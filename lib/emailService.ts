@@ -31,7 +31,7 @@ const createTransporter = () => {
     return null;
   }
 
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '465'),
     secure: process.env.SMTP_PORT === '465', // true для 465, false для других портов
