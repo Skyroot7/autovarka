@@ -1,7 +1,8 @@
+// @ts-ignore - типы для node-telegram-bot-api отсутствуют
 import TelegramBot from 'node-telegram-bot-api';
 
 // Инициализация бота
-let bot: TelegramBot | null = null;
+let bot: any | null = null;
 
 const initBot = () => {
   const token = process.env.TELEGRAM_BOT_TOKEN;
