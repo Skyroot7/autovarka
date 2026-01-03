@@ -1,0 +1,87 @@
+[
+  {
+    "id": "ORDER-1766335178738",
+    "createdAt": "2025-12-21T16:39:38.738Z",
+    "status": "new",
+    "customer": {
+      "name": "test",
+      "surname": "teste",
+      "email": "",
+      "phone": "0935685577"
+    },
+    "delivery": {
+      "city": "Киев",
+      "address": "298"
+    },
+    "paymentMethod": "cashOnDelivery",
+    "notes": "",
+    "items": [
+      {
+        "id": "mv-12-24-220-universal",
+        "name": "Автомобильная мультиварка 12/24/220В",
+        "price": 2975,
+        "quantity": 1,
+        "image": "/images/mv12-24-220-450x450.jpg"
+      }
+    ],
+    "total": 2975,
+    "locale": "ru"
+  },
+  {
+    "id": "ORDER-1766322117709",
+    "createdAt": "2025-12-21T13:01:57.709Z",
+    "status": "new",
+    "customer": {
+      "name": "Test",
+      "surname": "Test",
+      "email": "",
+      "phone": "09356857788"
+    },
+    "delivery": {
+      "city": "Киев",
+      "address": "298"
+    },
+    "paymentMethod": "cashOnDelivery",
+    "notes": "",
+    "items": [
+      {
+        "id": "mv-12-24-220-universal",
+        "name": "Автомобільна мультиварка 12/24/220В",
+        "price": 2975,
+        "quantity": 1,
+        "image": "/images/mv12-24-220-450x450.jpg"
+      }
+    ],
+    "total": 2975,
+    "locale": "uk"
+  },
+  {
+    "id": "ORDER-1766152021577",
+    "createdAt": "2025-12-19T13:47:01.577Z",
+    "status": "processing",
+    "customer": {
+      "name": "Test",
+      "surname": "Testovich",
+      "email": "skd7@ukr.net",
+      "phone": "0636815090"
+    },
+    "delivery": {
+      "city": "Киев",
+      "address": "298"
+    },
+    "paymentMethod": "cashOnDelivery",
+    "notes": "",
+    "items": [
+      {
+        "id": "mv-12-24-220-universal",
+        "name": "Автомобильная мультиварка 12/24/220В",
+        "price": 2975,
+        "quantity": 1,
+        "image": "/images/mv12-24-220-450x450.jpg"
+      }
+    ],
+    "total": 2975,
+    "locale": "ru",
+    "updatedAt": "2025-12-19T14:19:46.297Z"
+  }
+]

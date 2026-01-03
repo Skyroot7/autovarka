@@ -1,0 +1,307 @@
+export interface Product {
+  id: string;
+  name: string;
+  nameEn: string;
+  nameRu: string;
+  namePl: string;
+  nameDe: string;
+  price: number;
+  oldPrice?: number;
+  images: string[];
+  description: string;
+  descriptionEn: string;
+  descriptionRu: string;
+  descriptionPl: string;
+  descriptionDe: string;
+  specifications: {
+    voltage?: string;
+    power?: string;
+    capacity?: string;
+    weight?: string;
+    dimensions?: string;
+    material?: string;
+    warranty?: string;
+  };
+  inStock: boolean;
+  featured?: boolean;
+  videoUrl?: string;
+  videoTitle?: string;
+  videoTitleEn?: string;
+  videoTitleRu?: string;
+  videoTitlePl?: string;
+  videoTitleDe?: string;
+}
+
+export const products: Product[] = [
+  {
+    id: 'mv-multivarka-12-24-220',
+    name: 'Мультиварка 12/24/220В універсальна',
+    nameEn: 'Multivarka 12/24/220V Universal',
+    nameRu: 'Мультиварка 12/24/220В универсальная',
+    namePl: 'Multivarka 12/24/220V Uniwersalna',
+    nameDe: 'Multivarka 12/24/220V Universal',
+    price: 2975,
+    images: [
+      '/images/mv12-24-220-450x450.jpg',
+    ],
+    description: 'Інноваційна автомобільна мультиварка з потрійним живленням 12В, 24В та 220В - ваш надійний помічник у дорозі! Компактний дизайн і функціональність "три в одній" дозволяють готувати домашню їжу в будь-яких умовах. Ідеально підходить для водіїв-дальнобійщиків, які проводять багато часу за кермом. Легке підключення через прикуривач легкового авто або бортову мережу вантажівки, а також можливість використання від розетки 220В у готелі чи вдома. Комплектується різноманітними програмами приготування для здобуття ароматних страв прямо в дорозі.',
+    descriptionEn: 'Innovative automotive multivarka with triple power supply 12V, 24V and 220V - your reliable companion on the road! Compact design and "three in one" functionality allows cooking home-made food in any conditions. Perfect for truck drivers who spend a lot of time behind the wheel. Easy connection via car cigarette lighter or truck onboard network, as well as the ability to use from 220V socket in hotel or at home. Equipped with various cooking programs for aromatic dishes right on the road.',
+    descriptionRu: 'Инновационная автомобильная мультиварка с тройным питанием 12В, 24В и 220В - ваш надежный помощник в дороге! Компактный дизайн и функциональность "три в одной" позволяют готовить домашнюю еду в любых условиях. Идеально подходит для водителей-дальнобойщиков, которые проводят много времени за рулем. Легкое подключение через прикуриватель легкового авто или бортовую сеть грузовика, а также возможность использования от розетки 220В в отеле или дома. Комплектуется разнообразными программами приготовления для получения ароматных блюд прямо в дороге.',
+    descriptionPl: 'Innowacyjna multivarka samochodowa z potrójnym zasilaniem 12V, 24V i 220V - Twój niezawodny towarzysz w podróży! Kompaktowy design i funkcjonalność "trzy w jednym" pozwala gotować domowe posiłki w każdych warunkach. Idealne dla kierowców ciężarówek, którzy spędzają dużo czasu za kierownicą. Łatwe podłączenie przez zapalniczkę samochodową lub sieć pokładową ciężarówki, a także możliwość używania z gniazdka 220V w hotelu lub w domu. Wyposażona w różnorodne programy gotowania do aromatycznych potraw w drodze.',
+    descriptionDe: 'Innovative Autovarka mit dreifacher Stromversorgung 12V, 24V und 220V - Ihr zuverlässiger Begleiter auf der Straße! Kompaktes Design und "drei in einem" Funktionalität ermöglicht Kochen von hausgemachtem Essen unter allen Bedingungen. Perfekt für Fernfahrer, die viel Zeit hinter dem Steuer verbringen. Einfache Verbindung über Zigarettenanzünder oder Bordnetz, sowie Möglichkeit der Nutzung von 220V-Steckdose im Hotel oder zu Hause. Ausgestattet mit verschiedenen Kochprogrammen für aromatische Gerichte unterwegs.',
+    specifications: {
+      voltage: '12/24/220V',
+      capacity: '2 л',
+      power: '120/200/300Вт',
+      weight: '2.5 кг',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: 'mv-12-24-220-3l',
+    name: 'Мультиварка 12/24/220В 3 літри',
+    nameEn: 'Multivarka 12/24/220V 3 Liters',
+    nameRu: 'Мультиварка 12/24/220В 3 литра',
+    namePl: 'Multivarka 12/24/220V 3 litry',
+    nameDe: 'Multivarka 12/24/220V 3 Liter',
+    price: 3475,
+    images: [
+      '/images/mv12-24-220-3l-450x450.jpg',
+    ],
+    description: 'Потужна та зручна авто мультиварка на 3 літри з потрійним джерелом живлення - необхідний елемент для професійних водіїв! Великий об\'єм чаші дозволяє готувати апетитні та корисні страви великими порціями для вас та ваших попутників. Автоматичні режими роботи забезпечують ідеальний результат приготування м\'яса, риби, гарнірів та десертів. Енергоефективна технологія з автоматичним вимкненням під час готовності блюда. Надійна конструкція з нержавіючої сталі та міцного антипригарного покриття гарантує довготривалу експлуатацію в умовах тривалих поїздок.',
+    descriptionEn: 'Powerful and convenient car multivarka 3 liters with triple power supply - essential equipment for professional drivers! Large bowl capacity allows cooking delicious and healthy meals in large portions for you and your passengers. Automatic operation modes ensure perfect cooking results for meat, fish, side dishes and desserts. Energy-efficient technology with automatic shut-off when dish is ready. Reliable stainless steel construction with durable non-stick coating guarantees long-term operation in long-distance travel conditions.',
+    descriptionRu: 'Мощная и удобная автоварка на 3 литра с тройным источником питания - необходимый элемент для профессиональных водителей! Большой объем чаши позволяет готовить аппетитные и полезные блюда большими порциями для вас и ваших попутчиков. Автоматические режимы работы обеспечивают идеальный результат приготовления мяса, рыбы, гарниров и десертов. Энергоэффективная технология с автоматическим выключением по готовности блюда. Надежная конструкция из нержавеющей стали с прочным антипригарным покрытием гарантирует длительную эксплуатацию в условиях длительных поездок.',
+    descriptionPl: 'Potężna i wygodna multivarka samochodowa 3 litry z potrójnym zasilaniem - niezbędny element dla profesjonalnych kierowców! Duża pojemność miski pozwala gotować apetyczne i zdrowe posiłki w dużych porcjach dla Ciebie i Twoich pasażerów. Automatyczne tryby pracy zapewniają idealne rezultaty gotowania mięsa, ryb, przystawek i deserów. Energooszczędna technologia z automatycznym wyłączeniem, gdy danie jest gotowe. Solidna konstrukcja ze stali nierdzewnej z trwałą powłoką nieprzywierającą gwarantuje długotrwałe użytkowanie w warunkach długich podróży.',
+    descriptionDe: 'Leistungsstarke und praktische Autovarka 3 Liter mit dreifacher Stromversorgung - unverzichtbare Ausrüstung für Berufsfahrer! Große Topfkapazität ermöglicht Zubereitung köstlicher und gesunder Mahlzeiten in großen Portionen für Sie und Ihre Mitfahrer. Automatische Betriebsmodi sorgen für perfekte Kochergebnisse für Fleisch, Fisch, Beilagen und Desserts. Energieeffiziente Technologie mit automatischem Ausschalten, wenn das Gericht fertig ist. Zuverlässige Edelstahlkonstruktion mit strapazierfähiger Antihaftbeschichtung garantiert langfristigen Betrieb bei Langstreckenfahrten.',
+    specifications: {
+      voltage: '12/24/220V',
+      capacity: '3 л',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: 'mv-24-220',
+    name: 'Мультиварка 24/220В',
+    nameEn: 'Multivarka 24/220V',
+    nameRu: 'Мультиварка 24/220В',
+    namePl: 'Multivarka 24/220V',
+    nameDe: 'Multivarka 24/220V',
+    price: 2975,
+    images: [
+      '/images/mv24-220-450x450.jpg',
+    ],
+    description: 'Надійна авто мультиварка з подвійним живленням спеціально розроблена для комерційного транспорту та індивідуального використання. Міцна конструкція витримує екстремальні умови дороги та вібрації під час руху. Швидке нагрівання та рівномірний розподіл температури створюють ідеальні умови для приготування смачних обідів і вечерь без втрати якості продуктів. Ергономічний дизайн корпусу з зручними ручками забезпечує безпеку під час експлуатації. Пристрій автоматично адаптується під обраний джерело живлення і забезпечує стабільну роботу в будь-яких умовах.',
+    descriptionEn: 'Reliable car multivarka with dual power supply specially designed for commercial transport and personal use. Durable construction withstands extreme road conditions and vibrations during movement. Fast heating and uniform temperature distribution create ideal conditions for cooking delicious lunches and dinners without losing product quality. Ergonomic body design with convenient handles ensures safety during operation. Device automatically adapts to selected power source and provides stable operation in any conditions.',
+    descriptionRu: 'Надежная автоварка с двойным питанием специально разработана для коммерческого транспорта и индивидуального использования. Крепкая конструкция выдерживает экстремальные условия дороги и вибрации во время движения. Быстрое нагревание и равномерное распределение температуры создают идеальные условия для приготовления вкусных обедов и ужинов без потери качества продуктов. Эргономичный дизайн корпуса с удобными ручками обеспечивает безопасность при эксплуатации. Устройство автоматически адаптируется под выбранный источник питания и обеспечивает стабильную работу в любых условиях.',
+    descriptionPl: 'Niezawodna multivarka samochodowa z podwójnym zasilaniem specjalnie zaprojektowana dla transportu komercyjnego i użytku osobistego. Trwała konstrukcja wytrzymuje ekstremalne warunki drogowe i wibracje podczas ruchu. Szybkie nagrzewanie i równomierny rozkład temperatury tworzą idealne warunki do gotowania smacznych obiadów i kolacji bez utraty jakości produktów. Ergonomiczny design obudowy z wygodnymi uchwytami zapewnia bezpieczeństwo podczas użytkowania. Urządzenie automatycznie dostosowuje się do wybranego źródła zasilania i zapewnia stabilną pracę w każdych warunkach.',
+    descriptionDe: 'Zuverlässige Autovarka mit Doppelstromversorgung speziell für kommerziellen Transport und persönliche Nutzung entwickelt. Robuste Konstruktion hält extremen Straßenbedingungen und Vibrationen während der Fahrt stand. Schnelles Aufheizen und gleichmäßige Temperaturverteilung schaffen ideale Bedingungen für Zubereitung köstlicher Mittag- und Abendessen ohne Qualitätsverlust der Produkte. Ergonomisches Gehäuse-Design mit bequemen Griffen gewährleistet Sicherheit beim Betrieb. Gerät passt sich automatisch an gewählte Stromquelle an und gewährleistet stabilen Betrieb unter allen Bedingungen.',
+    specifications: {
+      voltage: '24/220V',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+  },
+  {
+    id: 'aerogrill-24v-3l',
+    name: 'Аерогриль 24В 3 літри',
+    nameEn: 'Aerogrill 24V 3 Liters',
+    nameRu: 'Аэрогриль 24В 3 литра',
+    namePl: 'Aerogrill 24V 3 litry',
+    nameDe: 'Aerogrill 24V 3 Liter',
+    price: 2975,
+    images: [
+      '/images/aerogrill-24v-3l-450x450.jpg',
+    ],
+    description: 'Революційна мультипіч з циркуляцією гарячого повітря забезпечує швидке та рівномірне приготування страв без додавання масла. Інноваційна технологія аерогрилювання дозволяє отримати хрустку скоринку та ніжну текстуру всередині при готуванні м\'яса, риби, овочів та випічки. Просторна камера на 3 літри вміщує великі порції їжі, ідеально підходить для команди водіїв або сім\'ї в поїздці. Просте управління та автоматичні програми роблять приготування максимально зручним у дорожніх умовах. Підтримання оптимальної температури забезпечує консистентну якість кожного блюда.',
+    descriptionEn: 'Revolutionary multi-oven with hot air circulation ensures fast and uniform cooking without adding oil. Innovative aerogrill technology allows getting crispy crust and tender texture inside when cooking meat, fish, vegetables and baking. Spacious 3-liter chamber accommodates large portions of food, perfect for driver crew or family on trip. Simple control and automatic programs make cooking maximally convenient in road conditions. Maintaining optimal temperature ensures consistent quality of every dish.',
+    descriptionRu: 'Революционная мультипечь с циркуляцией горячего воздуха обеспечивает быстрое и равномерное приготовление блюд без добавления масла. Инновационная технология аэрогрилирования позволяет получить хрустящую корочку и нежную текстуру внутри при приготовлении мяса, рыбы, овощей и выпечки. Просторная камера на 3 литра вмещает большие порции еды, идеально подходит для команды водителей или семьи в поездке. Простое управление и автоматические программы делают приготовление максимально удобным в дорожных условиях. Поддержание оптимальной температуры обеспечивает консистентное качество каждого блюда.',
+    descriptionPl: 'Rewolucyjny multi-pot z cyrkulacją gorącego powietrza zapewnia szybkie i równomierne gotowanie bez dodawania oleju. Innowacyjna technologia aerogrilla pozwala uzyskać chrupiącą skórkę i delikatną teksturę w środku podczas gotowania mięsa, ryb, warzyw i wypiekania. Przestronna komora 3 litry pomieści duże porcje jedzenia, idealnie nadaje się dla załogi kierowców lub rodziny w podróży. Prosta obsługa i automatyczne programy czynią gotowanie maksymalnie wygodnym w warunkach drogowych. Utrzymywanie optymalnej temperatury zapewnia spójną jakość każdego dania.',
+    descriptionDe: 'Revolutionärer Multi-Ofen mit Heißluftzirkulation gewährleistet schnelles und gleichmäßiges Kochen ohne Zugabe von Öl. Innovative Aerogrill-Technologie ermöglicht knusprige Kruste und zarte Textur innen beim Garen von Fleisch, Fisch, Gemüse und Backen. Geräumige 3-Liter-Kammer fasst große Portionen, perfekt für Fahrercrew oder Familie auf Reisen. Einfache Bedienung und automatische Programme machen Kochen maximal bequem unterwegs. Aufrechterhaltung optimaler Temperatur gewährleistet konsistente Qualität jedes Gerichts.',
+    specifications: {
+      voltage: '24V',
+      capacity: '3 л',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: 'skorovarka-12-24v-2.5l',
+    name: 'Скороварка 12/24В 2.5 літри',
+    nameEn: 'Pressure Cooker 12/24V 2.5 Liters',
+    nameRu: 'Скороварка 12/24В 2.5 литра',
+    namePl: 'Szybkowar 12/24V 2.5 litry',
+    nameDe: 'Schnellkochtopf 12/24V 2.5 Liter',
+    price: 3475,
+    images: [
+      '/images/skorovarka-12-24v-2.5l-450x450.jpg',
+    ],
+    description: 'Вироблена за інноваційними технологіями автономна скороварка з регульованим тиском - ваш шлях до швидкого та поживного харчування в дорозі! Технологія підвищеного тиску зменшує час приготування м\'ясних та овочевих страв майже вдвічі, зберігаючи при цьому всі корисні вітаміни та мінерали. Герметична кришка з клапаном безпеки гарантує надійну роботу приладу. Вбудована система керування тиском автоматично контролює процес приготування та запобігає перегріву. Об\'єм 2.5 літри оптимальний для приготування повноцінного обіду для однієї-двох осіб.',
+    descriptionEn: 'Manufactured using innovative technologies autonomous pressure cooker with adjustable pressure - your way to fast and nutritious meals on the road! Elevated pressure technology reduces cooking time of meat and vegetable dishes almost by half, while preserving all beneficial vitamins and minerals. Hermetic lid with safety valve guarantees reliable device operation. Built-in pressure management system automatically controls cooking process and prevents overheating. 2.5 liter capacity is optimal for cooking full lunch for one-two persons.',
+    descriptionRu: 'Произведенная по инновационным технологиям автономная скороварка с регулируемым давлением - ваш путь к быстрому и питательному питанию в дороге! Технология повышенного давления уменьшает время приготовления мясных и овощных блюд почти вдвое, сохраняя при этом все полезные витамины и минералы. Герметичная крышка с клапаном безопасности гарантирует надежную работу прибора. Встроенная система управления давлением автоматически контролирует процесс приготовления и предотвращает перегрев. Объем 2.5 литра оптимален для приготовления полноценного обеда для одной-двух персон.',
+    descriptionPl: 'Wyprodukowany przy użyciu innowacyjnych technologii autonomiczny szybkowar z regulowanym ciśnieniem - Twoja droga do szybkich i pożywnych posiłków w podróży! Technologia zwiększonego ciśnienia skraca czas gotowania mięsnych i warzywnych potraw prawie o połowę, zachowując przy tym wszystkie korzystne witaminy i minerały. Hermetyczna pokrywa z zaworem bezpieczeństwa gwarantuje niezawodną pracę urządzenia. Wbudowany system kontroli ciśnienia automatycznie kontroluje proces gotowania i zapobiega przegrzaniu. Pojemność 2.5 litra jest optymalna do gotowania pełnego obiadu dla jednej-dwóch osób.',
+    descriptionDe: 'Nach innovativen Technologien hergestellter autonomer Schnellkochtopf mit einstellbarem Druck - Ihr Weg zu schnellem und nahrhaftem Essen unterwegs! Erhöhte Drucktechnologie reduziert Kochzeit von Fleisch- und Gemüsegerichten fast um die Hälfte, während alle nützlichen Vitamine und Mineralien erhalten bleiben. Hermetischer Deckel mit Sicherheitsventil garantiert zuverlässigen Gerätebetrieb. Eingebautes Druckmanagementsystem kontrolliert automatisch Kochprozess und verhindert Überhitzung. 2.5 Liter Fassungsvermögen optimal für Zubereitung vollwertiges Mittagessen für eine-zwei Personen.',
+    specifications: {
+      voltage: '12/24V',
+      capacity: '2.5 л',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: 'skovoroda-24-220-3l',
+    name: 'Сковорода 24/220В 3л від прикурювача та розетки',
+    nameEn: 'Car Frying Pan 24/220V 3L from Cigarette Lighter and Socket',
+    nameRu: 'Сковорода 24/220В 3л от прикуривателя и розетки',
+    namePl: 'Patelnia 24/220V 3L od zapalniczki i gniazdka',
+    nameDe: 'Bratpfanne 24/220V 3L vom Zigarettenanzünder und Steckdose',
+    price: 1975,
+    images: [
+      '/images/skovoroda-24-220-3l-450x450.jpg',
+    ],
+    description: 'Автомобільна сковорода 24/220В 3л від прикурювача та розетки для дальнобійщика, повністю універсальна "два в одному" - 24/220 вольт на 3 літри в прикурювач і від розетки. Можна готувати відразу кілька порцій у фурі та вдома. Практична та функціональна авто сковорода стане незамінним помічником для смаження та тушіння ваших улюблених страв в дорозі. Глибока чаша на 3 літри ідеально підходить для приготування рагу, смажених овочів, м\'ясних котлет та інших смачних блюд. Рівномірне нагрівання дна забезпечує швидке та якісне приготування без пригоряння.',
+    descriptionEn: 'Car frying pan 24/220V 3L from cigarette lighter and socket for truck driver, fully universal "two in one" - 24/220 volts 3 liters in cigarette lighter and from socket. You can cook several portions at once in truck and at home. Practical and functional car frying pan will become indispensable helper for frying and stewing your favorite dishes on the road. Deep 3-liter bowl perfectly suits for cooking stews, fried vegetables, meat patties and other delicious dishes. Uniform bottom heating ensures fast and quality cooking without burning.',
+    descriptionRu: 'Автомобильная сковорода 24/220В 3л от прикуривателя и розетки для дальнобойщика, полностью универсальная "два в одном" - 24/220 вольт на 3 литра в прикуриватель и от розетки. Можно готовить сразу несколько порций в фуре и дома. Практичная и функциональная автосковорода станет незаменимым помощником для жарки и тушения ваших любимых блюд в дороге. Глубокая чаша на 3 литра идеально подходит для приготовления рагу, жареных овощей, мясных котлет и других вкусных блюд. Равномерный нагрев дна обеспечивает быстрое и качественное приготовление без пригорания.',
+    descriptionPl: 'Patelnia samochodowa 24/220V 3L od zapalniczki i gniazdka dla kierowcy ciężarówki, w pełni uniwersalna "dwa w jednym" - 24/220 woltów 3 litry w zapalniczkę i z gniazdka. Można gotować od razu kilka porcji w ciężarówce i w domu. Praktyczna i funkcjonalna patelnia samochodowa stanie się niezastąpionym pomocnikiem do smażenia i duszenia Twoich ulubionych potraw w podróży. Głęboka miska 3 litry idealnie nadaje się do gotowania potrawek, smażonych warzyw, mielonych kotletów i innych pysznych dań. Równomierne nagrzewanie dna zapewnia szybkie i jakościowe gotowanie bez przypalania.',
+    descriptionDe: 'Autobratpfanne 24/220V 3L vom Zigarettenanzünder und Steckdose für Fernfahrer, vollständig universell "zwei in einem" - 24/220 Volt 3 Liter im Zigarettenanzünder und von der Steckdose. Sie können sofort mehrere Portionen im LKW und zu Hause kochen. Praktische und funktionale Autobratpfanne wird unverzichtbarer Helfer für Braten und Schmoren Ihrer Lieblingsgerichte unterwegs. Tiefer 3-Liter-Topf perfekt für Zubereitung von Eintöpfen, gebratenen Gemüsen, Fleischklopsen und anderen köstlichen Gerichten. Gleichmäßige Bodenheizung gewährleistet schnelles und qualitatives Kochen ohne Anbrennen.',
+    specifications: {
+      voltage: '24/220V',
+      capacity: '3 л',
+      power: '250Вт/1200Вт',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: 'mv-24v-1l',
+    name: 'Мультиварка 24В 1л від прикурювача',
+    nameEn: 'Multivarka 24V 1L from Cigarette Lighter',
+    nameRu: 'Мультиварка 24В 1л от прикуривателя',
+    namePl: 'Multivarka 24V 1L od zapalniczki',
+    nameDe: 'Multivarka 24V 1L vom Zigarettenanzünder',
+    price: 999,
+    oldPrice: 1299,
+    images: [
+      '/images/mv24v-1l.jpg',
+    ],
+    description: 'Економна та практична мультиварка на 24 вольта місткістю 1 літр - ідеальний вибір для професійних водіїв вантажівок та комерційного транспорту. Пристрій підключається безпосередньо до бортової мережі транспортного засобу через прикурювач, забезпечуючи стабільне живлення під час руху. Мінімалістичний дизайн та легка вага роблять її зручною для транспортування та зберігання. Невеликий об\'єм оптимальний для швидкого приготування гарячих страв, каш та напоїв безпосередньо в кабіні. Енергоефективна робота економить заряд акумулятора під час тривалих рейсів.',
+    descriptionEn: 'Economical and practical 24 volt multivarka with 1 liter capacity - perfect choice for professional truck drivers and commercial transport operators. Device connects directly to vehicle onboard network via cigarette lighter, ensuring stable power supply during movement. Minimalist design and light weight make it convenient for transportation and storage. Small volume is optimal for quick cooking of hot meals, porridges and drinks directly in cabin. Energy-efficient operation saves battery charge during long routes.',
+    descriptionRu: 'Экономичная и практичная мультиварка на 24 вольта вместимостью 1 литр - идеальный выбор для профессиональных водителей грузовиков и коммерческого транспорта. Устройство подключается непосредственно к бортовой сети транспортного средства через прикуриватель, обеспечивая стабильное питание во время движения. Минималистичный дизайн и легкий вес делают её удобной для транспортировки и хранения. Небольшой объем оптимален для быстрого приготовления горячих блюд, каш и напитков непосредственно в кабине. Энергоэффективная работа экономит заряд аккумулятора во время длительных рейсов.',
+    descriptionPl: 'Ekonomiczna i praktyczna multivarka 24 woltów o pojemności 1 litr - idealny wybór dla profesjonalnych kierowców ciężarówek i operatorów transportu komercyjnego. Urządzenie łączy się bezpośrednio z siecią pokładową pojazdu przez zapalniczkę, zapewniając stabilne zasilanie podczas ruchu. Minimalistyczny design i lekka waga czynią ją wygodną do transportu i przechowywania. Mała pojemność jest optymalna do szybkiego gotowania gorących posiłków, kasz i napojów bezpośrednio w kabinie. Energooszczędna praca oszczędza ładunek akumulatora podczas długich tras.',
+    descriptionDe: 'Wirtschaftliche und praktische 24-Volt-Multivarka mit 1 Liter Fassungsvermögen - perfekte Wahl für professionelle LKW-Fahrer und kommerzielle Transportbetreiber. Gerät verbindet sich direkt mit Fahrzeug-Bordnetz über Zigarettenanzünder und gewährleistet stabile Stromversorgung während der Fahrt. Minimalistisches Design und leichtes Gewicht machen es bequem für Transport und Lagerung. Kleines Volumen ist optimal für schnelle Zubereitung heißer Mahlzeiten, Breie und Getränke direkt in der Kabine. Energieeffizienter Betrieb spart Batterieladung bei langen Routen.',
+    specifications: {
+      voltage: '24V',
+      capacity: '1 л',
+      power: '130Вт',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: 'mv-12-24v-1.6l',
+    name: 'Мультиварка 12/24В 1,6л від прикурювача',
+    nameEn: 'Multivarka 12/24V 1.6L from Cigarette Lighter',
+    nameRu: 'Мультиварка 12/24В 1,6л от прикуривателя',
+    namePl: 'Multivarka 12/24V 1.6L od zapalniczki',
+    nameDe: 'Multivarka 12/24V 1.6L vom Zigarettenanzünder',
+    price: 1590,
+    images: [
+      '/images/mv12-24v-1.6l.jpg',
+    ],
+    description: 'Компактна автомобільна мультиварка місткістю 1,6 літра з подвійним джерелом живлення 12 та 24 вольт - надійний помічник для водіїв комерційного транспорту та приватних автомобілів. Пристрій автоматично визначає напругу мережі та адаптується під обраний режим роботи. Середній об\'єм чаші оптимальний для приготування смачних страв на одну-дві персони під час тривалих маршрутів. Вбудовані інтелектуальні програми забезпечують якісне приготування без постійного контролю. У комплектацію входять всі необхідні аксесуари для комфортного використання.',
+    descriptionEn: 'Compact automotive multivarka with 1.6 liter capacity featuring dual power supply 12 and 24 volts - reliable assistant for commercial transport drivers and private car owners. Device automatically detects network voltage and adapts to selected operation mode. Medium bowl volume is optimal for cooking delicious meals for one-two persons during long routes. Built-in intelligent programs ensure quality cooking without constant monitoring. Package includes all necessary accessories for comfortable use.',
+    descriptionRu: 'Компактная автомобильная мультиварка вместимостью 1,6 литра с двойным источником питания 12 и 24 вольт - надежный помощник для водителей коммерческого транспорта и частных автомобилей. Устройство автоматически определяет напряжение сети и адаптируется под выбранный режим работы. Средний объем чаши оптимален для приготовления вкусных блюд на одну-две персоны во время длительных маршрутов. Встроенные интеллектуальные программы обеспечивают качественное приготовление без постоянного контроля. В комплектацию входят все необходимые аксессуары для комфортного использования.',
+    descriptionPl: 'Kompaktowa multivarka samochodowa o pojemności 1,6 litra z podwójnym zasilaniem 12 i 24 woltów - niezawodny pomocnik dla kierowców transportu komercyjnego i samochodów prywatnych. Urządzenie automatycznie wykrywa napięcie sieci i dostosowuje się do wybranego trybu pracy. Średnia pojemność miski jest optymalna do gotowania smacznych posiłków dla jednej-dwóch osób podczas długich tras. Wbudowane inteligentne programy zapewniają jakościowe gotowanie bez stałego nadzoru. W zestawie znajdują się wszystkie niezbędne akcesoria do wygodnego użytkowania.',
+    descriptionDe: 'Kompakte Autovarka mit 1,6 Liter Fassungsvermögen mit Doppelstromversorgung 12 und 24 Volt - zuverlässiger Assistent für kommerzielle Transportfahrer und private Autobesitzer. Gerät erkennt automatisch Netzspannung und passt sich an gewählten Betriebsmodus an. Mittlere Topfkapazität ist optimal für Zubereitung köstlicher Mahlzeiten für ein-zwei Personen während langer Routen. Eingebaute intelligente Programme gewährleisten qualitatives Kochen ohne ständige Überwachung. Paket enthält alle notwendigen Zubehörteile für komfortable Nutzung.',
+    specifications: {
+      voltage: '12/24V',
+      capacity: '1,6 л',
+      power: '120Вт/180Вт',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: 'avtochaynik-12-24v-1.5l',
+    name: 'Автомобільний чайник 12/24В 1,5л від прикурювача',
+    nameEn: 'Car Kettle 12/24V 1.5L from Cigarette Lighter',
+    nameRu: 'Автомобильный чайник 12/24В 1,5л от прикуривателя',
+    namePl: 'Czajnik samochodowy 12/24V 1.5L od zapalniczki',
+    nameDe: 'Autowasserkocher 12/24V 1.5L vom Zigarettenanzünder',
+    price: 1750,
+    images: [
+      '/images/avtochaynik-12-24v-1.5l.jpg',
+    ],
+    description: 'Автомобільний чайник 12/24В від прикурювача в машину або для дальнобійщика у фуру, вантажівку. Дуже зручний для далеких поїздок у вашому автомобілі. Автомобільний чайник 12/24В на 1,5 літра, металевий, з можливістю збереження тепла, як у термосі, зі спеціальним клапаном для зручності використання. Ідеально підходить для приготування гарячої води для чаю, кави та інших напоїв під час подорожі.',
+    descriptionEn: 'Car kettle 12/24V from cigarette lighter in car or for truck driver in truck, cargo vehicle. Very convenient for long trips in your car. Car kettle 12/24V 1.5 liters, metal, with heat retention capability like a thermos, with special valve for convenience. Perfect for preparing hot water for tea, coffee and other drinks during travel.',
+    descriptionRu: 'Автомобильный чайник 12/24В от прикуривателя в машину или для дальнобойщика в фуру, грузовик. Очень удобный для дальних поездок в вашей машине. Автомобильный чайник 12/24В на 1,5 литра, металлический, с возможностью сохранения тепла, как в термосе, со специальным клапаном для удобства использования. Идеально подходит для приготовления горячей воды для чая, кофе и других напитков во время поездки.',
+    descriptionPl: 'Czajnik samochodowy 12/24V od zapalniczki w samochodzie lub dla kierowcy ciężarówki w ciężarówce, pojeździe towarowym. Bardzo wygodny do dalekich podróży w Twoim samochodzie. Czajnik samochodowy 12/24V 1,5 litra, metalowy, z możliwością zachowania ciepła jak w termosie, ze specjalnym zaworem dla wygody użytkowania. Idealny do przygotowania gorącej wody na herbatę, kawę i inne napoje podczas podróży.',
+    descriptionDe: 'Autowasserkocher 12/24V vom Zigarettenanzünder im Auto oder für Fernfahrer im LKW, Lastwagen. Sehr praktisch für lange Fahrten in Ihrem Auto. Autowasserkocher 12/24V 1,5 Liter, metallisch, mit Wärmespeicherfähigkeit wie eine Thermoskanne, mit speziellem Ventil für Bequemlichkeit. Perfekt für Zubereitung von heißem Wasser für Tee, Kaffee und andere Getränke während der Fahrt.',
+    specifications: {
+      voltage: '12/24V',
+      capacity: '1,5 л',
+      power: '96Вт/200Вт',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: 'mv-12-24v-2l',
+    name: 'Мультиварка 12/24В 2л від прикурювача',
+    nameEn: 'Multivarka 12/24V 2L from Cigarette Lighter',
+    nameRu: 'Мультиварка 12/24В 2л от прикуривателя',
+    namePl: 'Multivarka 12/24V 2L od zapalniczki',
+    nameDe: 'Multivarka 12/24V 2L vom Zigarettenanzünder',
+    price: 2400,
+    images: [
+      '/images/mv12-24v-2l.jpg',
+    ],
+    description: 'Універсальна автомобільна мультиварка об\'ємом 2 літри з підтримкою напруги 12 та 24 вольт - ідеальне рішення для професійних водіїв-дальнобійщиків та активних автомобілістів. Пристрій працює як від бортової мережі вантажівки 24В, так і від стандартного прикурювача легкового автомобіля 12В. Компактний розмір та оптимальна місткість дозволяють готувати повноцінні обіди та вечері прямо під час подорожі. Повний комплект аксесуарів включає запасні елементи для тривалої експлуатації.',
+    descriptionEn: 'Universal automotive multivarka with 2 liter capacity supporting 12 and 24 volt power supply - perfect solution for professional truck drivers and active motorists. Device operates from both truck 24V onboard network and standard 12V car cigarette lighter. Compact size and optimal capacity allow cooking full lunches and dinners right during travel. Complete accessory set includes spare parts for long-term operation.',
+    descriptionRu: 'Универсальная автомобильная мультиварка объемом 2 литра с поддержкой напряжения 12 и 24 вольт - идеальное решение для профессиональных водителей-дальнобойщиков и активных автомобилистов. Устройство работает как от бортовой сети грузовика 24В, так и от стандартного прикуривателя легкового автомобиля 12В. Компактный размер и оптимальная вместимость позволяют готовить полноценные обеды и ужины прямо во время поездки. Полный комплект аксессуаров включает запасные элементы для длительной эксплуатации.',
+    descriptionPl: 'Uniwersalna multivarka samochodowa o pojemności 2 litrów z obsługą napięcia 12 i 24 woltów - idealne rozwiązanie dla profesjonalnych kierowców ciężarówek i aktywnych kierowców. Urządzenie działa zarówno z sieci pokładowej ciężarówki 24V, jak i ze standardowej zapalniczki samochodu osobowego 12V. Kompaktowy rozmiar i optymalna pojemność pozwalają gotować pełne obiady i kolacje wprost podczas podróży. Pełny zestaw akcesoriów obejmuje części zamienne do długotrwałej eksploatacji.',
+    descriptionDe: 'Universelle Autovarka mit 2 Liter Fassungsvermögen und Unterstützung für 12 und 24 Volt Spannung - perfekte Lösung für professionelle Fernfahrer und aktive Autofahrer. Gerät funktioniert sowohl vom LKW 24V Bordnetz als auch vom Standard-Zigarettenanzünder im Pkw 12V. Kompakte Größe und optimale Kapazität ermöglichen Zubereitung vollwertiger Mittag- und Abendessen direkt während der Fahrt. Vollständiges Zubehörset umfasst Ersatzteile für langfristigen Betrieb.',
+    specifications: {
+      voltage: '12/24V',
+      capacity: '2 л',
+      power: '120Вт/180Вт',
+      warranty: '6 місяців',
+    },
+    inStock: true,
+    featured: true,
+  },
+];
+
+export function getProduct(id: string): Product | undefined {
+  return products.find(p => p.id === id);
+}
+
+export function getFeaturedProducts(): Product[] {
+  return products
+    .filter(p => p.featured)
+    .sort((a, b) => a.price - b.price);
+}
+
+export function searchProducts(query: string, locale: string = 'uk'): Product[] {
+  const lowerQuery = query.toLowerCase();
+  return products.filter(product => {
+    let text = '';
+    switch(locale) {
+      case 'en': text = product.nameEn.toLowerCase(); break;
+      case 'ru': text = product.nameRu.toLowerCase(); break;
+      case 'pl': text = product.namePl.toLowerCase(); break;
+      case 'de': text = product.nameDe.toLowerCase(); break;
+      default: text = product.name.toLowerCase();
+    }
+    return text.includes(lowerQuery);
+  });
+}
