@@ -1,15 +1,11 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { kv } from '@vercel/kv';
 import { sendOrderEmail } from '@/lib/emailService';
 import { sendOrderNotification } from '@/lib/telegramService';
 
-const ordersFilePath = path.join(process.cwd(), 'lib', 'orders.json');
-
 export async function GET() {
   try {
-    const fileContents = await fs.readFile(ordersFilePath, 'utf8');
-    const orders = JSON.parse(fileContents);
+    const orders = await kv.get('orders') || [];
     return NextResponse.json(orders);
   } catch (error) {
     console.error('Error reading orders:', error);
@@ -21,15 +17,8 @@ export async function POST(request: Request) {
   try {
     const newOrder = await request.json();
     
-    // Read existing orders
-    let orders = [];
-    try {
-      const fileContents = await fs.readFile(ordersFilePath, 'utf8');
-      orders = JSON.parse(fileContents);
-    } catch (error) {
-      // If file doesn't exist, start with empty array
-      orders = [];
-    }
+    // Read existing orders from KV
+    let orders = await kv.get('orders') || [];
     
     // Add new order with ID and timestamp
     const orderWithMetadata = {
@@ -41,8 +30,8 @@ export async function POST(request: Request) {
     
     orders.unshift(orderWithMetadata); // Add to beginning
     
-    // Save to file
-    await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2), 'utf8');
+    // Save to KV
+    await kv.set('orders', orders);
     
     // Send email notification
     try {
@@ -82,9 +71,8 @@ export async function PATCH(request: Request) {
     const updateData = await request.json();
     const { orderId, status, fullUpdate } = updateData;
     
-    // Read existing orders
-    const fileContents = await fs.readFile(ordersFilePath, 'utf8');
-    let orders = JSON.parse(fileContents);
+    // Read existing orders from KV
+    let orders = await kv.get('orders') || [];
     
     if (fullUpdate) {
       // Full order update (for editing)
@@ -106,8 +94,8 @@ export async function PATCH(request: Request) {
       );
     }
     
-    // Save to file
-    await fs.writeFile(ordersFilePath, JSON.stringify(orders, null, 2), 'utf8');
+    // Save to KV
+    await kv.set('orders', orders);
     
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -124,9 +112,8 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: false, error: 'Order ID is required' }, { status: 400 });
     }
     
-    // Read existing orders
-    const fileContents = await fs.readFile(ordersFilePath, 'utf8');
-    let orders = JSON.parse(fileContents);
+    // Read existing orders from KV
+    let orders = await kv.get('orders') || [];
     
     // Filter out the order to delete
     const filteredOrders = orders.filter((order: any) => order.id !== orderId);
@@ -135,8 +122,8 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 });
     }
     
-    // Save to file
-    await fs.writeFile(ordersFilePath, JSON.stringify(filteredOrders, null, 2), 'utf8');
+    // Save to KV
+    await kv.set('orders', filteredOrders);
     
     console.log(`✅ Order ${orderId} deleted successfully`);
     return NextResponse.json({ success: true, message: 'Order deleted successfully' });

@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const settingsPath = path.join(process.cwd(), 'lib', 'videoSettings.json');
+import { kv } from '@vercel/kv';
 
 export async function GET() {
   try {
-    const data = fs.readFileSync(settingsPath, 'utf8');
-    return NextResponse.json(JSON.parse(data));
+    const settings = await kv.get('videoSettings') || { 
+      homePageVideoUrl: '', 
+      homePageVideoTitle: '' 
+    };
+    return NextResponse.json(settings);
   } catch (error) {
     return NextResponse.json({ 
       homePageVideoUrl: '', 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       homePageVideoTitle: homePageVideoTitle || '',
     };
 
-    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+    await kv.set('videoSettings', settings);
 
     return NextResponse.json({ success: true, settings });
   } catch (error) {
