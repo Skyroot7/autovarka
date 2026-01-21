@@ -5,7 +5,7 @@ import { sendOrderNotification } from '@/lib/telegramService';
 
 export async function GET() {
   try {
-    const orders = await kv.get('orders') || [];
+    const orders: any[] = (await kv.get('orders')) || [];
     return NextResponse.json(orders);
   } catch (error) {
     console.error('Error reading orders:', error);
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const newOrder = await request.json();
     
     // Read existing orders from KV
-    let orders = await kv.get('orders') || [];
+    let orders: any[] = (await kv.get('orders')) || [];
     
     // Add new order with ID and timestamp
     const orderWithMetadata = {
@@ -72,7 +72,7 @@ export async function PATCH(request: Request) {
     const { orderId, status, fullUpdate } = updateData;
     
     // Read existing orders from KV
-    let orders = await kv.get('orders') || [];
+    let orders: any[] = (await kv.get('orders')) || [];
     
     if (fullUpdate) {
       // Full order update (for editing)
@@ -113,7 +113,7 @@ export async function DELETE(request: Request) {
     }
     
     // Read existing orders from KV
-    let orders = await kv.get('orders') || [];
+    let orders: any[] = (await kv.get('orders')) || [];
     
     // Filter out the order to delete
     const filteredOrders = orders.filter((order: any) => order.id !== orderId);
