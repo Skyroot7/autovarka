@@ -29,9 +29,9 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="bg-gradient-to-br from-gray-50 to-gray-100 overflow-x-hidden w-full">
       {/* Hero Section with Image Banner */}
-      <section className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
+      <section className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden w-full">
         {/* Background Image */}
         <div className="absolute inset-0">
           <SafeImage
@@ -45,8 +45,8 @@ export default function HomePage() {
         </div>
         
         {/* Content */}
-        <div className="container mx-auto px-4 h-full relative z-10">
-          <div className="flex items-center h-full">
+        <div className="container mx-auto px-4 h-full relative z-10 max-w-full overflow-x-hidden">
+          <div className="flex items-center h-full w-full">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -130,8 +130,8 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-8 bg-white border-b border-gray-100">
-        <div className="container mx-auto px-4">
+      <section className="py-8 bg-white border-b border-gray-100 overflow-x-hidden w-full">
+        <div className="container mx-auto px-4 max-w-full">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {[
               { icon: '🛡️', title: t('feature1'), color: 'from-blue-500 to-blue-600' },
@@ -157,8 +157,8 @@ export default function HomePage() {
       </section>
 
       {/* Products Section */}
-      <section className="py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white">
-        <div className="container mx-auto px-4">
+      <section className="py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white overflow-x-hidden w-full">
+        <div className="container mx-auto px-4 max-w-full">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
@@ -263,13 +263,13 @@ export default function HomePage() {
       )}
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-20 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+      <section className="relative py-16 md:py-20 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 text-white overflow-x-hidden w-full">
+        <div className="absolute inset-0 opacity-10 overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
         
-        <div className="container mx-auto px-4 text-center relative z-10">
+        <div className="container mx-auto px-4 text-center relative z-10 max-w-full overflow-x-hidden">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

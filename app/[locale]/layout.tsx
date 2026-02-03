@@ -15,11 +15,13 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <Header />
-      <main className="min-h-screen">
-        {children}
-      </main>
-      <Footer />
+      <div className="overflow-x-hidden w-full">
+        <Header />
+        <main className="min-h-screen overflow-x-hidden">
+          {children}
+        </main>
+        <Footer />
+      </div>
     </NextIntlClientProvider>
   );
 }

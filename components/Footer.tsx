@@ -8,8 +8,8 @@ export default function Footer() {
   const locale = useLocale();
 
   return (
-    <footer className="bg-gray-900 text-gray-300" role="contentinfo">
-      <div className="container mx-auto px-4 py-12">
+    <footer className="bg-gray-900 text-gray-300 w-full overflow-x-hidden" role="contentinfo">
+      <div className="container mx-auto px-4 py-12 max-w-full">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">

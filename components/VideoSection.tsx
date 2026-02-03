@@ -41,8 +41,8 @@ export default function VideoSection({ videoUrl, title }: VideoSectionProps) {
   const videoTitle = title || t('videoTitle');
   
   return (
-    <section className="py-12 md:py-16 bg-gradient-to-b from-white to-gray-50">
-      <div className="container mx-auto px-4">
+    <section className="py-12 md:py-16 bg-gradient-to-b from-white to-gray-50 overflow-x-hidden w-full">
+      <div className="container mx-auto px-4 max-w-full">
         {videoTitle && (
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

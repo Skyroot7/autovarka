@@ -44,9 +44,9 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg sticky top-0 z-50" role="banner">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+    <header className="bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg sticky top-0 z-50 w-full overflow-x-hidden" role="banner">
+      <div className="container mx-auto px-4 max-w-full">
+        <div className="flex items-center justify-between h-16 md:h-20 w-full">
           {/* Logo */}
           <Link href={locale === 'uk' ? '/' : `/${locale}`} className="flex items-center group" aria-label="Перейти на головну сторінку Автоварка">
             <div className="flex flex-row items-center gap-2 group-hover:scale-105 transition-transform">
@@ -72,18 +72,18 @@ export default function Header() {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
             {/* Phone and Viber */}
-            <div className="flex items-center gap-1 md:gap-2">
+            <div className="hidden sm:flex items-center gap-1 md:gap-2">
               <a 
                 href="tel:+380636815090"
-                className="flex items-center gap-2 md:gap-2 lg:gap-3 px-2 md:px-3 lg:px-4 py-2 rounded-lg hover:bg-white/10 transition-all group"
+                className="flex items-center gap-1 md:gap-2 lg:gap-3 px-1 md:px-3 lg:px-4 py-2 rounded-lg hover:bg-white/10 transition-all group"
                 aria-label="Позвонить"
               >
-                <svg className="w-5 h-5 md:w-5 md:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span className="text-sm md:text-sm lg:text-base font-semibold group-hover:text-orange-100 transition-colors whitespace-nowrap">
+                <span className="text-xs md:text-sm lg:text-base font-semibold group-hover:text-orange-100 transition-colors whitespace-nowrap">
                   +38 (063) 681-50-90
                 </span>
               </a>
@@ -120,19 +120,19 @@ export default function Header() {
             {/* Search */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="p-1.5 md:p-2 hover:bg-white/10 rounded-full transition-colors shrink-0"
               aria-label={t('search')}
             >
-              <MagnifyingGlassIcon className="h-6 w-6" />
+              <MagnifyingGlassIcon className="h-5 w-5 md:h-6 md:w-6" />
             </button>
 
             {/* Cart */}
             <Link
               href={locale === 'uk' ? '/cart' : `/${locale}/cart`}
-              className="relative p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="relative p-1.5 md:p-2 hover:bg-white/10 rounded-full transition-colors shrink-0"
               aria-label={t('cart')}
             >
-              <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+              <ShoppingCartIcon className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
               <span
                 className={`absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transition-opacity ${
                   itemCount > 0 ? 'opacity-100' : 'opacity-0'
@@ -147,10 +147,10 @@ export default function Header() {
             {/* Profile */}
             <Link
               href={locale === 'uk' ? '/profile' : `/${locale}/profile`}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="hidden sm:block p-1.5 md:p-2 hover:bg-white/10 rounded-full transition-colors shrink-0"
               aria-label={t('profile')}
             >
-              <UserIcon className="h-6 w-6" />
+              <UserIcon className="h-5 w-5 md:h-6 md:w-6" />
             </Link>
 
             {/* Mobile Menu Button */}
