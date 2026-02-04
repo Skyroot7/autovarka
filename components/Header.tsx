@@ -72,28 +72,32 @@ export default function Header() {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
-            {/* Phone and Viber */}
-            <div className="hidden sm:flex items-center gap-1 md:gap-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4 shrink-0">
+            {/* Phone and Viber - Mobile: только иконки, Desktop: с номером телефона */}
+            <div className="flex items-center gap-0.5 sm:gap-1 md:gap-2">
+              {/* Phone */}
               <a 
                 href="tel:+380636815090"
-                className="flex items-center gap-1 md:gap-2 lg:gap-3 px-1 md:px-3 lg:px-4 py-2 rounded-lg hover:bg-white/10 transition-all group"
-                aria-label="Позвонить"
+                className="flex items-center gap-1 md:gap-2 lg:gap-3 px-1.5 sm:px-1 md:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-white/10 transition-all group"
+                aria-label="Позвонить +38 (063) 681-50-90"
+                title="+38 (063) 681-50-90"
               >
-                <svg className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                <span className="text-xs md:text-sm lg:text-base font-semibold group-hover:text-orange-100 transition-colors whitespace-nowrap">
+                {/* Номер телефона показываем только на sm и больше */}
+                <span className="hidden sm:inline text-xs md:text-sm lg:text-base font-semibold group-hover:text-orange-100 transition-colors whitespace-nowrap">
                   +38 (063) 681-50-90
                 </span>
               </a>
+              {/* Viber */}
               <a 
                 href="viber://chat?number=%2B380636815090"
-                className="p-2 rounded-lg hover:bg-white/10 transition-all group"
+                className="p-1.5 sm:p-2 rounded-lg hover:bg-white/10 transition-all group"
                 aria-label="Написать в Viber"
                 title="Написать в Viber"
               >
-                <svg className="w-6 h-6 md:w-6 md:h-6 lg:w-7 lg:h-7 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-6 md:h-6 lg:w-7 lg:h-7 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.696 6.7.633 9.817.57 12.933.488 18.617 6.055 20.29h.005l-.004 2.406s-.037.977.61 1.177c.777.242 1.234-.5 1.977-1.302.41-.442.977-1.093 1.404-1.594 3.856.326 6.82-.42 7.152-.532.77-.26 5.13-.837 5.84-6.833.73-6.17-.437-10.083-3.02-11.832C18.33.41 15.86 0 12.862 0h-.005C12.35-.004 11.875-.008 11.4 0zm.116 1.86c.407-.005.857 0 1.312.008 2.606 0 4.81.36 6.47 1.974 2.155 1.69 2.838 4.942 2.224 9.818-.545 4.35-3.613 4.858-4.228 5.06-.283.095-2.894.743-6.13.49 0 0-2.426 2.924-3.184 3.683-.12.12-.26.167-.352.145-.13-.03-.166-.188-.165-.414l.02-4.004c-4.762-1.338-4.48-6.098-4.426-8.686.054-2.588.567-4.693 1.977-6.105C7.49 2.35 10.94 1.897 11.516 1.86z"/>
                   <path d="M11.5 6.5c.276 0 .5.224.5.5v4.293l1.146-1.147a.5.5 0 01.708.708l-2 2a.5.5 0 01-.708 0l-2-2a.5.5 0 01.708-.708L11 11.293V7a.5.5 0 01.5-.5z"/>
                 </svg>
@@ -197,7 +201,31 @@ export default function Header() {
             <Link href={locale === 'uk' ? '/contacts' : `/${locale}/contacts`} className="block py-2 hover:text-orange-200 transition-colors">
               {t('contacts')}
             </Link>
-            <div className="flex items-center space-x-1 pt-2">
+            
+            {/* Контакты в мобильном меню */}
+            <div className="border-t border-white/20 pt-3 mt-3 space-y-2">
+              <a 
+                href="tel:+380636815090"
+                className="flex items-center gap-3 py-2 hover:text-orange-200 transition-colors"
+              >
+                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <span className="font-semibold">+38 (063) 681-50-90</span>
+              </a>
+              <a 
+                href="viber://chat?number=%2B380636815090"
+                className="flex items-center gap-3 py-2 hover:text-orange-200 transition-colors"
+              >
+                <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.696 6.7.633 9.817.57 12.933.488 18.617 6.055 20.29h.005l-.004 2.406s-.037.977.61 1.177c.777.242 1.234-.5 1.977-1.302.41-.442.977-1.093 1.404-1.594 3.856.326 6.82-.42 7.152-.532.77-.26 5.13-.837 5.84-6.833.73-6.17-.437-10.083-3.02-11.832C18.33.41 15.86 0 12.862 0h-.005C12.35-.004 11.875-.008 11.4 0zm.116 1.86c.407-.005.857 0 1.312.008 2.606 0 4.81.36 6.47 1.974 2.155 1.69 2.838 4.942 2.224 9.818-.545 4.35-3.613 4.858-4.228 5.06-.283.095-2.894.743-6.13.49 0 0-2.426 2.924-3.184 3.683-.12.12-.26.167-.352.145-.13-.03-.166-.188-.165-.414l.02-4.004c-4.762-1.338-4.48-6.098-4.426-8.686.054-2.588.567-4.693 1.977-6.105C7.49 2.35 10.94 1.897 11.516 1.86z"/>
+                  <path d="M11.5 6.5c.276 0 .5.224.5.5v4.293l1.146-1.147a.5.5 0 01.708.708l-2 2a.5.5 0 01-.708 0l-2-2a.5.5 0 01.708-.708L11 11.293V7a.5.5 0 01.5-.5z"/>
+                </svg>
+                <span className="font-semibold">Viber</span>
+              </a>
+            </div>
+            
+            <div className="flex items-center space-x-1 pt-2 border-t border-white/20 mt-3">
               {languages.map((lang) => (
                 <Link
                   key={lang.code}
