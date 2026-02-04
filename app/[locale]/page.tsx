@@ -31,7 +31,7 @@ export default function HomePage() {
   return (
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 overflow-x-hidden w-full">
       {/* Hero Section with Image Banner */}
-      <section className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden w-full">
+      <section className="relative h-[380px] sm:h-[420px] md:h-[500px] lg:h-[600px] overflow-hidden w-full">
         {/* Background Image */}
         <div className="absolute inset-0">
           <SafeImage
@@ -51,13 +51,13 @@ export default function HomePage() {
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-2xl"
+              className="max-w-2xl w-full pr-2"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
-                className="inline-block mb-4 bg-orange-500 px-5 py-2 rounded-full shadow-lg"
+                className="inline-block mb-2 sm:mb-3 bg-orange-500 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-lg"
               >
                 <span className="text-xs md:text-sm font-semibold text-white">{t('professionalEquipment')}</span>
               </motion.div>
@@ -66,7 +66,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight text-white"
+                className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight text-white"
                 style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5)' }}
               >
                 {t('title')}
@@ -76,7 +76,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="text-lg md:text-xl lg:text-2xl mb-3 text-white font-light"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl mb-2 sm:mb-3 text-white font-light leading-snug"
                 style={{ textShadow: '1px 1px 6px rgba(0,0,0,0.7), 0 0 15px rgba(0,0,0,0.4)' }}
               >
                 {t('subtitle')}
@@ -86,7 +86,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-sm md:text-base lg:text-lg mb-3 text-white max-w-xl leading-relaxed"
+              className="text-xs sm:text-sm md:text-base lg:text-lg mb-2 sm:mb-3 text-white max-w-xl leading-relaxed"
               style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}
             >
               {t('heroSubtext')}
@@ -96,7 +96,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="text-sm md:text-base lg:text-lg mb-8 text-orange-200 max-w-xl leading-relaxed font-semibold"
+              className="text-xs sm:text-sm md:text-base lg:text-lg mb-4 sm:mb-6 md:mb-8 text-orange-200 max-w-xl leading-relaxed font-semibold"
               style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}
             >
               🚚 {t('deliveryInfo')}
@@ -106,20 +106,20 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-2 sm:gap-3 md:gap-4"
             >
                 <Link
                   href={locale === 'uk' ? '/products' : `/${locale}/products`}
-                  className="group bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-xl font-bold hover:from-orange-600 hover:to-orange-700 transition-all shadow-2xl hover:shadow-orange-500/50 hover:scale-105 inline-flex items-center gap-2 text-sm md:text-base"
+                  className="group bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-xl font-bold hover:from-orange-600 hover:to-orange-700 transition-all shadow-2xl hover:shadow-orange-500/50 hover:scale-105 inline-flex items-center gap-2 text-xs sm:text-sm md:text-base"
                 >
                   {tCommon('products')}
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
                 <Link
                   href={locale === 'uk' ? '/about' : `/${locale}/about`}
-                  className="bg-white/10 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-orange-600 transition-all shadow-lg hover:scale-105 text-sm md:text-base"
+                  className="bg-white/10 backdrop-blur-sm border-2 border-white/50 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-xl font-bold hover:bg-white hover:text-orange-600 transition-all shadow-lg hover:scale-105 text-xs sm:text-sm md:text-base"
                 >
                   {tCommon('learnMore')}
                 </Link>
