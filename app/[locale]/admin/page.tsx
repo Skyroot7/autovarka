@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { products, Product } from '@/lib/products';
 import { getProductsFromFile, createProduct, updateProduct, deleteProduct } from '@/lib/productActions';
+import { checkAuth, login as authLogin, logout as authLogout } from '@/lib/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PencilIcon, TrashIcon, PlusIcon, EyeIcon } from '@heroicons/react/24/outline';
@@ -12,9 +13,11 @@ import ProductForm from '@/components/admin/ProductForm';
 export default function AdminPage() {
   const t = useTranslations('admin');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'products'>('dashboard');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
@@ -22,13 +25,17 @@ export default function AdminPage() {
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [savingProduct, setSavingProduct] = useState(false);
 
-  // Check login status from localStorage on mount
+  // Проверяем авторизацию при загрузке страницы
   useEffect(() => {
-    const adminLoggedIn = localStorage.getItem('adminLoggedIn');
-    if (adminLoggedIn === 'true') {
-      setIsLoggedIn(true);
-    }
+    checkAuthStatus();
   }, []);
+
+  const checkAuthStatus = async () => {
+    setIsCheckingAuth(true);
+    const authenticated = await checkAuth();
+    setIsLoggedIn(authenticated);
+    setIsCheckingAuth(false);
+  };
 
 
   // Загрузка товаров при входе
@@ -51,20 +58,27 @@ export default function AdminPage() {
     }
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === 'Skyroot7' && password === 'Senatorkiller777') {
+    setIsLoggingIn(true);
+    setLoginError('');
+
+    const result = await authLogin(username, password);
+    
+    if (result.success) {
       setIsLoggedIn(true);
-      localStorage.setItem('adminLoggedIn', 'true');
-      setLoginError('');
+      setUsername('');
+      setPassword('');
     } else {
-      setLoginError(t('loginError'));
+      setLoginError(result.message || t('loginError'));
     }
+    
+    setIsLoggingIn(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await authLogout();
     setIsLoggedIn(false);
-    localStorage.removeItem('adminLoggedIn');
   };
 
   const handleSaveProduct = async (productData: Partial<Product>) => {
@@ -123,6 +137,18 @@ export default function AdminPage() {
     processingOrders: 0,
     todayRevenue: 0
   };
+
+  // Показываем загрузку при проверке авторизации
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 flex items-center justify-center p-4">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 w-full max-w-md text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Проверка авторизации...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isLoggedIn) {
     return (
@@ -200,15 +226,26 @@ export default function AdminPage() {
             
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all font-semibold text-lg shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transform hover:-translate-y-0.5"
+              disabled={isLoggingIn}
+              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3.5 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all font-semibold text-lg shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              {t('login')}
+              {isLoggingIn ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Вход...
+                </span>
+              ) : (
+                t('login')
+              )}
             </button>
           </form>
           
           <div className="mt-6 text-center">
-            <p className="text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-lg inline-block">
-              💡 Тестовые данные: <span className="font-semibold">admin</span> / <span className="font-semibold">admin123</span>
+            <p className="text-xs text-gray-500">
+              🔒 Защищенная авторизация
             </p>
           </div>
         </div>

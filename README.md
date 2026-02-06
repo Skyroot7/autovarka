@@ -88,6 +88,29 @@ autovarka/
 
 ## ⚙️ Конфигурация
 
+### 🔐 Авторизация администратора (ВАЖНО!)
+
+**Быстрая настройка за 3 минуты:** См. [QUICK_AUTH_SETUP.md](./QUICK_AUTH_SETUP.md)
+
+1. Сгенерируйте хеш пароля:
+```bash
+node scripts/generatePasswordHash.js ваш_надежный_пароль
+```
+
+2. Добавьте в `.env.local`:
+```env
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD_HASH=ваш_хеш
+ADMIN_PASSWORD_SALT=ваша_соль
+```
+
+3. На Vercel:
+   - Создайте KV базу данных (Storage → Create Database → KV)
+   - Добавьте переменные в Settings → Environment Variables
+
+📖 **Полная документация:** [SETUP_ADMIN_AUTH.md](./SETUP_ADMIN_AUTH.md)  
+🔒 **Безопасность:** [SECURITY.md](./SECURITY.md)
+
 ### Email настройки
 
 Создайте файл `.env.local`:
