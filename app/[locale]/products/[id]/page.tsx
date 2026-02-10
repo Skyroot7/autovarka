@@ -2,14 +2,16 @@ import { getProductsFromFile } from '@/lib/productActions';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import ProductDetailsClient from './ProductDetailsClient';
+import StructuredData from '@/components/StructuredData';
+import { getProductSchema, getBreadcrumbSchema } from '@/lib/structuredData';
 
 // Разрешить динамические параметры
 export const dynamicParams = true;
 
 export async function generateMetadata(
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string; locale: string }> }
 ): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
   const products = await getProductsFromFile();
   const product = products.find(p => p.id === id);
 
@@ -19,18 +21,56 @@ export async function generateMetadata(
     };
   }
 
+  const getName = () => {
+    switch (locale) {
+      case 'en': return product.nameEn;
+      case 'ru': return product.nameRu;
+      case 'pl': return product.namePl;
+      case 'de': return product.nameDe;
+      default: return product.name;
+    }
+  };
+
+  const getDescription = () => {
+    switch (locale) {
+      case 'en': return product.descriptionEn;
+      case 'ru': return product.descriptionRu;
+      case 'pl': return product.descriptionPl;
+      case 'de': return product.descriptionDe;
+      default: return product.description;
+    }
+  };
+
   return {
-    title: `${product.name} - Автоварка`,
-    description: product.description,
+    title: `${getName()} - Автоварка`,
+    description: getDescription().substring(0, 160),
+    keywords: ['мультиварка', 'автомобільна', '12в', '24в', 'для вантажівки', getName()],
     openGraph: {
-      title: product.name,
-      description: product.description,
+      title: getName(),
+      description: getDescription().substring(0, 160),
+      images: product.images.map(img => ({
+        url: `https://autovarka.com.ua${img}`,
+        width: 450,
+        height: 450,
+        alt: getName(),
+      })),
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: getName(),
+      description: getDescription().substring(0, 160),
+      images: [`https://autovarka.com.ua${product.images[0]}`],
     },
   };
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function ProductPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string; locale: string }> 
+}) {
+  const { id, locale } = await params;
   const products = await getProductsFromFile();
   const product = products.find(p => p.id === id);
 
@@ -38,5 +78,21 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     notFound();
   }
 
-  return <ProductDetailsClient product={product} />;
+  // Структурированные данные для SEO
+  const productSchema = getProductSchema(product, locale);
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: 'Головна', url: locale === 'uk' ? '/' : `/${locale}` },
+    { name: 'Товари', url: locale === 'uk' ? '/products' : `/${locale}/products` },
+    { 
+      name: product.name, 
+      url: locale === 'uk' ? `/products/${id}` : `/${locale}/products/${id}` 
+    },
+  ]);
+
+  return (
+    <>
+      <StructuredData data={[productSchema, breadcrumbSchema]} />
+      <ProductDetailsClient product={product} />
+    </>
+  );
 }
