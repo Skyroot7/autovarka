@@ -44,36 +44,36 @@ export async function sendOrderNotification(orderData: {
   // Формирование сообщения
   const itemsList = orderData.cartItems
     .map((item, index) => 
-      `${index + 1}. ${item.name}\n   ├ Кількість: ${item.quantity} шт\n   └ Ціна: ${item.price} грн`
+      `${index + 1}. ${item.name}\n   ├ Количество: ${item.quantity} шт\n   └ Цена: ${item.price} грн`
     )
     .join('\n\n');
 
   const message = `
-🛒 *НОВЕ ЗАМОВЛЕННЯ №${orderData.orderId}*
+🛒 *НОВЫЙ ЗАКАЗ №${orderData.orderId}*
 
-👤 *Клієнт:*
-├ Ім'я: ${orderData.name}${orderData.surname ? ' ' + orderData.surname : ''}
+👤 *Клиент:*
+├ Имя: ${orderData.name}${orderData.surname ? ' ' + orderData.surname : ''}
 ├ Телефон: ${orderData.phone}
 ├ Email: ${orderData.email}
-└ Адреса: ${orderData.address}
+└ Адрес: ${orderData.address}
 
-📦 *Товари:*
+📦 *Товары:*
 ${itemsList}
 
-💰 *Загальна сума:* ${orderData.totalPrice} грн
+💰 *Общая сумма:* ${orderData.totalPrice} грн
 
-📅 *Дата:* ${new Date(orderData.createdAt).toLocaleString('uk-UA')}
+📅 *Дата:* ${new Date(orderData.createdAt).toLocaleString('ru-RU')}
 
 ━━━━━━━━━━━━━━━━━
-🔔 Не забудьте обробити замовлення!
+🔔 Не забудьте обработать заказ!
 `;
 
   try {
     await telegramBot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
-    console.log('✅ Уведомление отправлено в Telegram');
+    console.log('✅ Уведомление о заказе отправлено в Telegram');
     return true;
   } catch (error) {
-    console.error('❌ Ошибка отправки в Telegram:', error);
+    console.error('❌ Ошибка отправки уведомления о заказе в Telegram:', error);
     return false;
   }
 }
@@ -100,19 +100,19 @@ export async function sendContactNotification(contactData: {
   }
 
   const message = `
-📧 *НОВЕ ПОВІДОМЛЕННЯ З ФОРМИ*
+📧 *НОВОЕ СООБЩЕНИЕ С ФОРМЫ*
 
-👤 *Від:* ${contactData.name}
+👤 *От:* ${contactData.name}
 📱 *Телефон:* ${contactData.phone}
 ✉️ *Email:* ${contactData.email}
 
 📋 *Тема:* ${contactData.subject}
 
-💬 *Повідомлення:*
+💬 *Сообщение:*
 ${contactData.message}
 
 ━━━━━━━━━━━━━━━━━
-🔔 Відповідайте швидше!
+🔔 Ответьте быстрее!
 `;
 
   try {
