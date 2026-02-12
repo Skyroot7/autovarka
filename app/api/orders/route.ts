@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         surname: orderWithMetadata.customer?.surname || '',
         phone: orderWithMetadata.customer?.phone || '',
         email: orderWithMetadata.customer?.email || '',
-        address: `${orderWithMetadata.delivery?.city || ''}, ${orderWithMetadata.delivery?.address || ''}`,
+        address: `${orderWithMetadata.delivery?.city || ''} № ${orderWithMetadata.delivery?.address || ''}`,
         cartItems: orderWithMetadata.items || [],
         totalPrice: orderWithMetadata.total || 0,
         createdAt: new Date(orderWithMetadata.createdAt),
