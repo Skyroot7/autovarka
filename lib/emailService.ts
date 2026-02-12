@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 
 interface OrderEmailData {
-  orderId: string;
+  id: string;
   customer: {
     name: string;
     surname: string;
@@ -97,7 +97,7 @@ const createEmailTemplate = (data: OrderEmailData) => {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Новый заказ #${data.orderId}</title>
+        <title>Новый заказ #${data.id}</title>
       </head>
       <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f3f4f6;">
         <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 20px;">
@@ -121,7 +121,7 @@ const createEmailTemplate = (data: OrderEmailData) => {
                 <tr>
                   <td style="padding: 30px 40px; background-color: #fef3c7; border-bottom: 3px solid #f59e0b;">
                     <h2 style="margin: 0; color: #92400e; font-size: 24px;">
-                      📦 Заказ #${data.orderId}
+                      📦 Заказ #${data.id}
                     </h2>
                     <p style="margin: 5px 0 0 0; color: #78350f; font-size: 14px;">
                       ${new Date().toLocaleString('ru-RU', { dateStyle: 'long', timeStyle: 'short' })}
@@ -271,11 +271,11 @@ export async function sendOrderEmail(orderData: OrderEmailData): Promise<boolean
     const mailOptions = {
       from: `"🚗 Автоварка" <${process.env.SMTP_USER}>`,
       to: emailTo,
-      subject: `🛒 Новый заказ #${orderData.orderId} - ${orderData.customer.name} ${orderData.customer.surname}`,
+      subject: `🛒 Новый заказ #${orderData.id} - ${orderData.customer.name} ${orderData.customer.surname}`,
       html: emailHtml,
       // Текстовая версия для клиентов без HTML
       text: `
-Новый заказ #${orderData.orderId}
+Новый заказ #${orderData.id}
 
 Клиент: ${orderData.customer.name} ${orderData.customer.surname}
 Телефон: ${orderData.customer.phone}
@@ -301,7 +301,7 @@ autovarka.com.ua
     };
 
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Email отправлен на ${emailTo} для заказа #${orderData.orderId}`);
+    console.log(`✅ Email отправлен на ${emailTo} для заказа #${orderData.id}`);
     return true;
   } catch (error) {
     console.error('❌ Ошибка при отправке email:', error);
