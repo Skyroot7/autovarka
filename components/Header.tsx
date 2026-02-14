@@ -259,9 +259,9 @@ export default function Header() {
 
             {/* Search Results Dropdown */}
             {searchQuery.trim().length >= 2 && (
-              <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-xl shadow-2xl max-h-[700px] overflow-y-auto z-50 border-2 border-orange-200">
+              <div className="absolute top-full left-0 right-0 mt-4 bg-white rounded-2xl shadow-2xl max-h-[900px] overflow-y-auto z-50 border-4 border-orange-300">
                 {searchResults.length > 0 ? (
-                  <div className="py-4">
+                  <div className="py-6">
                     {searchResults.map((product) => {
                       const name = locale === 'en' ? product.nameEn : 
                                    locale === 'ru' ? product.nameRu : 
@@ -272,22 +272,22 @@ export default function Header() {
                         <button
                           key={product.id}
                           onClick={() => handleProductClick(product.id)}
-                          className="w-full flex items-center gap-6 px-8 py-6 hover:bg-orange-50 transition-all hover:shadow-md text-left border-b border-gray-100 last:border-0"
+                          className="w-full flex items-center gap-10 px-12 py-10 hover:bg-orange-50 transition-all hover:shadow-lg text-left border-b-2 border-gray-200 last:border-0"
                         >
-                          <div className="relative w-32 h-32 flex-shrink-0 bg-gray-50 rounded-xl overflow-hidden border-2 border-gray-200 shadow-sm">
+                          <div className="relative w-64 h-64 flex-shrink-0 bg-gray-50 rounded-2xl overflow-hidden border-4 border-gray-300 shadow-md">
                             <SafeImage
                               src={product.images[0]}
                               alt={name}
                               fill
-                              sizes="128px"
-                              className="object-contain p-4"
+                              sizes="256px"
+                              className="object-contain p-8"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-bold text-gray-900 text-2xl mb-2 leading-tight">{name}</h4>
-                            <p className="text-orange-600 font-bold text-3xl">{product.price} ₴</p>
+                            <h4 className="font-bold text-gray-900 text-4xl mb-4 leading-tight">{name}</h4>
+                            <p className="text-orange-600 font-bold text-6xl">{product.price} ₴</p>
                             {product.oldPrice && (
-                              <p className="text-gray-400 line-through text-lg mt-1">{product.oldPrice} ₴</p>
+                              <p className="text-gray-400 line-through text-3xl mt-3">{product.oldPrice} ₴</p>
                             )}
                           </div>
                         </button>
@@ -295,9 +295,9 @@ export default function Header() {
                     })}
                   </div>
                 ) : (
-                  <div className="px-8 py-16 text-center text-gray-500">
-                    <MagnifyingGlassIcon className="h-20 w-20 mx-auto mb-4 text-gray-300" />
-                    <p className="text-xl font-medium">{locale === 'uk' ? 'Нічого не знайдено' : 
+                  <div className="px-12 py-24 text-center text-gray-500">
+                    <MagnifyingGlassIcon className="h-32 w-32 mx-auto mb-6 text-gray-300" />
+                    <p className="text-3xl font-medium">{locale === 'uk' ? 'Нічого не знайдено' : 
                         locale === 'ru' ? 'Ничего не найдено' : 
                         locale === 'en' ? 'Nothing found' : 
                         locale === 'pl' ? 'Nic nie znaleziono' : 
