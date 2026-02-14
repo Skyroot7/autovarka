@@ -23,7 +23,22 @@ export async function getProductsFromFile(): Promise<Product[]> {
 
 // Сохранение товаров в файл
 async function saveProductsToFile(products: Product[]): Promise<void> {
-  await fs.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2), 'utf-8');
+  try {
+    // Проверяем, что данные валидны
+    if (!Array.isArray(products)) {
+      throw new Error('Products must be an array');
+    }
+    
+    // Форматируем JSON с правильными отступами
+    const jsonData = JSON.stringify(products, null, 2);
+    
+    // Сохраняем файл
+    await fs.writeFile(PRODUCTS_FILE, jsonData, 'utf-8');
+    console.log(`✅ Файл успешно сохранен: ${PRODUCTS_FILE}`);
+  } catch (error) {
+    console.error('❌ Ошибка сохранения файла:', error);
+    throw error;
+  }
 }
 
 // Функция для генерации slug из названия
@@ -80,20 +95,30 @@ export async function createProduct(productData: Omit<Product, 'id'>): Promise<{
 // Обновление товара
 export async function updateProduct(id: string, productData: Partial<Product>): Promise<{ success: boolean; product?: Product; error?: string }> {
   try {
+    console.log('🔄 Обновление товара:', id);
+    console.log('📦 Данные для обновления:', productData);
+    
     const products = await getProductsFromFile();
     const index = products.findIndex(p => p.id === id);
     
     if (index === -1) {
+      console.error('❌ Товар не найден:', id);
       return { success: false, error: 'Товар не знайдено' };
     }
     
-    products[index] = { ...products[index], ...productData, id };
+    // Объединяем существующие данные с новыми
+    const updatedProduct = { ...products[index], ...productData, id };
+    products[index] = updatedProduct;
+    
+    console.log('💾 Сохранение обновленного товара...');
     await saveProductsToFile(products);
     
+    console.log('✅ Товар успешно обновлен:', id);
     return { success: true, product: products[index] };
   } catch (error) {
-    console.error('Error updating product:', error);
-    return { success: false, error: 'Помилка при оновленні товару' };
+    console.error('❌ Ошибка при обновлении товара:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Помилка при оновленні товару';
+    return { success: false, error: errorMessage };
   }
 }
 

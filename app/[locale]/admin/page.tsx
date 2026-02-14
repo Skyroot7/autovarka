@@ -85,16 +85,24 @@ export default function AdminPage() {
     setSavingProduct(true);
     try {
       if (editingProduct) {
+        console.log('📝 Начало обновления товара:', editingProduct.id);
+        console.log('📦 Передаваемые данные:', productData);
+        
         const result = await updateProduct(editingProduct.id, productData);
+        
+        console.log('📬 Результат обновления:', result);
+        
         if (result.success) {
           await loadProducts();
           setShowProductForm(false);
           setEditingProduct(null);
-          alert('Товар успешно обновлен!');
+          alert('✅ Товар успешно обновлен!');
         } else {
-          alert(result.error || 'Ошибка при обновлении товара');
+          console.error('❌ Ошибка обновления:', result.error);
+          alert(`❌ Ошибка при обновлении товара:\n${result.error || 'Неизвестная ошибка'}`);
         }
       } else {
+        console.log('📝 Начало создания нового товара');
         const result = await createProduct(productData as Omit<Product, 'id'>);
         if (result.success) {
           await loadProducts();
