@@ -259,9 +259,9 @@ export default function Header() {
 
             {/* Search Results Dropdown */}
             {searchQuery.trim().length >= 2 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl max-h-96 overflow-y-auto z-50">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl max-h-[600px] overflow-y-auto z-50 border border-gray-200">
                 {searchResults.length > 0 ? (
-                  <div className="py-2">
+                  <div className="py-3">
                     {searchResults.map((product) => {
                       const name = locale === 'en' ? product.nameEn : 
                                    locale === 'ru' ? product.nameRu : 
@@ -272,29 +272,29 @@ export default function Header() {
                         <button
                           key={product.id}
                           onClick={() => handleProductClick(product.id)}
-                          className="w-full flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                          className="w-full flex items-center gap-5 px-6 py-4 hover:bg-orange-50 transition-colors text-left border-b border-gray-100 last:border-0"
                         >
-                          <div className="relative w-16 h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+                          <div className="relative w-24 h-24 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
                             <SafeImage
                               src={product.images[0]}
                               alt={name}
                               fill
-                              sizes="64px"
-                              className="object-contain p-2"
+                              sizes="96px"
+                              className="object-contain p-3"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-gray-900 truncate">{name}</h4>
-                            <p className="text-orange-600 font-bold mt-1">{product.price} ₴</p>
+                            <h4 className="font-bold text-gray-900 text-lg mb-1">{name}</h4>
+                            <p className="text-orange-600 font-bold text-xl">{product.price} ₴</p>
                           </div>
                         </button>
                       );
                     })}
                   </div>
                 ) : (
-                  <div className="px-4 py-8 text-center text-gray-500">
-                    <MagnifyingGlassIcon className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-                    <p>{locale === 'uk' ? 'Нічого не знайдено' : 
+                  <div className="px-6 py-12 text-center text-gray-500">
+                    <MagnifyingGlassIcon className="h-16 w-16 mx-auto mb-3 text-gray-300" />
+                    <p className="text-lg">{locale === 'uk' ? 'Нічого не знайдено' : 
                         locale === 'ru' ? 'Ничего не найдено' : 
                         locale === 'en' ? 'Nothing found' : 
                         locale === 'pl' ? 'Nic nie znaleziono' : 
