@@ -1,19 +1,80 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { useCartStore } from '@/store/cartStore';
-import { useState } from 'react';
-import { ShoppingCartIcon, MagnifyingGlassIcon, UserIcon, Bars3Icon } from '@heroicons/react/24/outline';
+import { useState, useEffect, useRef } from 'react';
+import { ShoppingCartIcon, MagnifyingGlassIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { products } from '@/lib/products';
+import SafeImage from '@/components/SafeImage';
 
 export default function Header() {
   const t = useTranslations('common');
   const locale = useLocale();
   const pathname = usePathname();
+  const router = useRouter();
   const itemCount = useCartStore(state => state.getItemCount());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<typeof products>([]);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // Закрытие поиска при клике вне его области
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setSearchOpen(false);
+        setSearchQuery('');
+        setSearchResults([]);
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [searchOpen]);
+
+  // Функция поиска товаров
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    
+    if (query.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    const lowerQuery = query.toLowerCase();
+    const filtered = products.filter(product => {
+      const name = locale === 'en' ? product.nameEn : 
+                   locale === 'ru' ? product.nameRu : 
+                   locale === 'pl' ? product.namePl : 
+                   locale === 'de' ? product.nameDe : product.name;
+      
+      const description = locale === 'en' ? product.descriptionEn : 
+                          locale === 'ru' ? product.descriptionRu : 
+                          locale === 'pl' ? product.descriptionPl : 
+                          locale === 'de' ? product.descriptionDe : product.description;
+      
+      return name.toLowerCase().includes(lowerQuery) || 
+             description.toLowerCase().includes(lowerQuery);
+    });
+
+    setSearchResults(filtered);
+  };
+
+  // Переход к товару
+  const handleProductClick = (productId: string) => {
+    router.push(locale === 'uk' ? `/products/${productId}` : `/${locale}/products/${productId}`);
+    setSearchOpen(false);
+    setSearchQuery('');
+    setSearchResults([]);
+  };
 
   // Функция для получения пути без locale
   const getPathWithoutLocale = () => {
@@ -171,18 +232,77 @@ export default function Header() {
 
         {/* Search Bar */}
         {searchOpen && (
-          <div className="pb-4">
+          <div className="pb-4 relative" ref={searchRef}>
             <div className="flex items-center bg-white/10 rounded-lg overflow-hidden">
-              <MagnifyingGlassIcon className="h-5 w-5 ml-3 text-white" />
+              <MagnifyingGlassIcon className="h-5 w-5 ml-3 text-white flex-shrink-0" />
               <input
                 type="text"
                 placeholder={t('search')}
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="flex-1 bg-transparent border-none outline-none px-3 py-2 text-white placeholder-white/70"
+                autoFocus
               />
-              <button className="px-4 py-2 bg-white/20 hover:bg-white/30 transition-colors">
-                {t('search')}
-              </button>
+              {searchQuery && (
+                <button 
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSearchResults([]);
+                  }}
+                  className="px-2 py-2 hover:bg-white/10 transition-colors"
+                  aria-label="Очистити пошук"
+                >
+                  <XMarkIcon className="h-5 w-5 text-white" />
+                </button>
+              )}
             </div>
+
+            {/* Search Results Dropdown */}
+            {searchQuery.trim().length >= 2 && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-2xl max-h-96 overflow-y-auto z-50">
+                {searchResults.length > 0 ? (
+                  <div className="py-2">
+                    {searchResults.map((product) => {
+                      const name = locale === 'en' ? product.nameEn : 
+                                   locale === 'ru' ? product.nameRu : 
+                                   locale === 'pl' ? product.namePl : 
+                                   locale === 'de' ? product.nameDe : product.name;
+                      
+                      return (
+                        <button
+                          key={product.id}
+                          onClick={() => handleProductClick(product.id)}
+                          className="w-full flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                        >
+                          <div className="relative w-16 h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+                            <SafeImage
+                              src={product.images[0]}
+                              alt={name}
+                              fill
+                              sizes="64px"
+                              className="object-contain p-2"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-gray-900 truncate">{name}</h4>
+                            <p className="text-orange-600 font-bold mt-1">{product.price} ₴</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="px-4 py-8 text-center text-gray-500">
+                    <MagnifyingGlassIcon className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                    <p>{locale === 'uk' ? 'Нічого не знайдено' : 
+                        locale === 'ru' ? 'Ничего не найдено' : 
+                        locale === 'en' ? 'Nothing found' : 
+                        locale === 'pl' ? 'Nic nie znaleziono' : 
+                        locale === 'de' ? 'Nichts gefunden' : 'Нічого не знайдено'}</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
