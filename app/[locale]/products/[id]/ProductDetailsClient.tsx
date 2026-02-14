@@ -3,6 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { Product, products } from '@/lib/products';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -15,6 +16,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
   const tCommon = useTranslations('common');
   const tHome = useTranslations('home');
   const locale = useLocale();
+  const router = useRouter();
   const addItem = useCartStore(state => state.addItem);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -39,6 +41,23 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
       });
     }
     alert('Товар додано до кошика!');
+  };
+
+  const handleBuyNow = () => {
+    const productName = locale === 'en' ? product.nameEn : 
+                        locale === 'ru' ? product.nameRu : 
+                        locale === 'pl' ? product.namePl : 
+                        locale === 'de' ? product.nameDe : product.name;
+    for (let i = 0; i < quantity; i++) {
+      addItem({
+        id: product.id,
+        name: productName,
+        price: product.price,
+        image: product.images[0],
+      });
+    }
+    // Redirect to cart
+    router.push(locale === 'uk' ? '/cart' : `/${locale}/cart`);
   };
 
   return (
@@ -215,12 +234,12 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                 >
                   {tCommon('addToCart')} ({quantity} шт.)
                 </button>
-                <Link
-                  href={locale === 'uk' ? '/cart' : `/${locale}/cart`}
-                  className="block w-full bg-orange-100 text-orange-600 py-4 rounded-lg font-bold text-lg hover:bg-orange-200 transition-colors text-center"
+                <button
+                  onClick={handleBuyNow}
+                  className="w-full bg-orange-100 text-orange-600 py-4 rounded-lg font-bold text-lg hover:bg-orange-200 transition-colors"
                 >
                   {tCommon('buyNow')}
-                </Link>
+                </button>
               </div>
 
               {/* Guarantee Info */}
