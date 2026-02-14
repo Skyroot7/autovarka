@@ -84,6 +84,9 @@ export default function ProductsPage() {
                   <option value="">{tCommon('allProducts')}</option>
                   <option value="12V">12V</option>
                   <option value="24V">24V</option>
+                  <option value="12/24V">12/24V</option>
+                  <option value="24/220V">24/220V</option>
+                  <option value="12/24/220V">12/24/220V</option>
                 </select>
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
                   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
