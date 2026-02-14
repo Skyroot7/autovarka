@@ -3,40 +3,53 @@
 import { Product } from './products';
 import fs from 'fs/promises';
 import path from 'path';
+import { kv } from '@vercel/kv';
 
 const PRODUCTS_FILE = path.join(process.cwd(), 'lib', 'productsData.json');
+const KV_PRODUCTS_KEY = 'products';
 
-// Загрузка товаров из файла (без кеширования)
+// Загрузка товаров (сначала из KV, если нет - из файла)
 export async function getProductsFromFile(): Promise<Product[]> {
   try {
-    // Читаем файл напрямую без кеширования
+    // Пробуем загрузить из Vercel KV
+    const productsFromKV: Product[] | null = await kv.get(KV_PRODUCTS_KEY);
+    
+    if (productsFromKV && Array.isArray(productsFromKV) && productsFromKV.length > 0) {
+      console.log(`✅ Загружено ${productsFromKV.length} товаров из Vercel KV`);
+      return productsFromKV;
+    }
+    
+    // Если в KV нет данных, загружаем из файла и сохраняем в KV
+    console.log('📂 Загрузка товаров из файла...');
     const data = await fs.readFile(PRODUCTS_FILE, 'utf-8');
     const products = JSON.parse(data);
-    console.log(`✅ Загружено ${products.length} товаров из файла`);
+    
+    // Сохраняем в KV для будущего использования
+    if (products.length > 0) {
+      await kv.set(KV_PRODUCTS_KEY, products);
+      console.log(`✅ Загружено ${products.length} товаров из файла и сохранено в KV`);
+    }
+    
     return products;
   } catch (error) {
     console.error('❌ Ошибка чтения товаров:', error);
-    // Если файл не существует, возвращаем пустой массив
     return [];
   }
 }
 
-// Сохранение товаров в файл
-async function saveProductsToFile(products: Product[]): Promise<void> {
+// Сохранение товаров в Vercel KV
+async function saveProductsToKV(products: Product[]): Promise<void> {
   try {
     // Проверяем, что данные валидны
     if (!Array.isArray(products)) {
       throw new Error('Products must be an array');
     }
     
-    // Форматируем JSON с правильными отступами
-    const jsonData = JSON.stringify(products, null, 2);
-    
-    // Сохраняем файл
-    await fs.writeFile(PRODUCTS_FILE, jsonData, 'utf-8');
-    console.log(`✅ Файл успешно сохранен: ${PRODUCTS_FILE}`);
+    // Сохраняем в Vercel KV
+    await kv.set(KV_PRODUCTS_KEY, products);
+    console.log(`✅ Сохранено ${products.length} товаров в Vercel KV`);
   } catch (error) {
-    console.error('❌ Ошибка сохранения файла:', error);
+    console.error('❌ Ошибка сохранения в KV:', error);
     throw error;
   }
 }
@@ -83,7 +96,7 @@ export async function createProduct(productData: Omit<Product, 'id'>): Promise<{
     };
     
     products.push(newProduct);
-    await saveProductsToFile(products);
+    await saveProductsToKV(products);
     
     return { success: true, product: newProduct };
   } catch (error) {
@@ -110,8 +123,8 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
     const updatedProduct = { ...products[index], ...productData, id };
     products[index] = updatedProduct;
     
-    console.log('💾 Сохранение обновленного товара...');
-    await saveProductsToFile(products);
+    console.log('💾 Сохранение обновленного товара в KV...');
+    await saveProductsToKV(products);
     
     console.log('✅ Товар успешно обновлен:', id);
     return { success: true, product: products[index] };
@@ -132,7 +145,7 @@ export async function deleteProduct(id: string): Promise<{ success: boolean; err
       return { success: false, error: 'Товар не знайдено' };
     }
     
-    await saveProductsToFile(filteredProducts);
+    await saveProductsToKV(filteredProducts);
     return { success: true };
   } catch (error) {
     console.error('Error deleting product:', error);
