@@ -8,6 +8,10 @@ import { getProductSchema, getBreadcrumbSchema } from '@/lib/structuredData';
 // Разрешить динамические параметры
 export const dynamicParams = true;
 
+// Отключить кеширование - всегда показывать актуальные данные
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string; locale: string }> }
 ): Promise<Metadata> {

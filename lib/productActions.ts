@@ -6,13 +6,16 @@ import path from 'path';
 
 const PRODUCTS_FILE = path.join(process.cwd(), 'lib', 'productsData.json');
 
-// Загрузка товаров из файла
+// Загрузка товаров из файла (без кеширования)
 export async function getProductsFromFile(): Promise<Product[]> {
   try {
+    // Читаем файл напрямую без кеширования
     const data = await fs.readFile(PRODUCTS_FILE, 'utf-8');
-    return JSON.parse(data);
+    const products = JSON.parse(data);
+    console.log(`✅ Загружено ${products.length} товаров из файла`);
+    return products;
   } catch (error) {
-    console.error('Error reading products:', error);
+    console.error('❌ Ошибка чтения товаров:', error);
     // Если файл не существует, возвращаем пустой массив
     return [];
   }

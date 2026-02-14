@@ -6,7 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useCartStore } from '@/store/cartStore';
 import { useState, useEffect, useRef } from 'react';
 import { ShoppingCartIcon, MagnifyingGlassIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { products } from '@/lib/products';
+import { useProducts } from '@/lib/useProducts';
 import SafeImage from '@/components/SafeImage';
 
 export default function Header() {
@@ -15,6 +15,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const itemCount = useCartStore(state => state.getItemCount());
+  const { products } = useProducts();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
