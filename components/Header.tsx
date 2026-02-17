@@ -278,7 +278,7 @@ export default function Header() {
                           <div className="relative w-32 h-32 flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden border-2 border-orange-200 shadow-sm">
                             <SafeImage
                               src={product.images[0]}
-                              alt={name}
+                              alt={`${name} - автомобільна мультиварка для дальнобійщика | ${product.price}₴`}
                               fill
                               sizes="128px"
                               className="object-contain p-3"

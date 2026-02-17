@@ -6,14 +6,18 @@ export function getOrganizationSchema() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Автоварка',
+    alternateName: 'Autovarka - Мультиварки для Дальнобійщиків',
     url: 'https://autovarka.com.ua',
     logo: 'https://autovarka.com.ua/logo.png',
-    description: 'Професійні автомобільні мультиварки 12-24V для вантажівок, фур та легкових автомобілів. Доставка по всій Україні.',
+    description: 'Інтернет-магазин автомобільних мультиварок 12/24/220V для дальнобійщиків, вантажівок та фур. Мультиварка 24 вольта від прикурювача. Доставка по всій Україні. Гарантія 6 місяців.',
+    slogan: 'Автомобільні мультиварки для дальнобійщиків',
+    priceRange: '₴₴',
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: '+380636815090',
       contactType: 'Customer Service',
       availableLanguage: ['Ukrainian', 'Russian', 'English', 'Polish', 'German'],
+      areaServed: 'UA',
     },
     sameAs: [
       'https://t.me/autovarka',
@@ -22,6 +26,7 @@ export function getOrganizationSchema() {
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'UA',
+      addressLocality: 'Київ',
     },
   };
 }
@@ -70,10 +75,13 @@ export function getProductSchema(product: Product, locale: string = 'uk') {
     description: getDescription(),
     image: product.images.map(img => `https://autovarka.com.ua${img}`),
     sku: product.id,
+    mpn: product.id,
     brand: {
       '@type': 'Brand',
       name: 'Автоварка',
     },
+    category: 'Автомобільні мультиварки',
+    keywords: 'мультиварка 24 вольта, автомобильная мультиварка, мультиварка для дальнобойщика, мультиварка 12/24/220, мультиварка для вантажівки',
     offers: {
       '@type': 'Offer',
       price: product.price,
@@ -82,9 +90,18 @@ export function getProductSchema(product: Product, locale: string = 'uk') {
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
       url: `https://autovarka.com.ua/products/${product.id}`,
+      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+      itemCondition: 'https://schema.org/NewCondition',
       seller: {
         '@type': 'Organization',
         name: 'Автоварка',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'UA',
+        },
       },
     },
     aggregateRating: product.featured
@@ -92,8 +109,11 @@ export function getProductSchema(product: Product, locale: string = 'uk') {
           '@type': 'AggregateRating',
           ratingValue: '4.8',
           reviewCount: '127',
+          bestRating: '5',
+          worstRating: '1',
         }
       : undefined,
+    warranty: product.specifications.warranty || '6 місяців',
   };
 }
 

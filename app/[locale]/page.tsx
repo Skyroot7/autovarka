@@ -36,7 +36,7 @@ export default function HomePage() {
         <div className="absolute inset-0">
           <SafeImage
             src="/images/hero-banner.jpg"
-            alt="Автоварка в кабине грузовика"
+            alt="Автомобільна мультиварка 12/24/220V для дальнобійщика в кабині вантажівки - Автоварка | Від 999₴"
             fill
             priority
             sizes="100vw"
@@ -200,7 +200,7 @@ export default function HomePage() {
                   >
                     <SafeImage
                       src={product.images[0]}
-                      alt={product.name}
+                      alt={`${product.name} - автомобільна мультиварка ${product.specifications.voltage || ''} ${product.specifications.capacity || ''} для дальнобійщика | ${product.price}₴`}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-contain p-8 group-hover:scale-110 transition-transform duration-300"
