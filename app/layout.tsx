@@ -1,14 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Analytics from "@/components/Analytics";
-import StructuredData from "@/components/StructuredData";
-import { getOrganizationSchema, getWebSiteSchema } from "@/lib/structuredData";
-
-const inter = Inter({
-  subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://autovarka.com.ua'),
@@ -42,16 +32,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const organizationSchema = getOrganizationSchema();
-  const websiteSchema = getWebSiteSchema();
-  
-  return (
-    <html suppressHydrationWarning>
-      <body className={`${inter.variable} antialiased`}>
-        <StructuredData data={[organizationSchema, websiteSchema]} />
-        <Analytics />
-        {children}
-      </body>
-    </html>
-  );
+  return children;
 }

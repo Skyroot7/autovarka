@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { ReactNode } from 'react';
-import LocaleProvider from '@/components/LocaleProvider';
+import { Inter } from "next/font/google";
+import "../globals.css";
+import Analytics from "@/components/Analytics";
+import StructuredData from "@/components/StructuredData";
+import { getOrganizationSchema, getWebSiteSchema } from "@/lib/structuredData";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-inter",
+});
 
 type Props = {
   children: ReactNode;
@@ -79,6 +90,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function LocaleLayout({ children }: Props) {
-  return <LocaleProvider>{children}</LocaleProvider>;
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale } = await params;
+  const messages = await getMessages();
+  const organizationSchema = getOrganizationSchema();
+  const websiteSchema = getWebSiteSchema();
+  
+  return (
+    <html lang={locale}>
+      <body className={`${inter.variable} antialiased`}>
+        <NextIntlClientProvider messages={messages}>
+          <StructuredData data={[organizationSchema, websiteSchema]} />
+          <Analytics />
+          {children}
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
 }
