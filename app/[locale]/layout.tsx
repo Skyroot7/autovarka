@@ -8,6 +8,8 @@ import "../globals.css";
 import Analytics from "@/components/Analytics";
 import StructuredData from "@/components/StructuredData";
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/structuredData";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -102,7 +104,9 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider messages={messages}>
           <StructuredData data={[organizationSchema, websiteSchema]} />
           <Analytics />
+          <Header />
           {children}
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
