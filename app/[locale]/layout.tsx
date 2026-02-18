@@ -1,13 +1,27 @@
-import { Metadata } from 'next';
+import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
+import { Inter } from "next/font/google";
+import "../globals.css";
+import Analytics from "@/components/Analytics";
+import StructuredData from "@/components/StructuredData";
+import { getOrganizationSchema, getWebSiteSchema } from "@/lib/structuredData";
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-inter",
+});
 
 type Props = {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata.home' });
 
   const localeMap: Record<string, string> = {
@@ -19,12 +33,36 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   };
 
   return {
+    metadataBase: new URL('https://autovarka.com.ua'),
     title: {
       default: t('title'),
       template: `%s | ${locale === 'uk' ? 'Автоварка - Мультиварки для Далекобійників' : locale === 'ru' ? 'Автоварка - Мультиварки для Дальнобойщиков' : locale === 'pl' ? 'Autovarka - Multicookery dla Kierowców TIR' : locale === 'de' ? 'Autovarka - Multikocher für LKW-Fahrer' : 'Autovarka - Multicookers for Truckers'}`,
     },
     description: t('description'),
     keywords: t('keywords').split(', '),
+    authors: [{ name: "Автоварка" }],
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    viewport: {
+      width: "device-width",
+      initialScale: 1,
+      maximumScale: 5,
+    },
+    icons: {
+      icon: "/favicon.ico",
+    },
+    verification: {
+      google: 'google-site-verification-code',
+    },
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDescription'),
@@ -50,6 +88,18 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   };
 }
 
-export default function LocaleLayout({ children }: Props) {
-  return children;
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale } = await params;
+  const organizationSchema = getOrganizationSchema();
+  const websiteSchema = getWebSiteSchema();
+  
+  return (
+    <html lang={locale}>
+      <body className={`${inter.variable} antialiased`}>
+        <StructuredData data={[organizationSchema, websiteSchema]} />
+        <Analytics />
+        {children}
+      </body>
+    </html>
+  );
 }

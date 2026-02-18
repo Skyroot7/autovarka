@@ -2,12 +2,16 @@ import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type Props = {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata.products' });
 
   const localeMap: Record<string, string> = {
