@@ -146,7 +146,7 @@ export default function CartPage() {
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 rounded-lg flex-shrink-0 mx-auto sm:mx-0">
                   <SafeImage
                     src={item.image}
-                    alt={`${item.name} - автомобільна мультиварка для дальнобійщика в кошику | ${item.price}₴`}
+                    alt={`${item.name} - автомобільна мультиварка для далекобійника в кошику | ${item.price}₴`}
                     fill
                     sizes="128px"
                     className="object-contain p-2"

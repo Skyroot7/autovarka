@@ -92,7 +92,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                 <SafeImage
                   key={currentImageUrl}
                   src={currentImageUrl}
-                  alt={`${locale === 'en' ? product.nameEn : locale === 'ru' ? product.nameRu : locale === 'pl' ? product.namePl : locale === 'de' ? product.nameDe : product.name} - автомобільна мультиварка ${product.specifications.voltage || ''} ${product.specifications.capacity || ''} для дальнобійщика та вантажівки`}
+                  alt={`${locale === 'en' ? product.nameEn : locale === 'ru' ? product.nameRu : locale === 'pl' ? product.namePl : locale === 'de' ? product.nameDe : product.name} - автомобільна мультиварка ${product.specifications.voltage || ''} ${product.specifications.capacity || ''} для далекобійника та вантажівки`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-contain p-10"
@@ -329,7 +329,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                     <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
                       <SafeImage
                         src={relatedProduct.images[0]}
-                        alt={`${relatedProduct.name} - автомобільна мультиварка для дальнобійщика | ${relatedProduct.price}₴`}
+                        alt={`${relatedProduct.name} - автомобільна мультиварка для далекобійника | ${relatedProduct.price}₴`}
                         fill
                         sizes="(max-width: 768px) 100vw, 33vw"
                         className="object-contain p-4"

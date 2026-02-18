@@ -189,7 +189,7 @@ export default function ProductsPage() {
                 >
                   <SafeImage
                     src={product.images[0]}
-                    alt={`${product.name} - автомобільна мультиварка ${product.specifications.voltage || ''} для вантажівки та дальнобійщика | ${product.price}₴ | Автоварка`}
+                    alt={`${product.name} - автомобільна мультиварка ${product.specifications.voltage || ''} для вантажівки та далекобійника | ${product.price}₴ | Автоварка`}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-contain p-8 group-hover:scale-110 transition-transform duration-300"
