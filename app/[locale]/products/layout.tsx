@@ -1,37 +1,41 @@
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import { ReactNode } from 'react';
 
-export const metadata: Metadata = {
-  title: "Каталог автомобільних мультиварок 12/24/220В | Автоварка",
-  description: "🛒 Повний каталог мультиварок для далекобійників та вантажівок. Обирайте з 10+ моделей 12В, 24В, 220В від 999₴. ✅ Гарантія 6 місяців. 🚚 Безкоштовна доставка по Україні.",
-  keywords: [
-    "каталог мультиварок",
-    "автомобільні мультиварки",
-    "мультиварка 12 вольт",
-    "мультиварка 24 вольта",
-    "мультиварка 220В",
-    "купити мультиварку для фури",
-    "мультиварки для вантажівок",
-    "автомультиварка від прикурювача",
-    "мультиварка для далекобійника",
-    "каталог автоварка"
-  ],
-  openGraph: {
-    title: "Каталог автомобільних мультиварок 12/24/220В | Автоварка",
-    description: "Повний каталог мультиварок для далекобійників. 10+ моделей від 999₴. Гарантія 6 місяців. Доставка по Україні.",
-    url: 'https://autovarka.com.ua/products',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: "Каталог автомобільних мультиварок | Автоварка",
-    description: "Повний каталог мультиварок для далекобійників. 10+ моделей від 999₴. Гарантія 6 місяців.",
-  },
+type Props = {
+  children: ReactNode;
+  params: { locale: string };
 };
 
-export default function ProductsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'metadata.products' });
+
+  const localeMap: Record<string, string> = {
+    uk: 'uk_UA',
+    ru: 'ru_RU',
+    en: 'en_US',
+    pl: 'pl_PL',
+    de: 'de_DE',
+  };
+
+  return {
+    title: t('title'),
+    description: t('description'),
+    openGraph: {
+      title: t('ogTitle'),
+      description: t('ogDescription'),
+      url: `https://autovarka.com.ua/${locale}/products`,
+      type: 'website',
+      locale: localeMap[locale] || 'uk_UA',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('twitterTitle'),
+      description: t('twitterDescription'),
+    },
+  };
+}
+
+export default function ProductsLayout({ children }: Props) {
   return children;
 }

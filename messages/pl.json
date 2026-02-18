@@ -190,6 +190,25 @@
     "processing": "W trakcie",
     "completed": "Zrealizowano",
     "cancelled": "Anulowano"
+  },
+  "metadata": {
+    "home": {
+      "title": "Autovarka – Multicookery samochodowe 12/24/220V dla kierowców TIR | od 999₴",
+      "description": "🚗 Multicookery samochodowe 12V, 24 wolty, 220V dla kierowców TIR i ciężarówek. ✅ Gwarancja 6 miesięcy ⚡ Szybka dostawa na Ukrainie od 999₴. Kup multicooker dla ciężarówki teraz!",
+      "keywords": "multicooker 24 wolty, multicooker samochodowy, multicooker dla kierowcy TIR, multicooker 12/24/220, multicooker 12v, multicooker 24v, multicooker dla ciężarówki, autovarka, kuchenka samochodowa, multicooker z zapalniczki, kupić multicooker samochodowy",
+      "ogTitle": "🚗 Autovarka - Multicookery 12/24/220V dla Kierowców TIR od 999₴",
+      "ogDescription": "Multicookery samochodowe 24 wolty dla ciężarówek i kierowców TIR. Gwarancja 6 miesięcy. Szybka dostawa na Ukrainie. Kup multicooker dla ciężarówki!",
+      "twitterTitle": "🚗 Autovarka - Multicookery 24 wolty dla Kierowców TIR od 999₴",
+      "twitterDescription": "Multicookery samochodowe dla ciężarówek. Gwarancja 6 miesięcy. Dostawa na Ukrainie. Kup multicooker 12/24/220 dla kierowcy TIR!"
+    },
+    "products": {
+      "title": "Katalog multicookerów samochodowych 12/24/220V | Autovarka",
+      "description": "🛒 Pełny katalog multicookerów dla kierowców TIR i ciężarówek. Wybieraj spośród 10+ modeli 12V, 24V, 220V od 999₴. ✅ Gwarancja 6 miesięcy. 🚚 Bezpłatna dostawa na Ukrainie.",
+      "ogTitle": "Katalog multicookerów samochodowych 12/24/220V | Autovarka",
+      "ogDescription": "Pełny katalog multicookerów dla kierowców TIR. 10+ modeli od 999₴. Gwarancja 6 miesięcy. Dostawa na Ukrainie.",
+      "twitterTitle": "Katalog multicookerów samochodowych | Autovarka",
+      "twitterDescription": "Pełny katalog multicookerów dla kierowców TIR. 10+ modeli od 999₴. Gwarancja 6 miesięcy."
+    }
   }
 }
 
