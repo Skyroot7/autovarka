@@ -169,6 +169,16 @@
       "success": "Bestellung aufgegeben! Wir werden uns bald bei Ihnen melden."
     }
   },
+  "profile": {
+    "title": "Profil",
+    "comingSoon": "Die Funktionalität des persönlichen Kontos wird später implementiert.",
+    "authTitle": "Autorisierung",
+    "authDesc": "Möglichkeit zur Registrierung und Anmeldung zum Speichern der Bestellhistorie",
+    "ordersTitle": "Bestellhistorie",
+    "ordersDesc": "Alle Ihre vorherigen Bestellungen anzeigen",
+    "personalTitle": "Persönliche Daten",
+    "personalDesc": "Kontaktinformationen und Lieferadressen verwalten"
+  },
   "admin": {
     "title": "Admin-Panel",
     "login": "Anmeldung",

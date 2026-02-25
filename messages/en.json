@@ -169,6 +169,16 @@
       "success": "Order placed! We will contact you soon."
     }
   },
+  "profile": {
+    "title": "Profile",
+    "comingSoon": "Personal account functionality will be implemented later.",
+    "authTitle": "Authorization",
+    "authDesc": "Ability to register and login to save order history",
+    "ordersTitle": "Order History",
+    "ordersDesc": "View all your previous orders",
+    "personalTitle": "Personal Data",
+    "personalDesc": "Manage contact information and delivery addresses"
+  },
   "admin": {
     "title": "Admin Panel",
     "login": "Login",

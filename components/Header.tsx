@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { useCartStore } from '@/store/cartStore';
 import { useState, useEffect, useRef } from 'react';
-import { ShoppingCartIcon, MagnifyingGlassIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ShoppingCartIcon, MagnifyingGlassIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useProducts } from '@/lib/useProducts';
 import SafeImage from '@/components/SafeImage';
 
@@ -208,15 +208,6 @@ export default function Header() {
               >
                 {itemCount}
               </span>
-            </Link>
-
-            {/* Profile */}
-            <Link
-              href={locale === 'uk' ? '/profile' : `/${locale}/profile`}
-              className="hidden sm:block p-1.5 md:p-2 hover:bg-white/10 rounded-full transition-colors shrink-0"
-              aria-label={t('profile')}
-            >
-              <UserIcon className="h-5 w-5 md:h-6 md:w-6" />
             </Link>
 
             {/* Mobile Menu Button */}

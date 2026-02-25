@@ -169,6 +169,16 @@
       "success": "Zamówienie złożone! Skontaktujemy się z Tobą wkrótce."
     }
   },
+  "profile": {
+    "title": "Profil",
+    "comingSoon": "Funkcjonalność panelu użytkownika zostanie zrealizowana później.",
+    "authTitle": "Autoryzacja",
+    "authDesc": "Możliwość rejestracji i logowania do zapisywania historii zamówień",
+    "ordersTitle": "Historia zamówień",
+    "ordersDesc": "Przeglądaj wszystkie swoje poprzednie zamówienia",
+    "personalTitle": "Dane osobowe",
+    "personalDesc": "Zarządzaj informacjami kontaktowymi i adresami dostawy"
+  },
   "admin": {
     "title": "Panel administratora",
     "login": "Logowanie",
