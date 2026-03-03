@@ -103,32 +103,34 @@ export default function AnalyticsSettings() {
               <label className="block text-sm font-semibold text-gray-900 mb-2">
                 Google Analytics ID (GA4)
               </label>
-              <input
-                type="text"
+              <textarea
                 value={googleAnalyticsId}
                 onChange={(e) => setGoogleAnalyticsId(e.target.value)}
-                placeholder="G-XXXXXXXXXX або UA-XXXXXXXXX-X"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                placeholder="G-XXXXXXXXXX или вставьте весь код из Google Analytics"
+                rows={5}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all font-mono text-sm"
               />
               <p className="mt-2 text-sm text-gray-500">
-                Пример: G-XXXXXXXXXX (для GA4) или UA-XXXXXXXXX-X (для Universal Analytics)
+                ✅ Можете вставить только ID: <code className="bg-gray-100 px-2 py-1 rounded">G-BTPZRYJB0J</code><br/>
+                ✅ Или весь код - система автоматически извлечет ID
               </p>
             </div>
 
             {/* Google Tag Manager */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Google Tag Manager ID
+                Google Tag Manager ID (опционально)
               </label>
-              <input
-                type="text"
+              <textarea
                 value={googleTagManagerId}
                 onChange={(e) => setGoogleTagManagerId(e.target.value)}
-                placeholder="GTM-XXXXXXX"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                placeholder="GTM-XXXXXXX или вставьте весь код из Google Tag Manager"
+                rows={5}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all font-mono text-sm"
               />
               <p className="mt-2 text-sm text-gray-500">
-                Пример: GTM-XXXXXXX
+                ✅ Можете вставить только ID: <code className="bg-gray-100 px-2 py-1 rounded">GTM-XXXXXXX</code><br/>
+                ✅ Или весь код - система автоматически извлечет ID
               </p>
             </div>
 
