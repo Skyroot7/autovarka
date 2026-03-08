@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDescription'),
-      url: `https://autovarka.com.ua/${locale}/products`,
+      url: `https://autovarka.com.ua/${locale === 'uk' ? '' : locale + '/'}products`,
       type: 'website',
       locale: localeMap[locale] || 'uk_UA',
     },
@@ -36,6 +36,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: t('twitterTitle'),
       description: t('twitterDescription'),
+    },
+    alternates: {
+      canonical: `https://autovarka.com.ua${locale === 'uk' ? '' : `/${locale}`}/products`,
+      languages: {
+        'uk': 'https://autovarka.com.ua/products',
+        'ru': 'https://autovarka.com.ua/ru/products',
+        'en': 'https://autovarka.com.ua/en/products',
+        'pl': 'https://autovarka.com.ua/pl/products',
+        'de': 'https://autovarka.com.ua/de/products',
+        'x-default': 'https://autovarka.com.ua/products',
+      },
     },
   };
 }

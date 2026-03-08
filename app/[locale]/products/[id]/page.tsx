@@ -77,6 +77,17 @@ export async function generateMetadata(
       description: getDescription().substring(0, 160),
       images: [`https://autovarka.com.ua${product.images[0]}`],
     },
+    alternates: {
+      canonical: `https://autovarka.com.ua${locale === 'uk' ? '' : `/${locale}`}/products/${id}`,
+      languages: {
+        'uk': `https://autovarka.com.ua/products/${id}`,
+        'ru': `https://autovarka.com.ua/ru/products/${id}`,
+        'en': `https://autovarka.com.ua/en/products/${id}`,
+        'pl': `https://autovarka.com.ua/pl/products/${id}`,
+        'de': `https://autovarka.com.ua/de/products/${id}`,
+        'x-default': `https://autovarka.com.ua/products/${id}`,
+      },
+    },
   };
 }
 

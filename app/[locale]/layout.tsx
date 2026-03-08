@@ -89,6 +89,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: t('twitterDescription'),
       images: ['/images/hero-banner.jpg'],
     },
+    alternates: {
+      canonical: `https://autovarka.com.ua${locale === 'uk' ? '' : `/${locale}`}`,
+      languages: {
+        'uk': 'https://autovarka.com.ua',
+        'ru': 'https://autovarka.com.ua/ru',
+        'en': 'https://autovarka.com.ua/en',
+        'pl': 'https://autovarka.com.ua/pl',
+        'de': 'https://autovarka.com.ua/de',
+        'x-default': 'https://autovarka.com.ua',
+      },
+    },
   };
 }
 
