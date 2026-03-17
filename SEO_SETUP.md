@@ -8,6 +8,8 @@
 - ✅ Структурированные данные (JSON-LD Schema.org)
 - ✅ 404 страница с SEO
 - ✅ Meta теги на всех страницах
+- ✅ **Canonical URLs** - Правильные канонические ссылки для всех страниц
+- ✅ **Hreflang теги** - Связи между языковыми версиями страниц
 
 ### 2. **Структурированные данные (Schema.org)**
 - ✅ Organization - Информация о компании
@@ -231,6 +233,69 @@ https://search.google.com/test/rich-results
 
 ---
 
+## 🔗 Canonical URLs и Hreflang (ИСПРАВЛЕНО)
+
+### Что это?
+
+**Canonical URL** - это основной URL страницы, который говорит Google: "Это оригинальная версия этой страницы".
+
+**Hreflang** - это теги, которые связывают языковые версии одной и той же страницы.
+
+### ✅ Что было исправлено:
+
+1. **Главная страница** (`/`, `/ru`, `/en`, `/pl`, `/de`):
+   - ✅ Каждая языковая версия имеет свой canonical URL
+   - ✅ Все версии связаны через hreflang теги
+
+2. **Страница "О нас"** (`/about`, `/ru/about`, и т.д.):
+   - ✅ Уникальный canonical для каждого языка
+   - ✅ Полные hreflang связи
+
+3. **Страница "Контакты"** (`/contacts`, `/ru/contacts`, и т.д.):
+   - ✅ Уникальный canonical для каждого языка
+   - ✅ Полные hreflang связи
+
+4. **Страница "Корзина"** (`/cart`, `/ru/cart`, и т.д.):
+   - ✅ Уникальный canonical для каждого языка
+   - ✅ Полные hreflang связи
+
+5. **Страница "Товары"** (`/products`, `/ru/products`, и т.д.):
+   - ✅ Уникальный canonical для каждого языка
+   - ✅ Полные hreflang связи
+
+6. **Страницы товаров** (`/products/1`, `/ru/products/1`, и т.д.):
+   - ✅ Уникальный canonical для каждого языка
+   - ✅ Полные hreflang связи
+
+### Пример правильной структуры canonical и hreflang:
+
+Для страницы `/ru/about`:
+
+```html
+<link rel="canonical" href="https://autovarka.com.ua/ru/about" />
+<link rel="alternate" hreflang="uk" href="https://autovarka.com.ua/about" />
+<link rel="alternate" hreflang="ru" href="https://autovarka.com.ua/ru/about" />
+<link rel="alternate" hreflang="en" href="https://autovarka.com.ua/en/about" />
+<link rel="alternate" hreflang="pl" href="https://autovarka.com.ua/pl/about" />
+<link rel="alternate" hreflang="de" href="https://autovarka.com.ua/de/about" />
+<link rel="alternate" hreflang="x-default" href="https://autovarka.com.ua/about" />
+```
+
+### 🎯 Результат:
+
+- ✅ Google Search Console перестанет показывать ошибки "неканонические страницы"
+- ✅ Google правильно поймет, какие страницы являются переводами друг друга
+- ✅ SEO для многоязычного сайта работает на 100%
+
+### ⏰ Когда увидите результат:
+
+Google нужно время, чтобы переиндексировать сайт:
+- **1-3 дня**: Google начнет замечать изменения
+- **1-2 недели**: Большинство страниц будут переиндексированы
+- **2-4 недели**: Ошибки в Google Search Console исчезнут
+
+---
+
 ## 📞 Поддержка
 
 Если нужна помощь с настройкой SEO:
@@ -254,4 +319,5 @@ https://search.google.com/test/rich-results
 ---
 
 **Создано:** 2026-02-04  
-**Версия:** 1.0
+**Обновлено:** 2026-02-12  
+**Версия:** 1.1
