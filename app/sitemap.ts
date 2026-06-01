@@ -1,51 +1,47 @@
 import { MetadataRoute } from 'next';
 import { products } from '@/lib/products';
 
+const BASE_URL = 'https://autovarka.com.ua';
+const LOCALES = ['uk', 'ru', 'en', 'pl', 'de'];
+
+function getUrl(locale: string, path: string = ''): string {
+  const cleanPath = path && !path.startsWith('/') ? `/${path}` : path;
+  if (locale === 'uk') {
+    return `${BASE_URL}${cleanPath}`;
+  }
+  return `${BASE_URL}/${locale}${cleanPath}`;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://autovarka.com.ua';
-  
-  // Список языков
-  const locales = ['uk', 'ru', 'en', 'pl', 'de'];
-  
-  // Базовые страницы
-  const routes = ['', '/products', '/about', '/contacts', '/cart', '/profile'];
-  
-  // Генерируем URL для всех языков
+  const now = new Date();
+
+  // Статические страницы (без cart и profile — они приватные)
+  const staticRoutes = ['', '/products', '/about', '/contacts'];
+
   const staticPages: MetadataRoute.Sitemap = [];
-  
-  locales.forEach(locale => {
-    routes.forEach(route => {
-      // Украинский язык - без префикса
-      const url = locale === 'uk' 
-        ? `${baseUrl}${route}`
-        : `${baseUrl}/${locale}${route}`;
-      
+  LOCALES.forEach(locale => {
+    staticRoutes.forEach(route => {
       staticPages.push({
-        url,
-        lastModified: new Date(),
+        url: getUrl(locale, route),
+        lastModified: now,
         changeFrequency: route === '' ? 'daily' : 'weekly',
-        priority: route === '' ? 1 : 0.8,
+        priority: route === '' ? 1.0 : route === '/products' ? 0.9 : 0.8,
       });
     });
   });
-  
-  // Генерируем URL для всех товаров на всех языках
+
+  // Страницы товаров
   const productPages: MetadataRoute.Sitemap = [];
-  
-  locales.forEach(locale => {
+  LOCALES.forEach(locale => {
     products.forEach(product => {
-      const url = locale === 'uk'
-        ? `${baseUrl}/products/${product.id}`
-        : `${baseUrl}/${locale}/products/${product.id}`;
-      
       productPages.push({
-        url,
-        lastModified: new Date(),
+        url: getUrl(locale, `/products/${product.id}`),
+        lastModified: now,
         changeFrequency: 'weekly',
         priority: 0.7,
       });
     });
   });
-  
+
   return [...staticPages, ...productPages];
 }

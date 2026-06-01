@@ -10,6 +10,7 @@ import StructuredData from "@/components/StructuredData";
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/structuredData";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { generateAlternates, getOgLocale } from "@/lib/seo";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -28,23 +29,39 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata.home' });
 
-  const localeMap: Record<string, string> = {
-    uk: 'uk_UA',
-    ru: 'ru_RU',
-    en: 'en_US',
-    pl: 'pl_PL',
-    de: 'de_DE',
+  const siteNames: Record<string, string> = {
+    uk: 'Автоварка - Мультиварки для Вантажівок',
+    ru: 'Автоварка - Мультиварки для Грузовиков',
+    en: 'Autovarka - Multicookers for Trucks',
+    pl: 'Autovarka - Multicookery dla Ciężarówek',
+    de: 'Autovarka - Multikocher für LKW',
+  };
+
+  const templates: Record<string, string> = {
+    uk: 'Автоварка - Мультиварки для Далекобійників',
+    ru: 'Автоварка - Мультиварки для Дальнобойщиков',
+    en: 'Autovarka - Multicookers for Truckers',
+    pl: 'Autovarka - Multicookery dla Kierowców TIR',
+    de: 'Autovarka - Multikocher für LKW-Fahrer',
+  };
+
+  const ogAlts: Record<string, string> = {
+    uk: 'Автомобільна мультиварка 12/24/220V для далекобійника - Автоварка',
+    ru: 'Автомобильная мультиварка 12/24/220V для дальнобойщика - Автоварка',
+    en: 'Car Multicooker 12/24/220V for Truckers - Autovarka',
+    pl: 'Multicooker samochodowy 12/24/220V dla kierowcy TIR - Autovarka',
+    de: 'Auto-Multikocher 12/24/220V für LKW-Fahrer - Autovarka',
   };
 
   return {
     metadataBase: new URL('https://autovarka.com.ua'),
     title: {
       default: t('title'),
-      template: `%s | ${locale === 'uk' ? 'Автоварка - Мультиварки для Далекобійників' : locale === 'ru' ? 'Автоварка - Мультиварки для Дальнобойщиков' : locale === 'pl' ? 'Autovarka - Multicookery dla Kierowców TIR' : locale === 'de' ? 'Autovarka - Multikocher für LKW-Fahrer' : 'Autovarka - Multicookers for Truckers'}`,
+      template: `%s | ${templates[locale] || templates.uk}`,
     },
     description: t('description'),
     keywords: t('keywords').split(', '),
-    authors: [{ name: "Автоварка" }],
+    authors: [{ name: 'Автоварка' }],
     robots: {
       index: true,
       follow: true,
@@ -57,12 +74,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     viewport: {
-      width: "device-width",
+      width: 'device-width',
       initialScale: 1,
       maximumScale: 5,
     },
     icons: {
-      icon: "/favicon.ico",
+      icon: '/favicon.ico',
     },
     verification: {
       google: 'google-site-verification-code',
@@ -71,15 +88,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: t('ogTitle'),
       description: t('ogDescription'),
       type: 'website',
-      locale: localeMap[locale] || 'uk_UA',
-      siteName: locale === 'uk' ? 'Автоварка - Мультиварки для Вантажівок' : locale === 'ru' ? 'Автоварка - Мультиварки для Грузовиков' : locale === 'pl' ? 'Autovarka - Multicookery dla Ciężarówek' : locale === 'de' ? 'Autovarka - Multikocher für LKW' : 'Autovarka - Multicookers for Trucks',
-      url: `https://autovarka.com.ua/${locale}`,
+      locale: getOgLocale(locale),
+      siteName: siteNames[locale] || siteNames.uk,
+      url: locale === 'uk' ? 'https://autovarka.com.ua' : `https://autovarka.com.ua/${locale}`,
       images: [
         {
           url: '/images/hero-banner.jpg',
           width: 1200,
           height: 630,
-          alt: locale === 'uk' ? 'Автомобільна мультиварка 12/24/220V для далекобійника - Автоварка' : locale === 'ru' ? 'Автомобильная мультиварка 12/24/220V для дальнобойщика - Автоварка' : locale === 'pl' ? 'Multicooker samochodowy 12/24/220V dla kierowcy TIR - Autovarka' : locale === 'de' ? 'Auto-Multikocher 12/24/220V für LKW-Fahrer - Autovarka' : 'Car Multicooker 12/24/220V for Truckers - Autovarka',
+          alt: ogAlts[locale] || ogAlts.uk,
         },
       ],
     },

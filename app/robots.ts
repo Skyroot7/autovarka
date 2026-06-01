@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = 'https://autovarka.com.ua';
-  
+
   return {
     rules: [
       {
@@ -10,22 +10,20 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: [
           '/admin',
-          '/api',
-          '/admin/*',
-          '/api/*',
+          '/admin/',
+          '/api/',
+          '/cart',
+          '/cart/',
+          '/profile',
+          '/profile/',
+          '/*/cart',
+          '/*/cart/',
+          '/*/profile',
+          '/*/profile/',
         ],
-      },
-      {
-        userAgent: 'Googlebot',
-        allow: '/',
-        disallow: ['/admin', '/api'],
-      },
-      {
-        userAgent: 'Bingbot',
-        allow: '/',
-        disallow: ['/admin', '/api'],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   };
 }
