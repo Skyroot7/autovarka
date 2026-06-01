@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { getTranslations } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -11,6 +11,12 @@ import { getOrganizationSchema, getWebSiteSchema } from "@/lib/structuredData";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { generateAlternates, getOgLocale } from "@/lib/seo";
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -73,16 +79,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         'max-snippet': -1,
       },
     },
-    viewport: {
-      width: 'device-width',
-      initialScale: 1,
-      maximumScale: 5,
-    },
     icons: {
       icon: '/favicon.ico',
-    },
-    verification: {
-      google: 'google-site-verification-code',
     },
     openGraph: {
       title: t('ogTitle'),
