@@ -46,21 +46,34 @@ export async function generateMetadata(
     }
   };
 
+  const titleSuffixes: Record<string, string> = {
+    uk: `${product.price}₴ | Купити з Доставкою | Автоварка`,
+    ru: `${product.price}₴ | Купить с Доставкой | Автоварка`,
+    en: `${product.price}₴ | Buy with Delivery | Autovarka`,
+    pl: `${product.price}₴ | Kup z Dostawą | Autovarka`,
+    de: `${product.price}₴ | Kaufen mit Lieferung | Autovarka`,
+  };
+
+  const descSuffixes: Record<string, string> = {
+    uk: '✅ Гарантія 6 місяців. 🚚 Доставка по Україні. ⚡ Для далекобійників та вантажівок.',
+    ru: '✅ Гарантия 6 месяцев. 🚚 Доставка по Украине. ⚡ Для дальнобойщиков и грузовиков.',
+    en: '✅ 6 months warranty. 🚚 Delivery across Ukraine. ⚡ For truck drivers.',
+    pl: '✅ Gwarancja 6 miesięcy. 🚚 Dostawa po Ukrainie. ⚡ Dla kierowców TIR.',
+    de: '✅ 6 Monate Garantie. 🚚 Lieferung in der Ukraine. ⚡ Für LKW-Fahrer.',
+  };
+
+  const keywordsByLocale: Record<string, string[]> = {
+    uk: ['мультиварка 24 вольта', 'автомобільна мультиварка', 'мультиварка для далекобійника', 'мультиварка 12/24/220', 'мультиварка для вантажівки', getName(), `${getName()} купити`, `${getName()} ціна`],
+    ru: ['мультиварка 24 вольта', 'автомобильная мультиварка', 'мультиварка для дальнобойщика', 'мультиварка 12/24/220', 'мультиварка для грузовика', getName(), `${getName()} купить`, `${getName()} цена`],
+    en: ['car multicooker', 'truck multicooker', '24v multicooker', 'multicooker for truck driver', getName(), `buy ${getName()}`, `${getName()} price`],
+    pl: ['multicooker samochodowy', 'multicooker 24v', 'multicooker dla kierowcy TIR', getName(), `kup ${getName()}`],
+    de: ['Auto-Multikocher', 'LKW-Multikocher', '24V Multikocher', 'Multikocher für LKW-Fahrer', getName()],
+  };
+
   return {
-    title: `${getName()} - ${product.price}₴ | Купити з Доставкою | Автоварка`,
-    description: `🚗 ${getName()} - ${product.price}₴. ${getDescription().substring(0, 100)}... ✅ Гарантія 6 місяців. 🚚 Доставка по Україні. ⚡ Для далекобійників та вантажівок.`,
-    keywords: [
-      'мультиварка 24 вольта',
-      'автомобильная мультиварка',
-      'мультиварка для дальнобойщика',
-      'мультиварка 12/24/220',
-      'мультиварка автомобільна',
-      'мультиварка для вантажівки',
-      'мультиварка для фури',
-      getName(),
-      `${getName()} купити`,
-      `${getName()} ціна`
-    ],
+    title: `${getName()} - ${titleSuffixes[locale] || titleSuffixes.uk}`,
+    description: `${getName()} - ${product.price}₴. ${getDescription().substring(0, 100)}... ${descSuffixes[locale] || descSuffixes.uk}`,
+    keywords: keywordsByLocale[locale] || keywordsByLocale.uk,
     openGraph: {
       title: getName(),
       description: getDescription().substring(0, 160),
@@ -95,13 +108,23 @@ export default async function ProductPage({
     notFound();
   }
 
-  // Структурированные данные для SEO
+  const breadcrumbLabels: Record<string, { home: string; catalog: string }> = {
+    uk: { home: 'Головна', catalog: 'Товари' },
+    ru: { home: 'Главная', catalog: 'Товары' },
+    en: { home: 'Home', catalog: 'Products' },
+    pl: { home: 'Strona główna', catalog: 'Produkty' },
+    de: { home: 'Startseite', catalog: 'Produkte' },
+  };
+  const labels = breadcrumbLabels[locale] || breadcrumbLabels.uk;
+
+  const productName = locale === 'en' ? product.nameEn : locale === 'ru' ? product.nameRu : locale === 'pl' ? product.namePl : locale === 'de' ? product.nameDe : product.name;
+
   const productSchema = getProductSchema(product, locale);
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Головна', url: locale === 'uk' ? '/' : `/${locale}` },
-    { name: 'Товари', url: locale === 'uk' ? '/products' : `/${locale}/products` },
+    { name: labels.home, url: locale === 'uk' ? '/' : `/${locale}` },
+    { name: labels.catalog, url: locale === 'uk' ? '/products' : `/${locale}/products` },
     { 
-      name: product.name, 
+      name: productName, 
       url: locale === 'uk' ? `/products/${id}` : `/${locale}/products/${id}` 
     },
   ]);

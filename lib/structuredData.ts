@@ -8,7 +8,12 @@ export function getOrganizationSchema() {
     name: 'Автоварка',
     alternateName: 'Autovarka - Мультиварки для Дальнобійщиків',
     url: 'https://autovarka.com.ua',
-    logo: 'https://autovarka.com.ua/logo.png',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://autovarka.com.ua/images/hero-banner.jpg',
+      width: 1200,
+      height: 630,
+    },
     description: 'Інтернет-магазин автомобільних мультиварок 12/24/220V для далекобійників, вантажівок та фур. Мультиварка 24 вольта від прикурювача. Доставка по всій Україні. Гарантія 6 місяців.',
     slogan: 'Автомобільні мультиварки для далекобійників',
     priceRange: '₴₴',
@@ -104,15 +109,6 @@ export function getProductSchema(product: Product, locale: string = 'uk') {
         },
       },
     },
-    aggregateRating: product.featured
-      ? {
-          '@type': 'AggregateRating',
-          ratingValue: '4.8',
-          reviewCount: '127',
-          bestRating: '5',
-          worstRating: '1',
-        }
-      : undefined,
     warranty: product.specifications.warranty || '6 місяців',
   };
 }

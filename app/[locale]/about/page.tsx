@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { generateAlternates } from '@/lib/seo';
+import { getFAQSchema } from '@/lib/structuredData';
+import StructuredData from '@/components/StructuredData';
 import AboutClient from './AboutClient';
 
 type Props = {
@@ -33,5 +35,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function AboutPage() {
-  return <AboutClient />;
+  const faqSchema = getFAQSchema();
+  return (
+    <>
+      <StructuredData data={[faqSchema]} />
+      <AboutClient />
+    </>
+  );
 }
