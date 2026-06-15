@@ -2,7 +2,8 @@ import { MetadataRoute } from 'next';
 import { getProductsFromFile } from '@/lib/productActions';
 
 const BASE_URL = 'https://autovarka.com.ua';
-const LOCALES = ['uk', 'ru', 'en', 'pl', 'de'];
+// pl/de excluded: Google crawls but does not index them yet (wastes crawl budget)
+const LOCALES = ['uk', 'ru', 'en'];
 
 function getUrl(locale: string, path: string = ''): string {
   const cleanPath = path && !path.startsWith('/') ? `/${path}` : path;

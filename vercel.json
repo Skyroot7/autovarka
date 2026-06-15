@@ -13,6 +13,17 @@
       ],
       "destination": "https://autovarka.com.ua/:path*",
       "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "m.autovarka.com.ua"
+        }
+      ],
+      "destination": "https://autovarka.com.ua/:path*",
+      "permanent": true
     }
   ]
 }

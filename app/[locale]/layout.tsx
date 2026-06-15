@@ -68,6 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t('description'),
     keywords: t('keywords').split(', '),
     authors: [{ name: 'Автоварка' }],
+    alternates: generateAlternates(locale, '/'),
     robots: {
       index: true,
       follow: true,
