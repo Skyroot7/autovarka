@@ -9,7 +9,7 @@ export default createMiddleware({
 });
 
 export const config = {
-  // Обрабатываем все маршруты кроме API, статических файлов и Next.js служебных файлов
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
+  // Exclude API, Next.js internals, and static files with known extensions only
+  matcher: ['/((?!api|_next|_vercel|.*\\.(ico|png|jpg|jpeg|gif|svg|webp|css|js|woff|woff2|ttf|otf|map|xml|txt)).*)']
 };
 
