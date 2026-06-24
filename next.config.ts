@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         hostname: 'autovarka.com.ua',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
     ],
     unoptimized: false,
   },
