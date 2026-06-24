@@ -30,8 +30,13 @@ export async function uploadImage(formData: FormData): Promise<{ success: boolea
     const ext = path.extname(file.name);
     const filename = `products/product-${timestamp}-${randomStr}${ext}`;
 
-    const blob = await put(filename, file, {
+    // Convert File to Buffer — more reliable in Next.js Server Actions
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const blob = await put(filename, buffer, {
       access: 'public',
+      contentType: file.type,
     });
 
     return { success: true, url: blob.url };
