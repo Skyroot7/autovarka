@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         !validText(customer.phone, 40) || !validText(delivery.city, 120) ||
         !validText(delivery.address, 200)) return invalid('Invalid customer or delivery details');
     if (customer.email !== undefined && customer.email !== '' &&
-        (!validText(customer.email, 254) || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(customer.email))) {
+        (!validText(customer.email, 254) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email))) {
       return invalid('Invalid email');
     }
     if (!Array.isArray(items) || items.length === 0 || items.length > 30) return invalid('Invalid items');
