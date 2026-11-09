@@ -138,31 +138,58 @@ export async function PATCH(request: Request) {
   if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const updateData = await request.json();
-    const { orderId, status, fullUpdate } = updateData;
-    
-    // Read existing orders from KV
-    let orders: any[] = (await kv.get('orders')) || [];
-    
-    if (fullUpdate) {
-      // Full order update (for editing)
-      orders = orders.map((order: any) => {
-        if (order.id === orderId) {
-          return {
-            ...updateData,
-            id: orderId, // Keep original ID
-            createdAt: order.createdAt, // Keep original creation date
-            updatedAt: new Date().toISOString(),
-          };
-        }
-        return order;
-      });
+    const invalid = (error: string) => NextResponse.json({ success: false, error }, { status: 400 });
+    if (!updateData || typeof updateData !== 'object' || Array.isArray(updateData) ||
+        typeof updateData.orderId !== 'string' || !updateData.orderId.trim()) return invalid('Invalid order ID');
+
+    const allowedStatuses = ['new', 'processing', 'shipped', 'completed', 'cancelled'];
+    const validText = (value: unknown, max: number) =>
+      typeof value === 'string' && value.trim().length > 0 && value.trim().length <= max;
+    const orders: any[] = (await kv.get('orders')) || [];
+    const index = orders.findIndex(order => order.id === updateData.orderId);
+    if (index === -1) return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 });
+    const previous = orders[index];
+
+    if (updateData.fullUpdate === true) {
+      const { customer, delivery, items, status, paymentMethod, notes, locale } = updateData;
+      if (!allowedStatuses.includes(status) ||
+          !customer || typeof customer !== 'object' ||
+          !validText(customer.name, 100) || !validText(customer.surname, 100) ||
+          !validText(customer.phone, 40) ||
+          (customer.email !== '' && customer.email !== undefined &&
+           (!validText(customer.email, 254) || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(customer.email))) ||
+          !delivery || typeof delivery !== 'object' ||
+          !validText(delivery.city, 120) || !validText(delivery.address, 200) ||
+          typeof paymentMethod !== 'string' || !['cashOnDelivery', 'card', 'prepayment'].includes(paymentMethod) ||
+          typeof notes !== 'string' || notes.length > 2000 ||
+          !['uk', 'ru', 'en', 'pl', 'de'].includes(locale) ||
+          !Array.isArray(items) || items.length < 1 || items.length > 30) return invalid('Invalid order details');
+
+      let total = 0;
+      const safeItems = [];
+      for (const item of items) {
+        if (!item || !validText(item.id, 200) || !validText(item.name, 300) ||
+            !Number.isSafeInteger(item.price) || item.price < 0 ||
+            !Number.isSafeInteger(item.quantity) || item.quantity < 1 || item.quantity > 100 ||
+            typeof item.image !== 'string' || item.image.length > 2000) return invalid('Invalid order item');
+        total += item.price * item.quantity;
+        safeItems.push({ id: item.id, name: item.name, price: item.price, quantity: item.quantity, image: item.image });
+      }
+      if (!Number.isSafeInteger(total) || total <= 0) return invalid('Invalid order total');
+      orders[index] = {
+        ...previous,
+        status,
+        customer: { name: customer.name.trim(), surname: customer.surname.trim(),
+          phone: customer.phone.trim(), email: (customer.email || '').trim() },
+        delivery: { city: delivery.city.trim(), address: delivery.address.trim() },
+        paymentMethod, notes, locale, items: safeItems, total,
+        updatedAt: new Date().toISOString(),
+      };
     } else {
-      // Simple status update
-      orders = orders.map((order: any) => 
-        order.id === orderId ? { ...order, status, updatedAt: new Date().toISOString() } : order
-      );
+      if (!allowedStatuses.includes(updateData.status)) return invalid('Invalid status');
+      orders[index] = { ...previous, status: updateData.status, updatedAt: new Date().toISOString() };
     }
-    
+
     // Save to KV
     await kv.set('orders', orders);
     
