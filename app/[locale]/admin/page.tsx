@@ -24,6 +24,8 @@ export default function AdminPage() {
   const [adminProducts, setAdminProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [savingProduct, setSavingProduct] = useState(false);
+  const [ordersForStats, setOrdersForStats] = useState<Array<{ status: string; total: number; createdAt: string }>>([]);
+  const [ordersStatsError, setOrdersStatsError] = useState(false);
 
   // Проверяем авторизацию при загрузке страницы
   useEffect(() => {
@@ -57,6 +59,43 @@ export default function AdminPage() {
       setLoadingProducts(false);
     }
   };
+
+  // Dashboard totals must come from the orders API, not hard-coded zeroes.
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setOrdersForStats([]);
+      setOrdersStatsError(false);
+      return;
+    }
+    const controller = new AbortController();
+    const loadOrderStats = async () => {
+      try {
+        const response = await fetch('/api/orders', {
+          cache: 'no-store',
+          credentials: 'include',
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error(`Orders API returned ${response.status}`);
+        const data: unknown = await response.json();
+        if (!Array.isArray(data)) throw new Error('Invalid orders response');
+        if (!controller.signal.aborted) {
+          setOrdersForStats(data.map((order: any) => ({
+            status: typeof order.status === 'string' ? order.status : '',
+            total: Number.isFinite(order.total) ? order.total : 0,
+            createdAt: typeof order.createdAt === 'string' ? order.createdAt : '',
+          })));
+          setOrdersStatsError(false);
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error('Failed to load admin order statistics:', error);
+          setOrdersStatsError(true);
+        }
+      }
+    };
+    void loadOrderStats();
+    return () => controller.abort();
+  }, [isLoggedIn]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,13 +176,17 @@ export default function AdminPage() {
     }
   };
 
+  const completedOrders = ordersForStats.filter(order => order.status === 'completed');
+  const today = new Date().toDateString();
   const stats = {
     totalProducts: adminProducts.length,
-    totalOrders: 0,
-    totalRevenue: 0,
-    pendingOrders: 0,
-    processingOrders: 0,
-    todayRevenue: 0
+    totalOrders: ordersForStats.length,
+    totalRevenue: completedOrders.reduce((sum, order) => sum + order.total, 0),
+    pendingOrders: ordersForStats.filter(order => order.status === 'new').length,
+    processingOrders: ordersForStats.filter(order => order.status === 'processing').length,
+    todayRevenue: completedOrders
+      .filter(order => order.createdAt && new Date(order.createdAt).toDateString() === today)
+      .reduce((sum, order) => sum + order.total, 0),
   };
 
   // Показываем загрузку при проверке авторизации
@@ -325,6 +368,11 @@ export default function AdminPage() {
         {/* Dashboard Tab */}
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
+            {ordersStatsError && (
+              <p role="alert" className="rounded-lg bg-red-50 p-4 text-red-700">
+                Не удалось загрузить статистику заказов. Обновите страницу.
+              </p>
+            )}
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
