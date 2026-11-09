@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { checkAuth } from '@/lib/auth';
 
 interface OrderItem {
   id: string;
@@ -62,12 +63,10 @@ export default function AdminOrdersPage() {
 
   // Check login status
   useEffect(() => {
-    const adminLoggedIn = localStorage.getItem('adminLoggedIn');
-    if (adminLoggedIn === 'true') {
-      setIsLoggedIn(true);
-    } else {
-      router.push('/uk/admin');
-    }
+    checkAuth().then(authenticated => {
+      if (authenticated) setIsLoggedIn(true);
+      else router.push('/admin');
+    });
   }, [router]);
 
   useEffect(() => {

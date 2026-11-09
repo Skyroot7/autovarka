@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
+import { isAdminAuthenticated } from '@/lib/adminAuth';
 
 const KV_ANALYTICS_KEY = 'analytics_settings';
 
@@ -17,6 +18,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const body = await request.json();
     let { googleAnalyticsId, googleTagManagerId } = body;

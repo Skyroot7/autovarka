@@ -4,6 +4,7 @@ import { Product } from './products';
 import fs from 'fs/promises';
 import path from 'path';
 import { kv } from '@vercel/kv';
+import { isAdminAuthenticated } from './adminAuth';
 
 const PRODUCTS_FILE = path.join(process.cwd(), 'lib', 'productsData.json');
 const KV_PRODUCTS_KEY = 'products';
@@ -76,6 +77,7 @@ function generateSlug(name: string): string {
 
 // Создание нового товара
 export async function createProduct(productData: Omit<Product, 'id'>): Promise<{ success: boolean; product?: Product; error?: string }> {
+  if (!(await isAdminAuthenticated())) return { success: false, error: 'Unauthorized' };
   try {
     const products = await getProductsFromFile();
     
@@ -107,6 +109,7 @@ export async function createProduct(productData: Omit<Product, 'id'>): Promise<{
 
 // Обновление товара
 export async function updateProduct(id: string, productData: Partial<Product>): Promise<{ success: boolean; product?: Product; error?: string }> {
+  if (!(await isAdminAuthenticated())) return { success: false, error: 'Unauthorized' };
   try {
     console.log('🔄 Обновление товара:', id);
     console.log('📦 Данные для обновления:', productData);
@@ -137,6 +140,7 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
 
 // Удаление товара
 export async function deleteProduct(id: string): Promise<{ success: boolean; error?: string }> {
+  if (!(await isAdminAuthenticated())) return { success: false, error: 'Unauthorized' };
   try {
     const products = await getProductsFromFile();
     const filteredProducts = products.filter(p => p.id !== id);

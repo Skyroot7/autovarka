@@ -81,6 +81,15 @@ export default function CartPage() {
       
       const result = await response.json();
       
+      if (result.dryRun) {
+        if (result.success) {
+          alert(`Тест успішний! Дані замовлення перевірено. Сума: ${result.validatedTotal} ₴. Замовлення не створено, повідомлення не надіслані.`);
+        } else {
+          alert('Тест не пройдено: ' + (result.error || 'Помилка перевірки'));
+        }
+        return;
+      }
+
       if (result.success) {
         alert(`Замовлення ${result.order.id} успішно відправлено! Ми зв'яжемося з вами найближчим часом.`);
         clearCart();
