@@ -89,6 +89,18 @@ export async function POST(request: Request) {
       locale,
     };
 
+    // Preview deployments share storage with production in some configurations.
+    // Validate the full checkout payload, but never create an order or send
+    // customer notifications from a Vercel Preview deployment.
+    if (process.env.VERCEL_ENV === 'preview') {
+      return NextResponse.json({
+        success: true,
+        dryRun: true,
+        validatedTotal: total,
+        validatedItems: trustedItems.map(({ id, quantity, price }) => ({ id, quantity, price })),
+      });
+    }
+
     // Existing admin UI reads the orders array. Keep its storage format unchanged.
     const orders: any[] = (await kv.get('orders')) || [];
     orders.unshift(orderWithMetadata);
