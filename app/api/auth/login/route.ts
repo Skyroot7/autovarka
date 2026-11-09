@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         // Устанавливаем cookie с токеном
         response.cookies.set('admin_session', sessionToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
+          secure: false, // Development-only fallback; production is rejected above.
           sameSite: 'strict',
           maxAge: 86400, // 24 часа
           path: '/',
