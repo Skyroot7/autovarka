@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
+import { isAdminAuthenticated } from '@/lib/adminAuth';
 import { kv } from '@vercel/kv';
 import { sendOrderEmail } from '@/lib/emailService';
 import { sendOrderNotification } from '@/lib/telegramService';
 
 export async function GET() {
+  if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const orders: any[] = (await kv.get('orders')) || [];
     return NextResponse.json(orders);
@@ -67,6 +69,7 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const updateData = await request.json();
     const { orderId, status, fullUpdate } = updateData;
@@ -105,6 +108,7 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const { orderId } = await request.json();
     

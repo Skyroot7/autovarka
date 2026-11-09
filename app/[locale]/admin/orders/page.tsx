@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { checkAuth } from '@/lib/auth';
 
 interface OrderItem {
   id: string;
@@ -60,14 +61,15 @@ export default function AdminOrdersPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editedOrder, setEditedOrder] = useState<Order | null>(null);
 
-  // Check login status
+  // The server session is the source of truth, not a per-browser localStorage flag.
   useEffect(() => {
-    const adminLoggedIn = localStorage.getItem('adminLoggedIn');
-    if (adminLoggedIn === 'true') {
-      setIsLoggedIn(true);
-    } else {
-      router.push('/uk/admin');
-    }
+    let active = true;
+    checkAuth().then(authenticated => {
+      if (!active) return;
+      if (authenticated) setIsLoggedIn(true);
+      else router.replace('/admin');
+    });
+    return () => { active = false; };
   }, [router]);
 
   useEffect(() => {
@@ -87,8 +89,6 @@ export default function AdminOrdersPage() {
         throw new Error(`Failed to fetch orders: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Orders received:', data);
-      console.log('Number of orders:', data.length);
       setOrders(data);
     } catch (error) {
       console.error('Error fetching orders:', error);
