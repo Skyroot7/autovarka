@@ -157,7 +157,7 @@ export async function PATCH(request: Request) {
           !validText(customer.name, 100) || !validText(customer.surname, 100) ||
           !validText(customer.phone, 40) ||
           (customer.email !== '' && customer.email !== undefined &&
-           (!validText(customer.email, 254) || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(customer.email))) ||
+           (!validText(customer.email, 254) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email))) ||
           !delivery || typeof delivery !== 'object' ||
           !validText(delivery.city, 120) || !validText(delivery.address, 200) ||
           typeof paymentMethod !== 'string' || !['cashOnDelivery', 'card', 'prepayment'].includes(paymentMethod) ||
