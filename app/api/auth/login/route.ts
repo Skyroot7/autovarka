@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
-import { randomBytes, pbkdf2Sync } from 'crypto';
+import { randomBytes, pbkdf2Sync, timingSafeEqual } from 'crypto';
 
 // Функция для хеширования пароля
 function hashPassword(password: string, salt: string): string {
@@ -10,7 +10,9 @@ function hashPassword(password: string, salt: string): string {
 // Функция для проверки пароля
 function verifyPassword(password: string, hash: string, salt: string): boolean {
   const hashVerify = hashPassword(password, salt);
-  return hash === hashVerify;
+  const expected = Buffer.from(hash, 'hex');
+  const actual = Buffer.from(hashVerify, 'hex');
+  return expected.length === actual.length && timingSafeEqual(expected, actual);
 }
 
 // Функция для генерации токена сессии
@@ -27,9 +29,13 @@ export async function POST(request: NextRequest) {
     const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
     const ADMIN_PASSWORD_SALT = process.env.ADMIN_PASSWORD_SALT;
 
-    // Если хеш не задан, используем плейн пароль (только для разработки!)
+    // Never allow default credentials in production.
     if (!ADMIN_PASSWORD_HASH || !ADMIN_PASSWORD_SALT) {
-      const ADMIN_PASSWORD_PLAIN = process.env.ADMIN_PASSWORD || 'admin123';
+      if (process.env.NODE_ENV === 'production') {
+        return NextResponse.json({ success: false, message: 'Admin credentials not configured' }, { status: 503 });
+      }
+      const ADMIN_PASSWORD_PLAIN = process.env.ADMIN_PASSWORD;
+      if (!ADMIN_PASSWORD_PLAIN) return NextResponse.json({ success: false, message: 'Admin credentials not configured' }, { status: 503 });
       
       if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD_PLAIN) {
         const sessionToken = generateSessionToken();
