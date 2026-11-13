@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { products, Product } from '@/lib/products';
-import { getProductsFromFile, createProduct, updateProduct, deleteProduct } from '@/lib/productActions';
+import type { Product } from '@/lib/products';
+import { getAdminProducts, createProduct, updateProduct, deleteProduct } from '@/lib/productActions';
 import { checkAuth, login as authLogin, logout as authLogout } from '@/lib/auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PencilIcon, TrashIcon, PlusIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
 import ProductForm from '@/components/admin/ProductForm';
 
 export default function AdminPage() {
@@ -23,6 +23,7 @@ export default function AdminPage() {
   const [showProductForm, setShowProductForm] = useState(false);
   const [adminProducts, setAdminProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
+  const [productsError, setProductsError] = useState<string | null>(null);
   const [savingProduct, setSavingProduct] = useState(false);
   const [ordersForStats, setOrdersForStats] = useState<Array<{ status: string; total: number; createdAt: string }>>([]);
   const [ordersStatsError, setOrdersStatsError] = useState(false);
@@ -49,12 +50,14 @@ export default function AdminPage() {
 
   const loadProducts = async () => {
     setLoadingProducts(true);
+    setProductsError(null);
     try {
-      const data = await getProductsFromFile();
-      setAdminProducts(data.length > 0 ? data : products);
+      const data = await getAdminProducts();
+      setAdminProducts(data);
     } catch (error) {
       console.error('Error loading products:', error);
-      setAdminProducts(products);
+      setAdminProducts([]);
+      setProductsError('Каталог тимчасово недоступний. Оновіть дані перед редагуванням.');
     } finally {
       setLoadingProducts(false);
     }
@@ -79,9 +82,9 @@ export default function AdminPage() {
         const data: unknown = await response.json();
         if (!Array.isArray(data)) throw new Error('Invalid orders response');
         if (!controller.signal.aborted) {
-          setOrdersForStats(data.map((order: any) => ({
+          setOrdersForStats(data.map((order: { status?: unknown; total?: number; createdAt?: unknown }) => ({
             status: typeof order.status === 'string' ? order.status : '',
-            total: Number.isFinite(order.total) ? order.total : 0,
+            total: typeof order.total === 'number' && Number.isFinite(order.total) ? order.total : 0,
             createdAt: typeof order.createdAt === 'string' ? order.createdAt : '',
           })));
           setOrdersStatsError(false);
@@ -531,6 +534,7 @@ export default function AdminPage() {
                   </p>
                 </div>
                 <button
+                  disabled={loadingProducts || Boolean(productsError)}
                   onClick={() => {
                     setEditingProduct(null);
                     setShowProductForm(true);
@@ -547,6 +551,11 @@ export default function AdminPage() {
               <div className="flex flex-col justify-center items-center py-20">
                 <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mb-4"></div>
                 <p className="text-gray-600 font-medium">Загрузка товаров...</p>
+              </div>
+            ) : productsError ? (
+              <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-800">
+                <p>{productsError}</p>
+                <button type="button" onClick={() => void loadProducts()} className="mt-3 font-semibold underline">Повторити завантаження</button>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

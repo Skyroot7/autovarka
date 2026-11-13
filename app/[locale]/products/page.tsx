@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import { generateAlternates } from '@/lib/seo';
 import { getItemListSchema } from '@/lib/structuredData';
-import { getProductsFromFile } from '@/lib/productActions';
+import { getPublicCatalog } from '@/lib/catalog';
+import { connection } from 'next/server';
 import StructuredData from '@/components/StructuredData';
 import ProductsClient from './ProductsClient';
 
@@ -37,13 +38,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductsPage({ params }: Props) {
   const { locale } = await params;
-  const products = await getProductsFromFile();
+  await connection();
+  const { products } = await getPublicCatalog();
   const itemListSchema = getItemListSchema(products, locale);
 
   return (
     <>
       <StructuredData data={[itemListSchema]} />
-      <ProductsClient />
+      <ProductsClient initialProducts={products} />
     </>
   );
 }

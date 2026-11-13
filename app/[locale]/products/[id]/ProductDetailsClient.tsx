@@ -1,33 +1,33 @@
 'use client';
 
 import { useTranslations, useLocale } from 'next-intl';
-import { Product, products } from '@/lib/products';
+import type { Product } from '@/lib/products';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cartStore';
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
 import SafeImage from '@/components/SafeImage';
 import { translateSpecValue } from '@/lib/specTranslations';
 import VideoSection from '@/components/VideoSection';
 
-export default function ProductDetailsClient({ product }: { product: Product }) {
+export default function ProductDetailsClient({ product, relatedProducts }: { product: Product; relatedProducts: Product[] }) {
   const t = useTranslations('product');
   const tCommon = useTranslations('common');
   const tHome = useTranslations('home');
   const locale = useLocale();
   const router = useRouter();
   const addItem = useCartStore(state => state.addItem);
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selection, setSelection] = useState({ productId: product.id, index: 0 });
+  const selectedImage = selection.productId === product.id ? selection.index : 0;
   const [quantity, setQuantity] = useState(1);
-  const [currentImageUrl, setCurrentImageUrl] = useState(product.images[0]);
+  const currentImageUrl = product.images[selectedImage] || product.images[0];
 
   const handleImageClick = (idx: number) => {
-    setSelectedImage(idx);
-    setCurrentImageUrl(product.images[idx]);
+    setSelection({ productId: product.id, index: idx });
   };
 
   const handleAddToCart = () => {
+    if (!product.inStock) return;
     const productName = locale === 'en' ? product.nameEn : 
                         locale === 'ru' ? product.nameRu : 
                         locale === 'pl' ? product.namePl : 
@@ -44,6 +44,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
   };
 
   const handleBuyNow = () => {
+    if (!product.inStock) return;
     const productName = locale === 'en' ? product.nameEn : 
                         locale === 'ru' ? product.nameRu : 
                         locale === 'pl' ? product.namePl : 
@@ -92,6 +93,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                 <SafeImage
                   key={currentImageUrl}
                   src={currentImageUrl}
+                  preload={selectedImage === 0}
                   alt={`${locale === 'en' ? product.nameEn : locale === 'ru' ? product.nameRu : locale === 'pl' ? product.namePl : locale === 'de' ? product.nameDe : product.name} - автомобільна мультиварка ${product.specifications.voltage || ''} ${product.specifications.capacity || ''} для далекобійника та вантажівки`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -157,8 +159,8 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
               </div>
 
               <div className="mb-6">
-                <div className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold mb-4">
-                  ✓ {t('inStock')}
+                <div className={`inline-block px-4 py-2 rounded-full font-semibold mb-4 ${product.inStock ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>
+                  {product.inStock ? `✓ ${t('inStock')}` : t('outOfStock')}
                 </div>
               </div>
 
@@ -230,13 +232,15 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
               <div className="space-y-4 max-w-[75%]">
                 <button
                   onClick={handleAddToCart}
-                  className="w-full bg-orange-500 text-white py-4 rounded-lg font-bold text-lg hover:bg-orange-600 transition-colors"
+                  disabled={!product.inStock}
+                  className="w-full bg-orange-500 text-white py-4 rounded-lg font-bold text-lg hover:bg-orange-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {tCommon('addToCart')} ({quantity} шт.)
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  className="w-full bg-orange-100 text-orange-600 py-4 rounded-lg font-bold text-lg hover:bg-orange-200 transition-colors"
+                  disabled={!product.inStock}
+                  className="w-full bg-orange-100 text-orange-600 py-4 rounded-lg font-bold text-lg hover:bg-orange-200 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {tCommon('buyNow')}
                 </button>
@@ -297,7 +301,8 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
         {product.videoUrl && (
           <div className="mt-12">
             <VideoSection 
-              videoUrl={product.videoUrl} 
+              videoUrl={product.videoUrl}
+              posterSrc={product.images[0]}
               title={
                 locale === 'en' ? product.videoTitleEn :
                 locale === 'ru' ? product.videoTitleRu :
@@ -315,14 +320,12 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
             {t('related')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {products
+            {relatedProducts
               .filter(p => p.id !== product.id)
               .slice(0, 3)
               .map((relatedProduct) => (
-                <motion.div
+                <div
                   key={relatedProduct.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
                   className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
                 >
                   <Link href={locale === 'uk' ? `/products/${relatedProduct.id}` : `/${locale}/products/${relatedProduct.id}`}>
@@ -347,7 +350,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                       </div>
                     </div>
                   </Link>
-                </motion.div>
+                </div>
               ))}
           </div>
         </div>

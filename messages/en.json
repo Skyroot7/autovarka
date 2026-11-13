@@ -54,6 +54,7 @@
     "heroSubtext": "Professional multivarks for cars, trucks and buses. Quality cooking on any journey. The best choice for truck drivers and drivers.",
     "deliveryInfo": "Delivery to Ukraine, Poland, Germany, worldwide",
     "videoTitle": "Multivarka 12/24 volts",
+    "playVideo": "Play video",
     "professionalEquipment": "🚀 Professional equipment for drivers",
     "whyChooseUs": "Why Choose Us",
     "feature1": "Extended Warranty",
@@ -93,6 +94,7 @@
     "weight": "Weight",
     "warranty": "Warranty",
     "inStock": "In Stock",
+    "outOfStock": "Out of stock",
     "warrantyTitle": "Product Warranty",
     "warrantyDescription": "Original product with manufacturer's warranty. Free consultation and support."
   },

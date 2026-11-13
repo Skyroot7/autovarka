@@ -1,4 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from 'next/headers';
+import { getPublicCatalog } from '@/lib/catalog';
+import { CATALOG_REQUEST_HEADER } from '@/lib/catalogRoutes';
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -28,10 +31,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Run above app/loading.tsx: an unavailable catalog must fail before a 200
+  // loading shell is streamed. Private/shop-checkout routes do not depend on it.
+  if ((await headers()).get(CATALOG_REQUEST_HEADER) === '1') {
+    await getPublicCatalog();
+  }
   return children;
 }

@@ -1,32 +1,19 @@
-'use client';
-
-import { useTranslations, useLocale } from 'next-intl';
+import { getTranslations, getLocale } from 'next-intl/server';
 import Link from 'next/link';
-import { useProducts } from '@/lib/useProducts';
-import { motion } from 'framer-motion';
+import ImageProtection from '@/components/ImageProtection';
+import type { Product } from '@/lib/products';
 import SafeImage from '@/components/SafeImage';
 import VideoSection from '@/components/VideoSection';
-import { useEffect, useState } from 'react';
 
-export default function HomeClient() {
-  const t = useTranslations('home');
-  const tCommon = useTranslations('common');
-  const locale = useLocale();
-  const { products } = useProducts();
+type HomeClientProps = {
+  initialProducts: Product[];
+  videoSettings: { homePageVideoUrl: string; homePageVideoTitle: string };
+};
+
+export default async function HomeClient({ initialProducts, videoSettings }: HomeClientProps) {
+  const [t, tCommon, locale] = await Promise.all([getTranslations('home'), getTranslations('common'), getLocale()]);
+  const products = initialProducts;
   const featuredProducts = products.filter(p => p.featured).sort((a, b) => a.price - b.price);
-  const [videoSettings, setVideoSettings] = useState<{ homePageVideoUrl: string; homePageVideoTitle: string }>({ homePageVideoUrl: '', homePageVideoTitle: '' });
-
-  useEffect(() => {
-    fetch('/api/videos')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch video settings');
-        }
-        return res.json();
-      })
-      .then(data => setVideoSettings(data))
-      .catch(err => console.error('Failed to load video settings:', err));
-  }, []);
 
   return (
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 overflow-x-hidden w-full">
@@ -38,7 +25,7 @@ export default function HomeClient() {
             src="/images/hero-banner.jpg"
             alt={t('heroBannerAlt')}
             fill
-            priority
+            preload
             sizes="100vw"
             className="object-cover object-center"
           />
@@ -47,65 +34,44 @@ export default function HomeClient() {
         {/* Content */}
         <div className="container mx-auto px-4 h-full relative z-10 max-w-full overflow-x-hidden">
           <div className="flex items-center h-full w-full">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+            <div
               className="max-w-2xl w-full pr-2"
             >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
+              <div
                 className="inline-block mb-2 sm:mb-3 bg-orange-500 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-lg"
               >
                 <span className="text-sm md:text-sm font-semibold text-white">{t('professionalEquipment')}</span>
-              </motion.div>
+              </div>
               
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+              <h1
                 className="text-[26px] sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 leading-tight text-white"
                 style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5)' }}
               >
                 {t('title')}
-              </motion.h1>
+              </h1>
               
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
+              <p
                 className="text-[17px] sm:text-lg md:text-xl lg:text-2xl mb-2 sm:mb-3 text-white font-light leading-snug"
                 style={{ textShadow: '1px 1px 6px rgba(0,0,0,0.7), 0 0 15px rgba(0,0,0,0.4)' }}
               >
                 {t('subtitle')}
-              </motion.p>
+              </p>
               
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+            <p
               className="text-[13px] sm:text-sm md:text-base lg:text-lg mb-2 sm:mb-3 text-white max-w-xl leading-relaxed"
               style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}
             >
               {t('heroSubtext')}
-            </motion.p>
+            </p>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
+            <p
               className="text-[13px] sm:text-sm md:text-base lg:text-lg mb-4 sm:mb-6 md:mb-8 text-orange-200 max-w-xl leading-relaxed font-semibold"
               style={{ textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}
             >
               🚚 {t('deliveryInfo')}
-            </motion.p>
+            </p>
               
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
+            <div
               className="flex flex-wrap gap-2 sm:gap-3 md:gap-4"
             >
                 <Link
@@ -123,8 +89,8 @@ export default function HomeClient() {
                 >
                   {tCommon('learnMore')}
                 </Link>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -139,18 +105,15 @@ export default function HomeClient() {
               { icon: '👨‍💼', title: t('feature3'), color: 'from-purple-500 to-purple-600' },
               { icon: '✅', title: t('feature4'), color: 'from-orange-500 to-orange-600' },
             ].map((feature, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="flex items-center gap-3 lg:gap-4 p-4 lg:p-5 rounded-xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:border-orange-200 hover:shadow-md transition-all"
               >
                 <div className={`w-12 h-12 lg:w-14 lg:h-14 flex-shrink-0 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center text-2xl lg:text-3xl shadow-md`}>
                   {feature.icon}
                 </div>
                 <h3 className="text-sm lg:text-base font-bold text-gray-900 leading-tight">{feature.title}</h3>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -180,23 +143,17 @@ export default function HomeClient() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product, index) => (
+            {featuredProducts.map((product) => (
               <Link
                 key={product.id}
                 href={locale === 'uk' ? `/products/${product.id}` : `/${locale}/products/${product.id}`}
                 className="block"
               >
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -8 }}
-                  className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col border-2 border-gray-100 hover:border-orange-200 h-full cursor-pointer"
+                <div
+                  className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl motion-safe:hover:-translate-y-2 transition-all duration-300 flex flex-col border-2 border-gray-100 hover:border-orange-200 h-full cursor-pointer"
                 >
                   <div 
                     className="relative aspect-[4/3] w-full bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden select-none"
-                    onContextMenu={(e) => e.preventDefault()}
                   >
                     <SafeImage
                       src={product.images[0]}
@@ -206,10 +163,7 @@ export default function HomeClient() {
                       className="object-contain p-8 group-hover:scale-110 transition-transform duration-300"
                     />
                     {/* Invisible overlay for extra protection */}
-                    <div className="absolute inset-0 pointer-events-auto" 
-                         onDragStart={(e) => e.preventDefault()} 
-                         onContextMenu={(e) => e.preventDefault()} 
-                    />
+                    <ImageProtection />
                     {product.featured && (
                       <div className="absolute top-4 right-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2 pointer-events-none">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -249,7 +203,7 @@ export default function HomeClient() {
                       </svg>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               </Link>
             ))}
           </div>
@@ -272,11 +226,7 @@ export default function HomeClient() {
         </div>
         
         <div className="container mx-auto px-4 text-center relative z-10 max-w-full overflow-x-hidden">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+          <div
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">
               {t('ctaTitle')}
@@ -305,7 +255,7 @@ export default function HomeClient() {
                 {t('contactUs')}
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

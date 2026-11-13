@@ -1,11 +1,9 @@
-'use client';
-
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { getTranslations, getLocale } from 'next-intl/server';
 
-export default function Footer() {
-  const t = useTranslations('common');
-  const locale = useLocale();
+export default async function Footer() {
+  const t = await getTranslations('common');
+  const locale = await getLocale();
 
   return (
     <footer className="bg-gray-900 text-gray-300 w-full overflow-x-hidden" role="contentinfo">

@@ -1,24 +1,21 @@
-import { getProductsFromFile } from '@/lib/productActions';
+import { getProductById, getPublicCatalog } from '@/lib/catalog';
+import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import ProductDetailsClient from './ProductDetailsClient';
 import StructuredData from '@/components/StructuredData';
 import { getProductSchema, getBreadcrumbSchema } from '@/lib/structuredData';
-import { generateAlternates } from '@/lib/seo';
+import { generateAlternates, getAbsoluteImageUrl } from '@/lib/seo';
 
 // Разрешить динамические параметры
 export const dynamicParams = true;
-
-// Отключить кеширование - всегда показывать актуальные данные
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string; locale: string }> }
 ): Promise<Metadata> {
   const { id, locale } = await params;
-  const products = await getProductsFromFile();
-  const product = products.find(p => p.id === id);
+  await connection();
+  const product = await getProductById(id);
 
   if (!product) {
     return {
@@ -78,7 +75,7 @@ export async function generateMetadata(
       title: getName(),
       description: getDescription().substring(0, 160),
       images: product.images.map(img => ({
-        url: `https://autovarka.com.ua${img}`,
+        url: getAbsoluteImageUrl(img),
         width: 450,
         height: 450,
         alt: getName(),
@@ -89,7 +86,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: getName(),
       description: getDescription().substring(0, 160),
-      images: [`https://autovarka.com.ua${product.images[0]}`],
+      images: product.images[0] ? [getAbsoluteImageUrl(product.images[0])] : [],
     },
     alternates: generateAlternates(locale, `/products/${id}`),
   };
@@ -101,12 +98,13 @@ export default async function ProductPage({
   params: Promise<{ id: string; locale: string }> 
 }) {
   const { id, locale } = await params;
-  const products = await getProductsFromFile();
-  const product = products.find(p => p.id === id);
+  await connection();
+  const product = await getProductById(id);
 
   if (!product) {
     notFound();
   }
+  const { products } = await getPublicCatalog();
 
   const breadcrumbLabels: Record<string, { home: string; catalog: string }> = {
     uk: { home: 'Головна', catalog: 'Товари' },
@@ -132,7 +130,7 @@ export default async function ProductPage({
   return (
     <>
       <StructuredData data={[productSchema, breadcrumbSchema]} />
-      <ProductDetailsClient product={product} />
+      <ProductDetailsClient product={product} relatedProducts={products.filter(item => item.id !== id).slice(0, 3)} />
     </>
   );
 }

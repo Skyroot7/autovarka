@@ -51,7 +51,7 @@ export async function uploadImage(formData: FormData): Promise<{ success: boolea
  */
 export async function deleteImage(imageUrl: string): Promise<{ success: boolean; error?: string }> {
   try {
-    if (!imageUrl || imageUrl === '/placeholder.jpg') {
+    if (!imageUrl || imageUrl === '/placeholder.jpg' || imageUrl === '/placeholder.svg') {
       return { success: true };
     }
 

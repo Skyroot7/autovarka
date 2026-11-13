@@ -4,16 +4,18 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useProducts } from '@/lib/useProducts';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
+import MotionFeatures from '@/components/MotionFeatures';
+import type { Product } from '@/lib/products';
 import SafeImage from '@/components/SafeImage';
 import { translateSpecValue } from '@/lib/specTranslations';
 
-export default function ProductsClient() {
+export default function ProductsClient({ initialProducts }: { initialProducts: Product[] }) {
   const t = useTranslations('products');
   const tProduct = useTranslations('product');
   const tCommon = useTranslations('common');
   const locale = useLocale();
-  const { products, loading } = useProducts();
+  const { products } = useProducts(initialProducts);
   const [sortBy, setSortBy] = useState<string>('');
   const [filterVoltage, setFilterVoltage] = useState<string>('');
 
@@ -39,11 +41,12 @@ export default function ProductsClient() {
   }
 
   return (
+    <MotionFeatures>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12">
       <div className="container mx-auto px-4">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="mb-12 text-center"
@@ -58,7 +61,7 @@ export default function ProductsClient() {
 
         {/* Filters */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-12 border border-gray-100"
@@ -142,15 +145,10 @@ export default function ProductsClient() {
           </div>
         </motion.div>
 
-        {/* Loading State */}
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent"></div>
-          </div>
-        ) : /* Products Grid */
-        filteredProducts.length === 0 ? (
+        {/* The server-provided grid is visible before hydration. */}
+        {filteredProducts.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={false}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
             className="text-center py-20 bg-white rounded-3xl shadow-xl"
@@ -177,7 +175,7 @@ export default function ProductsClient() {
             {filteredProducts.map((product, index) => (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: Math.min(index * 0.05, 0.3) }}
                 whileHover={{ y: -8 }}
@@ -282,5 +280,6 @@ export default function ProductsClient() {
         )}
       </div>
     </div>
+    </MotionFeatures>
   );
 }

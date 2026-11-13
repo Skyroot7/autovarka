@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { useCartStore } from '@/store/cartStore';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { ShoppingCartIcon, MagnifyingGlassIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useProducts } from '@/lib/useProducts';
 import SafeImage from '@/components/SafeImage';
@@ -15,11 +15,10 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const itemCount = useCartStore(state => state.getItemCount());
-  const { products } = useProducts();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const { products } = useProducts(undefined, searchOpen);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<typeof products>([]);
   const searchRef = useRef<HTMLDivElement>(null);
 
   // Закрытие поиска при клике вне его области
@@ -28,7 +27,6 @@ export default function Header() {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setSearchOpen(false);
         setSearchQuery('');
-        setSearchResults([]);
       }
     };
 
@@ -42,16 +40,10 @@ export default function Header() {
   }, [searchOpen]);
 
   // Функция поиска товаров
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    
-    if (query.trim().length < 2) {
-      setSearchResults([]);
-      return;
-    }
-
-    const lowerQuery = query.toLowerCase();
-    const filtered = products.filter(product => {
+  const searchResults = useMemo(() => {
+    if (searchQuery.trim().length < 2) return [];
+    const lowerQuery = searchQuery.toLowerCase();
+    return products.filter(product => {
       const name = locale === 'en' ? product.nameEn : 
                    locale === 'ru' ? product.nameRu : 
                    locale === 'pl' ? product.namePl : 
@@ -66,15 +58,15 @@ export default function Header() {
              description.toLowerCase().includes(lowerQuery);
     });
 
-    setSearchResults(filtered);
-  };
+  }, [products, searchQuery, locale]);
+
+  const handleSearch = (query: string) => setSearchQuery(query);
 
   // Переход к товару
   const handleProductClick = (productId: string) => {
     router.push(locale === 'uk' ? `/products/${productId}` : `/${locale}/products/${productId}`);
     setSearchOpen(false);
     setSearchQuery('');
-    setSearchResults([]);
   };
 
   // Функция для получения пути без locale
@@ -239,7 +231,6 @@ export default function Header() {
                 <button 
                   onClick={() => {
                     setSearchQuery('');
-                    setSearchResults([]);
                   }}
                   className="px-2 py-2 hover:bg-white/10 transition-colors"
                   aria-label="Очистити пошук"

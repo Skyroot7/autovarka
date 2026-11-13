@@ -2,9 +2,6 @@ import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 type Props = {
   children: ReactNode;
   params: Promise<{ locale: string }>;

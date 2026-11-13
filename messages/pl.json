@@ -54,6 +54,7 @@
     "heroSubtext": "Profesjonalne multywarki do samochodów, ciężarówek i autobusów. Jakościowe gotowanie w każdej podróży. Najlepszy wybór dla kierowcy ciężarówki i kierowcy.",
     "deliveryInfo": "Dostawa na Ukrainę, Polskę, Niemcy, za granicę",
     "videoTitle": "Multywarka 12/24 woltów",
+    "playVideo": "Odtwórz wideo",
     "professionalEquipment": "🚀 Profesjonalny sprzęt dla kierowców",
     "whyChooseUs": "Dlaczego wybierać nas",
     "feature1": "Rozszerzona gwarancja",
@@ -93,6 +94,7 @@
     "weight": "Waga",
     "warranty": "Gwarancja",
     "inStock": "W magazynie",
+    "outOfStock": "Brak w magazynie",
     "warrantyTitle": "Gwarancja produktu",
     "warrantyDescription": "Oryginalny produkt z gwarancją producenta. Bezpłatne konsultacje i wsparcie."
   },

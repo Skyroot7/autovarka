@@ -3,7 +3,6 @@ import { getTranslations } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ReactNode } from 'react';
-import { Inter } from "next/font/google";
 import "../globals.css";
 import Analytics from "@/components/Analytics";
 import StructuredData from "@/components/StructuredData";
@@ -17,14 +16,6 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
 };
-
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-const inter = Inter({
-  subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
-});
 
 type Props = {
   children: ReactNode;
@@ -116,7 +107,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   
   return (
     <html lang={locale}>
-      <body className={`${inter.variable} antialiased`}>
+      <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
           <StructuredData data={[organizationSchema, websiteSchema]} />
           <Analytics />
