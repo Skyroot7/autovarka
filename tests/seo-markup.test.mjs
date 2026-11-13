@@ -115,3 +115,18 @@ test('a later product render emits its own current commercial data', () => {
   assert.equal(parseSchemas(second)[0].offers.price, changed.price);
   assert.equal(parseSchemas(second)[0].offers.availability, 'https://schema.org/OutOfStock');
 });
+
+test('catalog availability guard includes only public home/catalog/product routes', () => {
+  const { isCatalogPage } = loadSource('lib/catalogRoutes.ts');
+  for (const prefix of ['', '/uk', '/ru', '/en', '/pl', '/de']) {
+    for (const suffix of ['', '/', '/products', '/products/item']) {
+      assert.equal(isCatalogPage(prefix + suffix), true, prefix + suffix);
+    }
+    for (const suffix of ['/cart', '/admin', '/admin/orders', '/profile', '/contacts', '/about']) {
+      assert.equal(isCatalogPage(prefix + suffix), false, prefix + suffix);
+    }
+  }
+  for (const path of ['/api/orders', '/products-other', '/sitemap.xml', '/fr/products']) {
+    assert.equal(isCatalogPage(path), false, path);
+  }
+});

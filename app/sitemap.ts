@@ -1,5 +1,8 @@
 import { MetadataRoute } from 'next';
-import { getProductsFromFile } from '@/lib/productActions';
+import { getPublicCatalog } from '@/lib/catalog';
+
+// Never persist a partial sitemap generated during a storage outage.
+export const dynamic = 'force-dynamic';
 
 const BASE_URL = 'https://autovarka.com.ua';
 const LOCALES = ['uk', 'ru', 'en', 'pl', 'de'];
@@ -13,10 +16,9 @@ function getUrl(locale: string, path: string = ''): string {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
-
-  // Получаем актуальные товары из productsData.json (включая добавленные через админку)
-  const products = await getProductsFromFile();
+  // A recent, validated snapshot is acceptable during a short outage. If no
+  // trustworthy snapshot exists, fail the request rather than drop all items.
+  const { products } = await getPublicCatalog();
 
   // Статические страницы (без cart и profile — они приватные)
   const staticRoutes = ['', '/products', '/about', '/contacts'];
@@ -26,7 +28,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     staticRoutes.forEach(route => {
       staticPages.push({
         url: getUrl(locale, route),
-        lastModified: now,
         changeFrequency: route === '' ? 'daily' : 'weekly',
         priority: route === '' ? 1.0 : route === '/products' ? 0.9 : 0.8,
       });
@@ -39,7 +40,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     products.forEach(product => {
       productPages.push({
         url: getUrl(locale, `/products/${product.id}`),
-        lastModified: now,
         changeFrequency: 'weekly',
         priority: product.featured ? 0.8 : 0.7,
       });

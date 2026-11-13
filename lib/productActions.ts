@@ -1,56 +1,45 @@
 'use server';
 
-import { Product } from './products';
-import fs from 'fs/promises';
-import path from 'path';
+import type { Product } from './products';
 import { kv } from '@vercel/kv';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { getPublicCatalog, readFreshCatalog } from './catalog';
+import { CATALOG_CACHE_TAG, validateCatalog } from './catalogPolicy';
+import { isAdminAuthenticated } from './adminAuth';
 
-const PRODUCTS_FILE = path.join(process.cwd(), 'lib', 'productsData.json');
-const KV_PRODUCTS_KEY = 'products';
-
-// Загрузка товаров (сначала из KV, если нет - из файла)
+// Keep the existing public read API; editing uses an authenticated live action.
 export async function getProductsFromFile(): Promise<Product[]> {
-  try {
-    // Пробуем загрузить из Vercel KV
-    const productsFromKV: Product[] | null = await kv.get(KV_PRODUCTS_KEY);
-    
-    if (productsFromKV && Array.isArray(productsFromKV) && productsFromKV.length > 0) {
-      console.log(`✅ Загружено ${productsFromKV.length} товаров из Vercel KV`);
-      return productsFromKV;
-    }
-    
-    // Если в KV нет данных, загружаем из файла и сохраняем в KV
-    console.log('📂 Загрузка товаров из файла...');
-    const data = await fs.readFile(PRODUCTS_FILE, 'utf-8');
-    const products = JSON.parse(data);
-    
-    // Сохраняем в KV для будущего использования
-    if (products.length > 0) {
-      await kv.set(KV_PRODUCTS_KEY, products);
-      console.log(`✅ Загружено ${products.length} товаров из файла и сохранено в KV`);
-    }
-    
-    return products;
-  } catch (error) {
-    console.error('❌ Ошибка чтения товаров:', error);
-    return [];
-  }
+  return (await getPublicCatalog()).products;
 }
 
-// Сохранение товаров в Vercel KV
+export async function getAdminProducts(): Promise<Product[]> {
+  return readProductsForMutation();
+}
+
+async function readProductsForMutation(): Promise<Product[]> {
+  if (!await isAdminAuthenticated()) throw new Error('Необхідна авторизація адміністратора');
+  // Never write an old cached/backup catalog over current KV contents.
+  return (await readFreshCatalog()).products;
+}
+
 async function saveProductsToKV(products: Product[]): Promise<void> {
-  try {
-    // Проверяем, что данные валидны
-    if (!Array.isArray(products)) {
-      throw new Error('Products must be an array');
+  const validated = validateCatalog(products);
+  await kv.set('products', validated);
+  // Expire immediately, including other instances that share the Next cache.
+  // These operations concern only public catalog data, never orders or sessions.
+  for (const invalidate of [
+    () => revalidateTag(CATALOG_CACHE_TAG, { expire: 0 }),
+    () => revalidatePath('/sitemap.xml'),
+    () => revalidatePath('/[locale]', 'layout'),
+  ]) {
+    try {
+      invalidate();
+    } catch {
+      // The write is already committed. Reporting failure here can cause an
+      // administrator to retry a successful create and duplicate the product.
+      // Public reads still enforce the independent 60-second freshness limit.
+      console.error('Product saved, but public catalog cache invalidation failed.');
     }
-    
-    // Сохраняем в Vercel KV
-    await kv.set(KV_PRODUCTS_KEY, products);
-    console.log(`✅ Сохранено ${products.length} товаров в Vercel KV`);
-  } catch (error) {
-    console.error('❌ Ошибка сохранения в KV:', error);
-    throw error;
   }
 }
 
@@ -77,10 +66,10 @@ function generateSlug(name: string): string {
 // Создание нового товара
 export async function createProduct(productData: Omit<Product, 'id'>): Promise<{ success: boolean; product?: Product; error?: string }> {
   try {
-    const products = await getProductsFromFile();
+    const products = await readProductsForMutation();
     
     // Генерация ID на основе названия
-    let baseSlug = generateSlug(productData.name);
+    const baseSlug = generateSlug(productData.name);
     let newId = baseSlug;
     let counter = 1;
     
@@ -109,9 +98,8 @@ export async function createProduct(productData: Omit<Product, 'id'>): Promise<{
 export async function updateProduct(id: string, productData: Partial<Product>): Promise<{ success: boolean; product?: Product; error?: string }> {
   try {
     console.log('🔄 Обновление товара:', id);
-    console.log('📦 Данные для обновления:', productData);
     
-    const products = await getProductsFromFile();
+    const products = await readProductsForMutation();
     const index = products.findIndex(p => p.id === id);
     
     if (index === -1) {
@@ -138,7 +126,7 @@ export async function updateProduct(id: string, productData: Partial<Product>): 
 // Удаление товара
 export async function deleteProduct(id: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const products = await getProductsFromFile();
+    const products = await readProductsForMutation();
     const filteredProducts = products.filter(p => p.id !== id);
     
     if (filteredProducts.length === products.length) {
