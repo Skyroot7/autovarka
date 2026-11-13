@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --test tests/*.test.*",
+    "test:browser": "node tests/browser-smoke.mjs",
     "generate-password": "node scripts/generatePasswordHash.js"
   },
   "dependencies": {
