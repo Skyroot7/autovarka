@@ -2,6 +2,15 @@
 
 const BASE_URL = 'https://autovarka.com.ua';
 
+// Uploaded Blob images already have an absolute URL; local images do not.
+export function getAbsoluteImageUrl(image: string): string {
+  const url = new URL(image, BASE_URL);
+  if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+    throw new TypeError('Product images must use HTTP or HTTPS URLs');
+  }
+  return url.href;
+}
+
 export const LOCALES = ['uk', 'ru', 'en', 'pl', 'de'] as const;
 export type Locale = typeof LOCALES[number];
 

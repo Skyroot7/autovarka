@@ -1,4 +1,5 @@
-import { Product } from './products';
+import type { Product } from './products';
+import { getAbsoluteImageUrl, getLocalizedUrl } from './seo';
 
 // Организация (автоматически добавляется на всех страницах)
 export function getOrganizationSchema() {
@@ -78,7 +79,8 @@ export function getProductSchema(product: Product, locale: string = 'uk') {
     '@type': 'Product',
     name: getName(),
     description: getDescription(),
-    image: product.images.map(img => `https://autovarka.com.ua${img}`),
+    image: product.images.map(getAbsoluteImageUrl),
+    url: getLocalizedUrl(locale, `/products/${product.id}`),
     sku: product.id,
     mpn: product.id,
     brand: {
@@ -94,7 +96,7 @@ export function getProductSchema(product: Product, locale: string = 'uk') {
       availability: product.inStock
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      url: `https://autovarka.com.ua/products/${product.id}`,
+      url: getLocalizedUrl(locale, `/products/${product.id}`),
       priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
       itemCondition: 'https://schema.org/NewCondition',
       seller: {
@@ -149,12 +151,15 @@ export function getItemListSchema(products: Product[], locale: string = 'uk') {
         item: {
           '@type': 'Product',
           name: getName(),
-          image: `https://autovarka.com.ua${product.images[0]}`,
-          url: `https://autovarka.com.ua/products/${product.id}`,
+          image: product.images[0] ? getAbsoluteImageUrl(product.images[0]) : undefined,
+          url: getLocalizedUrl(locale, `/products/${product.id}`),
           offers: {
             '@type': 'Offer',
             price: product.price,
             priceCurrency: 'UAH',
+            availability: product.inStock
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
           },
         },
       };
