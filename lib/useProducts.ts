@@ -1,47 +1,37 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Product, products as staticProducts } from './products';
+import type { Product } from './products';
 
-/**
- * Hook to load products from the server
- * Falls back to static products if API fails
- */
-export function useProducts() {
-  const [products, setProducts] = useState<Product[]>(staticProducts);
-  const [loading, setLoading] = useState(true);
+/** Server-rendered pages keep their initial data; header search loads on demand. */
+export function useProducts(initialProducts?: Product[], enabled = true) {
+  const [loadedProducts, setLoadedProducts] = useState<Product[] | null>(null);
+  const [loading, setLoading] = useState(!initialProducts && enabled);
 
   useEffect(() => {
+    if (initialProducts !== undefined || !enabled) return;
+    const controller = new AbortController();
     async function loadProducts() {
+      setLoading(true);
       try {
-        const response = await fetch('/api/products');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.length > 0) {
-            setProducts(data);
-          }
-        }
+        const response = await fetch('/api/products', { signal: controller.signal });
+        if (!response.ok) throw new Error('Catalog temporarily unavailable');
+        const data: Product[] = await response.json();
+        setLoadedProducts(data);
       } catch (error) {
-        console.error('Error loading products:', error);
-        // Use static products as fallback
+        if (!controller.signal.aborted) console.error('Error loading products:', error);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
+    void loadProducts();
+    return () => controller.abort();
+  }, [initialProducts, enabled]);
 
-    loadProducts();
-  }, []);
-
-  return { products, loading };
+  return { products: initialProducts ?? loadedProducts ?? [], loading };
 }
 
-/**
- * Hook to get a single product by ID
- */
 export function useProduct(id: string) {
   const { products, loading } = useProducts();
-  const product = products.find(p => p.id === id);
-  
-  return { product, loading };
+  return { product: products.find(product => product.id === id), loading };
 }
-

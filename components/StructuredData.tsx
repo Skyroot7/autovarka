@@ -1,5 +1,3 @@
-import Script from 'next/script';
-
 interface StructuredDataProps {
   data: object | object[];
 }
@@ -10,12 +8,12 @@ export default function StructuredData({ data }: StructuredDataProps) {
   return (
     <>
       {schemas.map((schema, index) => (
-        <Script
+        <script
           key={index}
-          id={`structured-data-${index}`}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(schema),
+            // Keep JSON-LD in the server HTML and prevent data from closing the tag.
+            __html: JSON.stringify(schema).replace(/</g, '\\u003c'),
           }}
         />
       ))}

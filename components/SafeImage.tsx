@@ -8,7 +8,7 @@ type SafeImageProps = Omit<ImageProps, 'src' | 'unoptimized'> & {
   fallbackSrc?: string;
 };
 
-const DEFAULT_FALLBACK_SRC = '/placeholder.jpg';
+const DEFAULT_FALLBACK_SRC = '/placeholder.svg';
 
 export default function SafeImage({
   src,
@@ -21,18 +21,34 @@ export default function SafeImage({
     ? src
     : fallbackSrc;
 
-  const [currentSrc, setCurrentSrc] = useState(normalizedSrc);
-  const isRemote = currentSrc.startsWith('http');
+  // Track a failed source rather than copying the prop into state. A new src
+  // from an updated catalog is then shown immediately, without a stale frame.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const currentSrc = failedSrc === normalizedSrc ? fallbackSrc : normalizedSrc;
+  let unoptimized = false;
+  if (/^https?:\/\//i.test(currentSrc)) {
+    try {
+      const url = new URL(currentSrc);
+      const trustedHost = url.hostname === 'autovarka.com.ua'
+        || url.hostname === 'preobrazovatel12-220.com.ua'
+        || url.hostname.endsWith('.public.blob.vercel-storage.com');
+      // Preserve support for legacy external URLs; trusted image hosts use the
+      // Next.js optimizer and its responsive sizes/format negotiation.
+      unoptimized = url.protocol !== 'https:' || !trustedHost;
+    } catch {
+      unoptimized = true;
+    }
+  }
 
   return (
     <Image
       {...rest}
       alt={alt}
       src={currentSrc}
-      unoptimized={isRemote}
+      unoptimized={unoptimized}
       onError={(event) => {
         if (currentSrc !== fallbackSrc) {
-          setCurrentSrc(fallbackSrc);
+          setFailedSrc(normalizedSrc);
         }
         onError?.(event);
       }}

@@ -98,7 +98,7 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
       descriptionRu: formData.descriptionRu,
       descriptionPl: product?.descriptionPl || formData.description, // Fallback
       descriptionDe: product?.descriptionDe || formData.description, // Fallback
-      images: images.length > 0 ? images : ['/placeholder.jpg'],
+      images: images.length > 0 ? images : ['/placeholder.svg'],
       specifications: {
         voltage: formData.voltage,
         capacity: formData.capacity,
