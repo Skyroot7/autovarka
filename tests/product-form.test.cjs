@@ -51,7 +51,8 @@ function fixture(product = products[0], { isSubmitting = false } = {}) {
   };
   let tree;
   const render = () => { cursor = 0; tree = loaded.exports.default(props); return tree; };
-  function all(predicate, node = tree) {
+  function all(predicate, ...nodes) {
+    const node = nodes.length ? nodes[0] : tree;
     if (Array.isArray(node)) return node.flatMap(child => all(predicate, child));
     if (!React.isValidElement(node)) return [];
     return [...(predicate(node) ? [node] : []), ...all(predicate, node.props.children)];
@@ -87,7 +88,7 @@ test('product editing preserves existing translations, commercial values and add
 });
 
 test('new products require explicit names and descriptions on all five languages without copying Ukrainian', () => {
-  const f = fixture(undefined);
+  const f = fixture(null);
   for (const key of ['name', 'description', 'nameEn', 'descriptionEn', 'nameRu', 'descriptionRu']) f.change(key, `Entered ${key}`);
   f.submit();
   assert.equal(f.saved.length, 0);
