@@ -88,7 +88,7 @@ export default async function HomeClient({ initialProducts, videoSettings }: Hom
                   href={locale === 'uk' ? '/about' : `/${locale}/about`}
                   className="bg-white/10 backdrop-blur-sm border-2 border-white/50 text-white px-5 sm:px-6 md:px-8 py-3 sm:py-3 md:py-4 rounded-xl font-bold hover:bg-white hover:text-orange-600 transition-all shadow-lg hover:scale-105 text-sm sm:text-sm md:text-base"
                 >
-                  {tCommon('learnMore')}
+                  {tCommon('about')}
                 </Link>
               </div>
             </div>
