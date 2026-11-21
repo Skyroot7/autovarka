@@ -21,6 +21,9 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
   const selectedImage = selection.productId === product.id ? selection.index : 0;
   const [quantity, setQuantity] = useState(1);
   const currentImageUrl = product.images[selectedImage] || product.images[0];
+  const getName = (item: Product) => locale === 'en' ? item.nameEn
+    : locale === 'ru' ? item.nameRu : locale === 'pl' ? item.namePl
+    : locale === 'de' ? item.nameDe : item.name;
 
   const handleImageClick = (idx: number) => {
     setSelection({ productId: product.id, index: idx });
@@ -40,7 +43,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
         image: product.images[0],
       });
     }
-    alert('Товар додано до кошика!');
+    alert(t('addedToCart'));
   };
 
   const handleBuyNow = () => {
@@ -65,7 +68,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
     <div className="bg-gray-50 min-h-screen py-8">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <nav className="mb-8 text-sm">
+        <nav className="mb-8 text-sm" aria-label={t('breadcrumbs')}>
           <Link href={locale === 'uk' ? '/' : `/${locale}`} className="text-orange-600 hover:text-orange-700">
             {tCommon('home')}
           </Link>
@@ -93,10 +96,11 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
                 <SafeImage
                   key={currentImageUrl}
                   src={currentImageUrl}
-                  preload={selectedImage === 0}
-                  alt={`${locale === 'en' ? product.nameEn : locale === 'ru' ? product.nameRu : locale === 'pl' ? product.namePl : locale === 'de' ? product.nameDe : product.name} - автомобільна мультиварка ${product.specifications.voltage || ''} ${product.specifications.capacity || ''} для далекобійника та вантажівки`}
+                  loading="eager"
+                  fetchPriority={selectedImage === 0 ? 'high' : 'auto'}
+                  alt={t('photo', { name: getName(product), number: selectedImage + 1 })}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 1023px) calc(100vw - 96px), (max-width: 1535px) calc((100vw - 128px) / 2), 704px"
                   className="object-contain p-10"
                 />
                 {/* Invisible overlay for extra protection */}
@@ -106,7 +110,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
                 />
                 {product.oldPrice && (
                   <div className="absolute top-4 left-4 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold pointer-events-none">
-                    Знижка {Math.round((1 - product.price / product.oldPrice) * 100)}%
+                    {t('discount', { percent: Math.round((1 - product.price / product.oldPrice) * 100) })}
                   </div>
                 )}
               </div>
@@ -116,6 +120,8 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
                     key={idx}
                     type="button"
                     onClick={() => handleImageClick(idx)}
+                    aria-label={t('photo', { name: getName(product), number: idx + 1 })}
+                    aria-pressed={selectedImage === idx}
                     onContextMenu={(e) => e.preventDefault()}
                     className={`relative h-20 sm:h-24 rounded-lg overflow-hidden border-2 transition-all hover:scale-105 cursor-pointer bg-white select-none ${
                       selectedImage === idx 
@@ -125,7 +131,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
                   >
                     <SafeImage
                       src={image}
-                      alt={`${product.name} фото ${idx + 1} - мультиварка для вантажівки ${product.specifications.voltage || ''}`}
+                      alt={t('photo', { name: getName(product), number: idx + 1 })}
                       fill
                       sizes="96px"
                       className="object-contain p-2"
@@ -202,18 +208,20 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
 
               {/* Quantity */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Кількість
+                <label htmlFor="product-quantity" className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('quantity')}
                 </label>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    aria-label={t('decreaseQuantity')}
                     className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50"
                   >
                     -
                   </button>
                   <input
                     type="number"
+                    id="product-quantity"
                     value={quantity}
                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                     className="w-20 text-center border border-gray-300 rounded-lg py-2"
@@ -221,6 +229,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
                   />
                   <button
                     onClick={() => setQuantity(quantity + 1)}
+                    aria-label={t('increaseQuantity')}
                     className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-50"
                   >
                     +
@@ -235,7 +244,7 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
                   disabled={!product.inStock}
                   className="w-full bg-orange-500 text-white py-4 rounded-lg font-bold text-lg hover:bg-orange-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {tCommon('addToCart')} ({quantity} шт.)
+                  {tCommon('addToCart')} ({quantity} {t('units')})
                 </button>
                 <button
                   onClick={handleBuyNow}
@@ -332,9 +341,9 @@ export default function ProductDetailsClient({ product, relatedProducts }: { pro
                     <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
                       <SafeImage
                         src={relatedProduct.images[0]}
-                        alt={`${relatedProduct.name} - автомобільна мультиварка для далекобійника | ${relatedProduct.price}₴`}
+                        alt={getName(relatedProduct)}
                         fill
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1535px) calc((100vw - 96px) / 3), 480px"
                         className="object-contain p-4"
                       />
                     </div>

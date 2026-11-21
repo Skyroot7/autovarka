@@ -1,7 +1,11 @@
 'use server';
 
-import { put, del, list } from '@vercel/blob';
-import path from 'path';
+import { put, del, head, list } from '@vercel/blob';
+import { randomUUID } from 'crypto';
+import { isAdminAuthenticated } from './adminAuth';
+import { ImageValidationError, getProductBlobPath, validateUploadedImage } from './imagePolicy';
+
+const unauthorized = { success: false, error: 'Необхідна авторизація адміністратора' } as const;
 
 /**
  * Upload an image to Vercel Blob storage.
@@ -9,39 +13,19 @@ import path from 'path';
  */
 export async function uploadImage(formData: FormData): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
-    const file = formData.get('file') as File;
-
-    if (!file) {
-      return { success: false, error: 'Файл не знайдено' };
-    }
-
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
-      return { success: false, error: 'Недопустимий тип файлу. Використовуйте JPG, PNG, WEBP або GIF' };
-    }
-
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      return { success: false, error: 'Файл занадто великий. Максимальний розмір: 5MB' };
-    }
-
-    const timestamp = Date.now();
-    const randomStr = Math.random().toString(36).substring(7);
-    const ext = path.extname(file.name);
-    const filename = `products/product-${timestamp}-${randomStr}${ext}`;
-
-    // Convert File to Buffer — more reliable in Next.js Server Actions
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const blob = await put(filename, buffer, {
+    if (!await isAdminAuthenticated()) return unauthorized;
+    const image = await validateUploadedImage(formData);
+    const blob = await put(`products/product-${randomUUID()}.${image.extension}`, image.bytes, {
       access: 'public',
-      contentType: file.type,
+      contentType: image.contentType,
+      allowOverwrite: false,
     });
 
     return { success: true, url: blob.url };
   } catch (error) {
-    console.error('Error uploading image to Vercel Blob:', error);
+    if (error instanceof ImageValidationError) return { success: false, error: error.message };
+    // SDK errors can contain request details; do not expose them to the client/logs.
+    console.error('Authenticated image upload failed.');
     return { success: false, error: 'Помилка завантаження зображення' };
   }
 }
@@ -51,20 +35,26 @@ export async function uploadImage(formData: FormData): Promise<{ success: boolea
  */
 export async function deleteImage(imageUrl: string): Promise<{ success: boolean; error?: string }> {
   try {
-    if (!imageUrl || imageUrl === '/placeholder.jpg' || imageUrl === '/placeholder.svg') {
-      return { success: true };
-    }
+    if (!await isAdminAuthenticated()) return unauthorized;
+    // Checked-in images are immutable deployment assets, never Blob deletion targets.
+    if (typeof imageUrl === 'string' && (
+      imageUrl === '/placeholder.jpg' || imageUrl === '/placeholder.svg'
+      || /^\/images\/[A-Za-z0-9_./-]+$/.test(imageUrl)
+    )) return { success: true };
 
-    // Vercel Blob URLs look like: https://*.public.blob.vercel-storage.com/...
-    if (imageUrl.startsWith('https://') && imageUrl.includes('blob.vercel-storage.com')) {
-      await del(imageUrl);
-      return { success: true };
+    const pathname = getProductBlobPath(imageUrl);
+    // Resolve a pathname in OUR authenticated store, not a caller-selected URL.
+    // Comparing the provider's URL rejects another store with the same path.
+    const blob = await head(pathname);
+    if (blob.pathname !== pathname || blob.url !== imageUrl || !blob.etag) {
+      return { success: false, error: 'Зображення не належить сховищу цього магазину' };
     }
-
-    // Legacy local images — cannot delete from Vercel filesystem at runtime, just skip
+    // Never delete a replacement uploaded between the ownership check and delete.
+    await del(blob.url, { ifMatch: blob.etag });
     return { success: true };
   } catch (error) {
-    console.error('Error deleting image from Vercel Blob:', error);
+    if (error instanceof ImageValidationError) return { success: false, error: error.message };
+    console.error('Authenticated image deletion failed.');
     return { success: false, error: 'Помилка видалення зображення' };
   }
 }
@@ -74,10 +64,11 @@ export async function deleteImage(imageUrl: string): Promise<{ success: boolean;
  */
 export async function listImages(): Promise<{ success: boolean; urls?: string[]; error?: string }> {
   try {
+    if (!await isAdminAuthenticated()) return unauthorized;
     const { blobs } = await list({ prefix: 'products/' });
-    return { success: true, urls: blobs.map(b => b.url) };
-  } catch (error) {
-    console.error('Error listing images from Vercel Blob:', error);
+    return { success: true, urls: blobs.filter(blob => blob.pathname.startsWith('products/')).map(blob => blob.url) };
+  } catch {
+    console.error('Authenticated image listing failed.');
     return { success: false, error: 'Помилка отримання списку зображень' };
   }
 }

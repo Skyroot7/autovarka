@@ -45,13 +45,26 @@
     "multivarkas12V": "Multivarkas 12V",
     "multivarkas24V": "Multivarkas 24V",
     "accessories": "Zubehör",
-    "forCustomers": "Für Kunden"
+    "forCustomers": "Für Kunden",
+    "mainNavigation": "Hauptnavigation",
+    "goHome": "Autovarka Startseite",
+    "switchLanguage": "Sprache zu {language} wechseln",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "clearSearch": "Suche löschen",
+    "callPhone": "Anrufen: {phone}",
+    "writeViber": "Über Viber schreiben",
+    "writeEmail": "E-Mail an {email}",
+    "productNavigation": "Produkte durchsuchen",
+    "brandLogo": "Autovarka Logo",
+    "selectionGuide": "Multikocher auswählen",
+    "productAdvice": "Produktberatung"
   },
   "home": {
-    "title": "Auto-Multivarks\u00A012/24/220V",
+    "title": "Auto-Multivarks 12/24/220V",
     "subtitle": "Leckere Mahlzeiten unterwegs mit uns",
     "description": "Professionelle Multivarks für Autos, LKW und Busse. Qualitätskochen auf jeder Reise.",
-    "heroSubtext": "Professionelle Multivarks für Autos, LKW und Busse. Qualitätskochen auf jeder Reise. Die beste Wahl für LKW-Fahrer und Fahrer.",
+    "heroSubtext": "Auto-Multikocher für Autofahrer, Fernfahrer, LKW und Busse. Vergleichen Sie Modelle nach Versorgungsspannung, Fassungsvermögen und Leistung.",
     "deliveryInfo": "Lieferung in die Ukraine, Polen, Deutschland, weltweit",
     "videoTitle": "Multivarka 12/24 Volt",
     "playVideo": "Video abspielen",
@@ -67,11 +80,19 @@
     "ctaTitle": "Bereit eine Bestellung aufzugeben?",
     "ctaDescription": "Kontaktieren Sie uns jetzt und erhalten Sie professionelle Beratung!",
     "contactUs": "Kontaktiere uns",
-    "heroBannerAlt": "Auto-Multikocher 12/24/220V für LKW-Fahrer in der LKW-Kabine - Autovarka | Ab 999₴"
+    "heroBannerAlt": "Auto-Multikocher in einer LKW-Kabine",
+    "selectionTitle": "Den passenden Multikocher für unterwegs wählen",
+    "selectionIntro": "Prüfen Sie vor dem Kauf die technischen Daten sowie das Bordnetz und den Anschluss Ihres Fahrzeugs. Die Angabe 12/24/220V im Katalog beschreibt verschiedene Modelle; nicht jedes Produkt unterstützt alle Spannungen.",
+    "selectionVoltageTitle": "Spannung und Anschluss",
+    "selectionVoltageText": "Prüfen Sie, ob das jeweilige Modell 12V, 24V oder 220V unterstützt. Verwenden Sie nur eine in den technischen Daten angegebene Spannung und beachten Sie die zulässige Leistung von Steckdose und Kabel.",
+    "selectionCapacityTitle": "Fassungsvermögen und Mahlzeiten",
+    "selectionCapacityText": "Vergleichen Sie Fassungsvermögen und Kochprogramme mit der benötigten Portionszahl. Prüfen Sie auf der Modellseite die Beschreibung, Fotos und angegebenen technischen Daten.",
+    "selectionCompare": "Modelle und Preise vergleichen",
+    "selectionAsk": "Kompatibilität erfragen"
   },
   "products": {
     "title": "Produktkatalog",
-    "subtitle": "Wählen Sie die perfekte Multivarka für Ihre Bedürfnisse",
+    "subtitle": "Vergleichen Sie Preise, Fassungsvermögen und Versorgungsspannung für die passende Küchentechnik unterwegs.",
     "filter": "Filter",
     "sort": "Sortieren",
     "noSort": "Keine Sortierung",
@@ -80,7 +101,11 @@
     "nameAsc": "Name: A-Z",
     "nameDesc": "Name: Z-A",
     "noProducts": "Produkte nicht gefunden",
-    "viewDetails": "Details anzeigen"
+    "viewDetails": "Details anzeigen",
+    "filtersTitle": "Filter und Sortierung",
+    "foundProducts": "Gefundene Produkte",
+    "resetFilters": "Filter zurücksetzen",
+    "resetAllFilters": "Alle Filter zurücksetzen"
   },
   "product": {
     "addToCart": "In den Warenkorb",
@@ -96,7 +121,15 @@
     "inStock": "Auf Lager",
     "outOfStock": "Nicht auf Lager",
     "warrantyTitle": "Produktgarantie",
-    "warrantyDescription": "Originalprodukt mit Herstellergarantie. Kostenlose Beratung und Unterstützung."
+    "warrantyDescription": "Originalprodukt mit Herstellergarantie. Kostenlose Beratung und Unterstützung.",
+    "addedToCart": "Produkt zum Warenkorb hinzugefügt!",
+    "quantity": "Menge",
+    "units": "Stk.",
+    "discount": "{percent}% Rabatt",
+    "photo": "{name} — Foto {number}",
+    "decreaseQuantity": "Menge verringern",
+    "increaseQuantity": "Menge erhöhen",
+    "breadcrumbs": "Brotkrumennavigation"
   },
   "about": {
     "title": "Über uns",
@@ -224,4 +257,3 @@
     }
   }
 }
-

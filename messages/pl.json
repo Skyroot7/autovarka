@@ -45,13 +45,26 @@
     "multivarkas12V": "Multywarki 12V",
     "multivarkas24V": "Multywarki 24V",
     "accessories": "Akcesoria",
-    "forCustomers": "Dla klientów"
+    "forCustomers": "Dla klientów",
+    "mainNavigation": "Nawigacja główna",
+    "goHome": "Strona główna Autovarka",
+    "switchLanguage": "Zmień język na {language}",
+    "openMenu": "Otwórz menu",
+    "closeMenu": "Zamknij menu",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "callPhone": "Zadzwoń: {phone}",
+    "writeViber": "Napisz na Viber",
+    "writeEmail": "Napisz: {email}",
+    "productNavigation": "Przeglądaj produkty",
+    "brandLogo": "Logo Autovarka",
+    "selectionGuide": "Jak wybrać multicooker",
+    "productAdvice": "Porady dotyczące produktów"
   },
   "home": {
-    "title": "Multywarki samochodowe\u00A012/24/220V",
+    "title": "Multywarki samochodowe 12/24/220V",
     "subtitle": "Pyszne posiłki w drodze z nami",
     "description": "Profesjonalne multywarki do samochodów, ciężarówek i autobusów. Jakościowe gotowanie w każdej podróży.",
-    "heroSubtext": "Profesjonalne multywarki do samochodów, ciężarówek i autobusów. Jakościowe gotowanie w każdej podróży. Najlepszy wybór dla kierowcy ciężarówki i kierowcy.",
+    "heroSubtext": "Multicookery samochodowe dla kierowców aut osobowych, ciężarówek i autobusów. Porównaj modele według napięcia zasilania, pojemności i mocy.",
     "deliveryInfo": "Dostawa na Ukrainę, Polskę, Niemcy, za granicę",
     "videoTitle": "Multywarka 12/24 woltów",
     "playVideo": "Odtwórz wideo",
@@ -67,11 +80,19 @@
     "ctaTitle": "Gotowy złożyć zamówienie?",
     "ctaDescription": "Skontaktuj się z nami teraz i otrzymaj profesjonalną konsultację!",
     "contactUs": "Napisz do nas",
-    "heroBannerAlt": "Multicooker samochodowy 12/24/220V dla kierowcy TIR w kabinie ciężarówki - Autovarka | Od 999₴"
+    "heroBannerAlt": "Multicooker samochodowy w kabinie ciężarówki",
+    "selectionTitle": "Jak wybrać multicooker na podróż",
+    "selectionIntro": "Przed zakupem porównaj dane urządzenia z instalacją elektryczną i gniazdem pojazdu. Oznaczenie 12/24/220V w katalogu dotyczy różnych modeli, a nie wszystkich napięć w każdym produkcie.",
+    "selectionVoltageTitle": "Napięcie i podłączenie",
+    "selectionVoltageText": "Sprawdź, czy dany model obsługuje 12V, 24V lub 220V. Używaj wyłącznie napięcia podanego w specyfikacji oraz sprawdź dopuszczalną moc gniazda i przewodu.",
+    "selectionCapacityTitle": "Pojemność i codzienne posiłki",
+    "selectionCapacityText": "Dopasuj pojemność i tryby gotowania do potrzebnej liczby porcji. Na stronie modelu sprawdź opis, zdjęcia i podane dane techniczne.",
+    "selectionCompare": "Porównaj modele i ceny",
+    "selectionAsk": "Zapytaj o kompatybilność"
   },
   "products": {
     "title": "Katalog produktów",
-    "subtitle": "Wybierz idealną multivarkę dla swoich potrzeb",
+    "subtitle": "Porównaj ceny, pojemność i napięcie zasilania, aby wybrać sprzęt do gotowania w trasie.",
     "filter": "Filtruj",
     "sort": "Sortuj",
     "noSort": "Bez sortowania",
@@ -80,7 +101,11 @@
     "nameAsc": "Nazwa: A-Z",
     "nameDesc": "Nazwa: Z-A",
     "noProducts": "Nie znaleziono produktów",
-    "viewDetails": "Szczegóły"
+    "viewDetails": "Szczegóły",
+    "filtersTitle": "Filtry i sortowanie",
+    "foundProducts": "Znalezione produkty",
+    "resetFilters": "Wyczyść filtry",
+    "resetAllFilters": "Wyczyść wszystkie filtry"
   },
   "product": {
     "addToCart": "Dodaj do koszyka",
@@ -96,7 +121,15 @@
     "inStock": "W magazynie",
     "outOfStock": "Brak w magazynie",
     "warrantyTitle": "Gwarancja produktu",
-    "warrantyDescription": "Oryginalny produkt z gwarancją producenta. Bezpłatne konsultacje i wsparcie."
+    "warrantyDescription": "Oryginalny produkt z gwarancją producenta. Bezpłatne konsultacje i wsparcie.",
+    "addedToCart": "Produkt dodano do koszyka!",
+    "quantity": "Ilość",
+    "units": "szt.",
+    "discount": "Rabat {percent}%",
+    "photo": "{name} — zdjęcie {number}",
+    "decreaseQuantity": "Zmniejsz ilość",
+    "increaseQuantity": "Zwiększ ilość",
+    "breadcrumbs": "Ścieżka nawigacji"
   },
   "about": {
     "title": "O nas",
@@ -224,4 +257,3 @@
     }
   }
 }
-

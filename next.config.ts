@@ -4,6 +4,11 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./i18n.ts');
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Raster uploads are capped at 4 MiB by the action. Allow multipart overhead
+    // here while remaining below Vercel's request limit for accepted files.
+    serverActions: { bodySizeLimit: '5mb' },
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

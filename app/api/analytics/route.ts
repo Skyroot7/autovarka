@@ -1,53 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
+import { isAdminAuthenticated } from '@/lib/adminAuth';
+import { SettingsValidationError, validateAnalyticsSettings } from '@/lib/analyticsPolicy';
+import { ANALYTICS_SETTINGS_KEY, ANALYTICS_SETTINGS_TAG, readFreshAnalyticsSettings } from '@/lib/analyticsSettings';
+import { invalidatePublicSettings } from '@/lib/publicSettings';
 
-const KV_ANALYTICS_KEY = 'analytics_settings';
+const headers = { 'Cache-Control': 'no-store' };
 
+// IDs are public, but the editor must receive a fresh value or an explicit error.
 export async function GET() {
   try {
-    const settings = await kv.get(KV_ANALYTICS_KEY);
-    if (settings) {
-      return NextResponse.json(settings);
-    }
-    return NextResponse.json({ googleAnalyticsId: '', googleTagManagerId: '' });
-  } catch (error) {
-    console.error('Failed to get analytics settings:', error);
-    return NextResponse.json({ googleAnalyticsId: '', googleTagManagerId: '' });
+    return NextResponse.json(await readFreshAnalyticsSettings(), { headers });
+  } catch {
+    return NextResponse.json({ error: 'Analytics settings are unavailable.' }, { status: 503, headers });
   }
 }
 
 export async function POST(request: NextRequest) {
+  // Authorize before parsing or writing. The admin UI is not an access boundary.
+  if (!await isAdminAuthenticated()) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401, headers });
+  }
   try {
-    const body = await request.json();
-    let { googleAnalyticsId, googleTagManagerId } = body;
-
-    // Извлекаем ID из полного кода Google Analytics, если пользователь вставил весь код
-    if (googleAnalyticsId && googleAnalyticsId.includes('gtag')) {
-      const match = googleAnalyticsId.match(/G-[A-Z0-9]+|UA-[0-9]+-[0-9]+/);
-      if (match) {
-        googleAnalyticsId = match[0];
-      }
-    }
-
-    // Извлекаем ID из полного кода GTM, если пользователь вставил весь код
-    if (googleTagManagerId && googleTagManagerId.includes('googletagmanager')) {
-      const match = googleTagManagerId.match(/GTM-[A-Z0-9]+/);
-      if (match) {
-        googleTagManagerId = match[0];
-      }
-    }
-
-    const settings = {
-      googleAnalyticsId: googleAnalyticsId?.trim() || '',
-      googleTagManagerId: googleTagManagerId?.trim() || '',
-    };
-
-    await kv.set(KV_ANALYTICS_KEY, settings);
-
-    return NextResponse.json({ success: true, settings });
+    const settings = validateAnalyticsSettings(await request.json());
+    await kv.set(ANALYTICS_SETTINGS_KEY, settings);
+    invalidatePublicSettings(ANALYTICS_SETTINGS_TAG);
+    return NextResponse.json({ success: true, settings }, { headers });
   } catch (error) {
-    console.error('Failed to save analytics settings:', error);
-    return NextResponse.json({ success: false, error: 'Failed to save settings' }, { status: 500 });
+    if (error instanceof SettingsValidationError || error instanceof SyntaxError) {
+      return NextResponse.json({ success: false, error: 'Enter valid GA4 and GTM IDs, or empty strings to clear them.' }, { status: 400, headers });
+    }
+    console.error('Failed to save analytics settings.');
+    return NextResponse.json({ success: false, error: 'Failed to save settings' }, { status: 503, headers });
   }
 }
-

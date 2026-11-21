@@ -1,19 +1,16 @@
-'use client';
+import { getTranslations } from 'next-intl/server';
 
-import { useTranslations } from 'next-intl';
-import { motion } from 'framer-motion';
-
-export default function AboutClient() {
-  const t = useTranslations('about');
+export default async function AboutClient() {
+  const t = await getTranslations('about');
 
   return (
     <div className="bg-gray-50 min-h-screen py-16">
       <div className="container mx-auto px-4">
         {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <div
+
+
+
           className="text-center mb-16"
         >
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
@@ -27,15 +24,15 @@ export default function AboutClient() {
               {t('introText')}
             </p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Mission, Experience, Quality */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+          <div
+
+
+
+
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">🎯</div>
@@ -45,13 +42,13 @@ export default function AboutClient() {
             <p className="text-gray-600">
               {t('missionText')}
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
+          <div
+
+
+
+
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">⏱️</div>
@@ -61,13 +58,13 @@ export default function AboutClient() {
             <p className="text-gray-600">
               {t('experienceText')}
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
+          <div
+
+
+
+
             className="bg-white rounded-2xl shadow-lg p-8 text-center"
           >
             <div className="text-6xl mb-4">⭐</div>
@@ -77,7 +74,7 @@ export default function AboutClient() {
             <p className="text-gray-600">
               {t('qualityText')}
             </p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Why Choose Us */}
@@ -104,11 +101,11 @@ export default function AboutClient() {
         </div>
 
         {/* Contact CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+        <div
+
+
+
+
           className="text-center"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -117,7 +114,7 @@ export default function AboutClient() {
           <p className="text-lg text-gray-600 mb-8">
             {t('contactToday')}
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             <a
               href="tel:+380636815090"
               className="bg-orange-500 text-white px-8 py-4 rounded-full font-bold hover:bg-orange-600 transition-colors inline-flex items-center gap-2"
@@ -131,7 +128,7 @@ export default function AboutClient() {
               💬 Viber
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

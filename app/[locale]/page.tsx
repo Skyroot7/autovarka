@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+import { getPublicPageMetadata } from '@/lib/pageMetadata';
 import HomeClient from './HomeClient';
 import { getPublicCatalog } from '@/lib/catalog';
 import { getVideoSettings } from '@/lib/videoSettings';
@@ -11,19 +12,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 
-  return {
-    alternates: {
-      canonical: `https://autovarka.com.ua${locale === 'uk' ? '' : `/${locale}`}`,
-      languages: {
-        'uk': 'https://autovarka.com.ua',
-        'ru': 'https://autovarka.com.ua/ru',
-        'en': 'https://autovarka.com.ua/en',
-        'pl': 'https://autovarka.com.ua/pl',
-        'de': 'https://autovarka.com.ua/de',
-        'x-default': 'https://autovarka.com.ua',
-      },
-    },
-  };
+  return getPublicPageMetadata(locale, 'home');
 }
 
 export default async function HomePage() {
