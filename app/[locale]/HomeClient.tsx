@@ -25,7 +25,8 @@ export default async function HomeClient({ initialProducts, videoSettings }: Hom
             src="/images/hero-banner.jpg"
             alt={t('heroBannerAlt')}
             fill
-            preload
+            loading="eager"
+            fetchPriority="high"
             sizes="100vw"
             className="object-cover object-center"
           />
@@ -159,7 +160,7 @@ export default async function HomeClient({ initialProducts, videoSettings }: Hom
                       src={product.images[0]}
                       alt={`${locale === 'en' ? product.nameEn : locale === 'ru' ? product.nameRu : locale === 'pl' ? product.namePl : locale === 'de' ? product.nameDe : product.name} ${product.specifications.voltage || ''} ${product.specifications.capacity || ''} | ${product.price}₴`}
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1023px) calc((100vw - 64px) / 2), (max-width: 1535px) calc((100vw - 96px) / 3), 480px"
                       className="object-contain p-8 group-hover:scale-110 transition-transform duration-300"
                     />
                     {/* Invisible overlay for extra protection */}
@@ -206,6 +207,31 @@ export default async function HomeClient({ initialProducts, videoSettings }: Hom
                 </div>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-12 md:py-16">
+        <div className="container mx-auto max-w-5xl px-4">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900">{t('selectionTitle')}</h2>
+          <p className="mb-6 text-gray-700">{t('selectionIntro')}</p>
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-900">{t('selectionVoltageTitle')}</h3>
+              <p className="text-gray-700">{t('selectionVoltageText')}</p>
+            </div>
+            <div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-900">{t('selectionCapacityTitle')}</h3>
+              <p className="text-gray-700">{t('selectionCapacityText')}</p>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-4">
+            <Link className="font-semibold text-orange-700 underline" href={locale === 'uk' ? '/products' : `/${locale}/products`}>
+              {t('selectionCompare')}
+            </Link>
+            <Link className="font-semibold text-orange-700 underline" href={locale === 'uk' ? '/contacts' : `/${locale}/contacts`}>
+              {t('selectionAsk')}
+            </Link>
           </div>
         </div>
       </section>
