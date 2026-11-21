@@ -130,3 +130,42 @@ test('catalog availability guard includes only public home/catalog/product route
     assert.equal(isCatalogPage(path), false, path);
   }
 });
+
+test('service metadata overrides inherited indexing and has no public-page canonical', () => {
+  const { getServiceMetadata } = loadSource('lib/seo.ts');
+  for (const locale of ['uk', 'ru', 'en', 'pl', 'de']) {
+    const metadata = getServiceMetadata(locale, 'Fixture');
+    assert.equal(metadata.robots.index, false);
+    assert.equal(metadata.robots.googleBot.index, false);
+    assert.equal(metadata.alternates, null);
+  }
+});
+
+test('localized public metadata is complete with the real banner dimensions', () => {
+  const { getPublicPageMetadata } = loadSource('lib/pageMetadata.ts');
+  for (const locale of ['uk', 'ru', 'en', 'pl', 'de']) {
+    const metadata = ['home', 'products', 'about', 'contacts']
+      .map(page => getPublicPageMetadata(locale, page));
+    assert.equal(new Set(metadata.map(value => value.title.absolute)).size, 4);
+    assert.equal(new Set(metadata.map(value => value.description)).size, 4);
+    for (const value of metadata) {
+      assert.equal(value.openGraph.url, value.alternates.canonical);
+      assert.equal(value.openGraph.images[0].height, 400);
+      assert.match(value.twitter.images[0].url, /^https:\/\/autovarka\.com\.ua\//);
+      assert.equal(value.title.absolute.split(' | ').length, 2);
+    }
+  }
+});
+
+test('all catalog offers keep their commercial data without invented product identifiers', () => {
+  const products = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../lib/productsData.json'), 'utf8'));
+  for (const item of products) {
+    const schema = getProductSchema(item);
+    assert.equal(schema.sku, item.id);
+    assert.equal(schema.offers.price, item.price);
+    assert.equal(schema.offers.priceCurrency, 'UAH');
+    assert.equal(schema.offers.availability, 'https://schema.org/' + (item.inStock ? 'InStock' : 'OutOfStock'));
+    for (const key of ['mpn', 'brand', 'category']) assert.equal(key in schema, false);
+    assert.equal('priceValidUntil' in schema.offers, false);
+  }
+});
