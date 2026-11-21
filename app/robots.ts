@@ -8,19 +8,8 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: [
-          '/admin',
-          '/admin/',
-          '/api/',
-          '/cart',
-          '/cart/',
-          '/profile',
-          '/profile/',
-          '/*/cart',
-          '/*/cart/',
-          '/*/profile',
-          '/*/profile/',
-        ],
+        // Permit fetching service HTML so crawlers can see its noindex.
+        disallow: ['/api/'],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

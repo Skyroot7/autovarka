@@ -1,7 +1,6 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 export default function ContactsClient() {
@@ -58,10 +57,10 @@ export default function ContactsClient() {
   return (
     <div className="bg-gray-50 min-h-screen py-16">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <div
+
+
+
           className="text-center mb-16"
         >
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
@@ -70,16 +69,16 @@ export default function ContactsClient() {
           <p className="text-2xl text-orange-600">
             {t('subtitle')}
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Info */}
           <div className="space-y-8">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
+            <div
+
+
+
+
             >
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
                 {t('ourContacts')}
@@ -131,13 +130,13 @@ export default function ContactsClient() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
+            <div
+
+
+
+
               className="bg-orange-50 rounded-xl p-6"
             >
               <h3 className="text-xl font-bold text-gray-900 mb-4">
@@ -148,15 +147,15 @@ export default function ContactsClient() {
                 <div>{t('saturday')}</div>
                 <div>{t('sunday')}</div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+          <div
+
+
+
+
           >
             <div className="bg-white rounded-2xl shadow-xl p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
@@ -177,12 +176,14 @@ export default function ContactsClient() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-name" className="block text-sm font-medium text-gray-700 mb-2">
                     {tCommon('name')}
                   </label>
                   <input
                     type="text"
                     name="name"
+                    id="contact-name"
+                    autoComplete="name"
                     value={formData.name}
                     onChange={handleChange}
                     required
@@ -191,12 +192,14 @@ export default function ContactsClient() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-2">
                     {tCommon('email')}
                   </label>
                   <input
                     type="email"
                     name="email"
+                    id="contact-email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -205,12 +208,14 @@ export default function ContactsClient() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-phone" className="block text-sm font-medium text-gray-700 mb-2">
                     {tCommon('phone')}
                   </label>
                   <input
                     type="tel"
                     name="phone"
+                    id="contact-phone"
+                    autoComplete="tel"
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
@@ -218,11 +223,12 @@ export default function ContactsClient() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-subject" className="block text-sm font-medium text-gray-700 mb-2">
                     {tCommon('subject')}
                   </label>
                   <select
                     name="subject"
+                    id="contact-subject"
                     value={formData.subject}
                     onChange={handleChange}
                     required
@@ -237,11 +243,12 @@ export default function ContactsClient() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="contact-message" className="block text-sm font-medium text-gray-700 mb-2">
                     {tCommon('message')}
                   </label>
                   <textarea
                     name="message"
+                    id="contact-message"
                     value={formData.message}
                     onChange={handleChange}
                     required
@@ -259,7 +266,7 @@ export default function ContactsClient() {
                 </button>
               </form>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>

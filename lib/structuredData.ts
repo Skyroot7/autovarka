@@ -1,5 +1,5 @@
 import type { Product } from './products';
-import { getAbsoluteImageUrl, getLocalizedUrl } from './seo';
+import { getAbsoluteImageUrl, getLocalizedUrl, getProductText } from './seo';
 
 // Организация (автоматически добавляется на всех страницах)
 export function getOrganizationSchema() {
@@ -7,17 +7,16 @@ export function getOrganizationSchema() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Автоварка',
-    alternateName: 'Autovarka - Мультиварки для Дальнобійщиків',
+    alternateName: 'Autovarka',
     url: 'https://autovarka.com.ua',
     logo: {
       '@type': 'ImageObject',
       url: 'https://autovarka.com.ua/images/hero-banner.jpg',
       width: 1200,
-      height: 630,
+      height: 400,
     },
-    description: 'Інтернет-магазин автомобільних мультиварок 12/24/220V для далекобійників, вантажівок та фур. Мультиварка 24 вольта від прикурювача. Доставка по всій Україні. Гарантія 6 місяців.',
+    description: 'Інтернет-магазин автомобільних мультиварок 12/24/220V для далекобійників, вантажівок та фур.',
     slogan: 'Автомобільні мультиварки для далекобійників',
-    priceRange: '₴₴',
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: '+380636815090',
@@ -44,51 +43,21 @@ export function getWebSiteSchema() {
     '@type': 'WebSite',
     name: 'Автоварка',
     url: 'https://autovarka.com.ua',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://autovarka.com.ua/products?search={search_term_string}',
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 
 // Товар (для страниц товаров)
 export function getProductSchema(product: Product, locale: string = 'uk') {
-  const getName = () => {
-    switch (locale) {
-      case 'en': return product.nameEn;
-      case 'ru': return product.nameRu;
-      case 'pl': return product.namePl;
-      case 'de': return product.nameDe;
-      default: return product.name;
-    }
-  };
-
-  const getDescription = () => {
-    switch (locale) {
-      case 'en': return product.descriptionEn;
-      case 'ru': return product.descriptionRu;
-      case 'pl': return product.descriptionPl;
-      case 'de': return product.descriptionDe;
-      default: return product.description;
-    }
-  };
+  const { name, description } = getProductText(product, locale);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: getName(),
-    description: getDescription(),
+    name,
+    description,
     image: product.images.map(getAbsoluteImageUrl),
     url: getLocalizedUrl(locale, `/products/${product.id}`),
     sku: product.id,
-    mpn: product.id,
-    brand: {
-      '@type': 'Brand',
-      name: 'Автоварка',
-    },
-    category: 'Автомобільні мультиварки',
-    keywords: 'мультиварка 24 вольта, автомобильная мультиварка, мультиварка для дальнобойщика, мультиварка 12/24/220, мультиварка для вантажівки',
     offers: {
       '@type': 'Offer',
       price: product.price,
@@ -97,21 +66,11 @@ export function getProductSchema(product: Product, locale: string = 'uk') {
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
       url: getLocalizedUrl(locale, `/products/${product.id}`),
-      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
-      itemCondition: 'https://schema.org/NewCondition',
       seller: {
         '@type': 'Organization',
         name: 'Автоварка',
       },
-      shippingDetails: {
-        '@type': 'OfferShippingDetails',
-        shippingDestination: {
-          '@type': 'DefinedRegion',
-          addressCountry: 'UA',
-        },
-      },
     },
-    warranty: product.specifications.warranty || '6 місяців',
   };
 }
 
@@ -135,22 +94,14 @@ export function getItemListSchema(products: Product[], locale: string = 'uk') {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     itemListElement: products.map((product, index) => {
-      const getName = () => {
-        switch (locale) {
-          case 'en': return product.nameEn;
-          case 'ru': return product.nameRu;
-          case 'pl': return product.namePl;
-          case 'de': return product.nameDe;
-          default: return product.name;
-        }
-      };
+      const { name } = getProductText(product, locale);
 
       return {
         '@type': 'ListItem',
         position: index + 1,
         item: {
           '@type': 'Product',
-          name: getName(),
+          name,
           image: product.images[0] ? getAbsoluteImageUrl(product.images[0]) : undefined,
           url: getLocalizedUrl(locale, `/products/${product.id}`),
           offers: {
@@ -164,39 +115,5 @@ export function getItemListSchema(products: Product[], locale: string = 'uk') {
         },
       };
     }),
-  };
-}
-
-// Вопрос-Ответ (FAQ) для страницы "О нас"
-export function getFAQSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'Які є варіанти доставки?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Доставка по всій Україні службами Нова Пошта, УкрПошта. Самовивіз з Києва.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Яка гарантія на товар?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'На всі товари надається офіційна гарантія виробника 6 місяців.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Чи можна оплатити при отриманні?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Так, доступна оплата при отриманні (накладений платіж).',
-        },
-      },
-    ],
   };
 }

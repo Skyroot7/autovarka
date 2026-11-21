@@ -41,19 +41,32 @@
     "tryFilters": "Try changing filters",
     "learnMore": "Learn More",
     "allRightsReserved": "All rights reserved",
-    "footerDescription": "Professional multivarkas for cars, trucks and buses. Quality products with warranty.",
-    "multivarkas12V": "Multivarkas 12V",
-    "multivarkas24V": "Multivarkas 24V",
+    "footerDescription": "Professional multicookers for cars, trucks and buses. Quality products with warranty.",
+    "multivarkas12V": "Multicookers 12V",
+    "multivarkas24V": "Multicookers 24V",
     "accessories": "Accessories",
-    "forCustomers": "For Customers"
+    "forCustomers": "For Customers",
+    "mainNavigation": "Main navigation",
+    "goHome": "Autovarka home",
+    "switchLanguage": "Switch language to {language}",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "clearSearch": "Clear search",
+    "callPhone": "Call {phone}",
+    "writeViber": "Message on Viber",
+    "writeEmail": "Email {email}",
+    "productNavigation": "Browse products",
+    "brandLogo": "Autovarka logo",
+    "selectionGuide": "Choosing a multicooker",
+    "productAdvice": "Product advice"
   },
   "home": {
-    "title": "Car Multivarks\u00A012/24/220V",
+    "title": "Car Multicookers 12/24/220V",
     "subtitle": "Delicious meals on the go with us",
-    "description": "Professional multivarks for cars, trucks and buses. Quality cooking on any journey.",
-    "heroSubtext": "Professional multivarks for cars, trucks and buses. Quality cooking on any journey. The best choice for truck drivers and drivers.",
+    "description": "Professional multicookers for cars, trucks and buses. Quality cooking on any journey.",
+    "heroSubtext": "Car multicookers for car drivers, truckers, trucks and buses. Compare models by supply voltage, capacity and power.",
     "deliveryInfo": "Delivery to Ukraine, Poland, Germany, worldwide",
-    "videoTitle": "Multivarka 12/24 volts",
+    "videoTitle": "Multicooker 12/24 volts",
     "playVideo": "Play video",
     "professionalEquipment": "🚀 Professional equipment for drivers",
     "whyChooseUs": "Why Choose Us",
@@ -67,11 +80,19 @@
     "ctaTitle": "Ready to place an order?",
     "ctaDescription": "Contact us now and get professional consultation!",
     "contactUs": "Contact us",
-    "heroBannerAlt": "Car Multicooker 12/24/220V for Truck Driver in Truck Cabin - Autovarka | From 999₴"
+    "heroBannerAlt": "Car multicooker in a truck cabin",
+    "selectionTitle": "Choosing a multicooker for your journeys",
+    "selectionIntro": "Before buying, check the appliance specifications against your vehicle’s electrical supply and socket. The catalog’s 12/24/220V range covers different models; it does not mean every product supports every voltage.",
+    "selectionVoltageTitle": "Voltage and connection",
+    "selectionVoltageText": "Check whether the particular model supports 12V, 24V or 220V. Only use a voltage listed in its specifications, and check the power rating of the socket and cable.",
+    "selectionCapacityTitle": "Capacity and everyday meals",
+    "selectionCapacityText": "Compare capacity and cooking modes with the portions you need. Check each model’s description, photographs and listed technical specifications.",
+    "selectionCompare": "Compare models and prices",
+    "selectionAsk": "Ask about compatibility"
   },
   "products": {
     "title": "Product Catalog",
-    "subtitle": "Choose the perfect multivarka for your needs",
+    "subtitle": "Compare prices, capacity and supply voltage to choose cooking equipment for the road.",
     "filter": "Filter",
     "sort": "Sort",
     "noSort": "No Sorting",
@@ -80,7 +101,11 @@
     "nameAsc": "Name: A-Z",
     "nameDesc": "Name: Z-A",
     "noProducts": "Products not found",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "filtersTitle": "Filters and sorting",
+    "foundProducts": "Products found",
+    "resetFilters": "Reset filters",
+    "resetAllFilters": "Reset all filters"
   },
   "product": {
     "addToCart": "Add to Cart",
@@ -96,11 +121,19 @@
     "inStock": "In Stock",
     "outOfStock": "Out of stock",
     "warrantyTitle": "Product Warranty",
-    "warrantyDescription": "Original product with manufacturer's warranty. Free consultation and support."
+    "warrantyDescription": "Original product with manufacturer's warranty. Free consultation and support.",
+    "addedToCart": "Product added to cart!",
+    "quantity": "Quantity",
+    "units": "pcs",
+    "discount": "Save {percent}%",
+    "photo": "{name} — photo {number}",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "breadcrumbs": "Breadcrumbs"
   },
   "about": {
     "title": "About Us",
-    "subtitle": "Autovarka - your reliable partner for car multivarks",
+    "subtitle": "Autovarka - your reliable partner for car multicookers",
     "introText": "We are a team of professionals who understand the needs of drivers and travel enthusiasts. Our mission is to provide you with quality and reliable equipment for cooking on the road.",
     "mission": "Our Mission",
     "missionText": "To provide drivers and travel enthusiasts with the ability to cook fresh, tasty and healthy meals right on the road.",
@@ -224,4 +257,3 @@
     }
   }
 }
-

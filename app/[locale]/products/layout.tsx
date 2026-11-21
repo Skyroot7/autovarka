@@ -1,53 +1,6 @@
-import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-type Props = {
-  children: ReactNode;
-  params: Promise<{ locale: string }>;
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'metadata.products' });
-
-  const localeMap: Record<string, string> = {
-    uk: 'uk_UA',
-    ru: 'ru_RU',
-    en: 'en_US',
-    pl: 'pl_PL',
-    de: 'de_DE',
-  };
-
-  return {
-    title: t('title'),
-    description: t('description'),
-    openGraph: {
-      title: t('ogTitle'),
-      description: t('ogDescription'),
-      url: `https://autovarka.com.ua/${locale === 'uk' ? '' : locale + '/'}products`,
-      type: 'website',
-      locale: localeMap[locale] || 'uk_UA',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: t('twitterTitle'),
-      description: t('twitterDescription'),
-    },
-    alternates: {
-      canonical: `https://autovarka.com.ua${locale === 'uk' ? '' : `/${locale}`}/products`,
-      languages: {
-        'uk': 'https://autovarka.com.ua/products',
-        'ru': 'https://autovarka.com.ua/ru/products',
-        'en': 'https://autovarka.com.ua/en/products',
-        'pl': 'https://autovarka.com.ua/pl/products',
-        'de': 'https://autovarka.com.ua/de/products',
-        'x-default': 'https://autovarka.com.ua/products',
-      },
-    },
-  };
-}
-
-export default function ProductsLayout({ children }: Props) {
+// Public metadata is generated once by the page, including complete social data.
+export default function ProductsLayout({ children }: { children: ReactNode }) {
   return children;
 }

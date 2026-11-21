@@ -8,6 +8,7 @@ export default function VideosManagement() {
   const [homePageVideoUrl, setHomePageVideoUrl] = useState('');
   const [homePageVideoTitle, setHomePageVideoTitle] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -27,12 +28,15 @@ export default function VideosManagement() {
       })
       .catch(err => {
         console.error('Failed to load settings:', err);
+        setLoadFailed(true);
+        setMessage('❌ Не удалось загрузить текущие настройки. Обновите страницу и проверьте авторизацию.');
         setLoading(false);
       });
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loadFailed || saving) return;
     setSaving(true);
     setMessage('');
 
@@ -50,12 +54,14 @@ export default function VideosManagement() {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (response.ok && data.success) {
         setMessage('✅ Настройки видео успешно сохранены! Обновите страницу для применения изменений.');
       } else {
-        setMessage('❌ Ошибка сохранения настроек');
+        setMessage(response.status === 401
+          ? '❌ Войдите в панель администратора и повторите попытку.'
+          : '❌ ' + (data.error || 'Ошибка сохранения настроек'));
       }
-    } catch (error) {
+    } catch {
       setMessage('❌ Ошибка сохранения настроек');
     } finally {
       setSaving(false);
@@ -177,7 +183,7 @@ export default function VideosManagement() {
                 </svg>
                 <div className="text-sm text-purple-900">
                   <p className="font-semibold mb-1">Видео для товаров:</p>
-                  <p>Чтобы добавить видео к конкретному товару, перейдите в раздел "Товары" и отредактируйте нужный товар. Там есть поле для ссылки на видео.</p>
+                  <p>Чтобы добавить видео к конкретному товару, перейдите в раздел «Товары» и отредактируйте нужный товар. Там есть поле для ссылки на видео.</p>
                 </div>
               </div>
             </div>
@@ -192,7 +198,7 @@ export default function VideosManagement() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || loadFailed}
               className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-xl font-bold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? 'Сохранение...' : '💾 Сохранить настройки'}

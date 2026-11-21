@@ -18,6 +18,10 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
   const { products } = useProducts(initialProducts);
   const [sortBy, setSortBy] = useState<string>('');
   const [filterVoltage, setFilterVoltage] = useState<string>('');
+  const getName = (product: Product) => locale === 'en' ? product.nameEn
+    : locale === 'ru' ? product.nameRu : locale === 'pl' ? product.namePl
+    : locale === 'de' ? product.nameDe : product.name;
+  const collator = new Intl.Collator(locale, { numeric: true, sensitivity: 'base' });
 
   // Filter and sort products
   let filteredProducts = [...products];
@@ -33,8 +37,8 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
       switch(sortBy) {
         case 'priceAsc': return a.price - b.price;
         case 'priceDesc': return b.price - a.price;
-        case 'nameAsc': return a.name.localeCompare(b.name);
-        case 'nameDesc': return b.name.localeCompare(a.name);
+        case 'nameAsc': return collator.compare(getName(a), getName(b));
+        case 'nameDesc': return collator.compare(getName(b), getName(a));
         default: return 0;
       }
     });
@@ -70,16 +74,17 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
             <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
-            <h2 className="text-xl font-bold text-gray-900">Фільтри та сортування</h2>
+            <h2 className="text-xl font-bold text-gray-900">{t('filtersTitle')}</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+              <label htmlFor="catalog-voltage" className="block text-sm font-semibold text-gray-700 mb-3">
                 {t('filter')}
               </label>
               <div className="relative">
                 <select
+                  id="catalog-voltage"
                   value={filterVoltage}
                   onChange={(e) => setFilterVoltage(e.target.value)}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all appearance-none bg-white cursor-pointer"
@@ -100,11 +105,12 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
             </div>
             
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+              <label htmlFor="catalog-sort" className="block text-sm font-semibold text-gray-700 mb-3">
                 {t('sort')}
               </label>
               <div className="relative">
                 <select
+                  id="catalog-sort"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all appearance-none bg-white cursor-pointer"
@@ -126,7 +132,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
           
           <div className="mt-6 pt-6 border-t border-gray-100 flex items-center justify-between">
             <p className="text-sm text-gray-600">
-              Знайдено товарів: <span className="font-bold text-orange-600">{filteredProducts.length}</span>
+              {t('foundProducts')}: <span className="font-bold text-orange-600">{filteredProducts.length}</span>
             </p>
             {(filterVoltage || sortBy) && (
               <button
@@ -139,7 +145,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                Скинути фільтри
+                {t('resetFilters')}
               </button>
             )}
           </div>
@@ -167,7 +173,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
               }}
               className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-2xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
             >
-              Скинути всі фільтри
+              {t('resetAllFilters')}
             </button>
           </motion.div>
         ) : (
@@ -187,9 +193,11 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                 >
                   <SafeImage
                     src={product.images[0]}
-                    alt={`${product.name} - автомобільна мультиварка ${product.specifications.voltage || ''} для вантажівки та далекобійника | ${product.price}₴ | Автоварка`}
+                    alt={getName(product)}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1023px) calc((100vw - 64px) / 2), (max-width: 1535px) calc((100vw - 96px) / 3), 480px"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={index === 0 ? 'high' : 'auto'}
                     className="object-contain p-8 group-hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 pointer-events-auto" 

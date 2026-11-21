@@ -52,7 +52,7 @@ try {
   const schemas=await p.locator('script[type="application/ld+json"]').evaluateAll(s=>s.map(x=>JSON.parse(x.textContent)));
   const types=schemas.map(s=>s['@type']).sort();assert.deepEqual(types,['BreadcrumbList','Organization','Product','WebSite']);
   const productSchema=schemas.find(s=>s['@type']==='Product');assert.equal(productSchema.name,name(product,locale));assert.equal(productSchema.offers.price,product.price);assert.equal(productSchema.offers.availability,'https://schema.org/InStock');assert.equal(productSchema.offers.url,canonical(locale,'/products/'+product.id));
-  assert.equal(await p.locator('iframe').count(),0);
+  assert.equal(await p.locator('iframe:not([title="Google Tag Manager"])').count(),0);
   const pa=await alternates(p,path);assert.equal(pa.canonical,canonical(locale,'/products/'+product.id));
   reports.push({check:'no-JS product schemas/metadata',locale,status:productResponse.status(),types,...pa});
   await p.close();
@@ -113,9 +113,9 @@ try {
  reports.push({check:'checkout required fields, payment choices, native validity and cancel; no submission',passed:true});
  await p.getByRole('button',{name:'Remove',exact:true}).click();assert.equal((await readCart()).length,0);
  reports.push({check:'cart add 2 / plus / minus / persist / remove; no checkout submission',passed:true});
- await p.goto(origin+'/en/products/'+data[0].id,{waitUntil:'networkidle'});assert.equal(await p.locator('iframe').count(),0);
+ await p.goto(origin+'/en/products/'+data[0].id,{waitUntil:'networkidle'});assert.equal(await p.locator('iframe:not([title="Google Tag Manager"])').count(),0);
  await p.getByRole('button',{name:/^Play video:/}).click();
- const iframe=p.locator('iframe');await iframe.waitFor({state:'attached'});
+ const iframe=p.locator('iframe:not([title="Google Tag Manager"])');await iframe.waitFor({state:'attached'});
  assert.equal(await iframe.getAttribute('src'),'https://www.youtube.com/embed/vnwhJnRX8b4?autoplay=1');
  reports.push({check:'video click facade / no early iframe / correct video',passed:true,playbackExternalBlocked:true});
  await p.goto(origin+'/en/admin',{waitUntil:'networkidle'});

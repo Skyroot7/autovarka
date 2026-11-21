@@ -11,7 +11,7 @@ export default async function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <div className="text-2xl font-bold text-white" aria-label="Логотип Автоварка">
+            <div className="text-2xl font-bold text-white" aria-label={t('brandLogo')}>
               🚗 Автоварка
             </div>
             <p className="text-sm">
@@ -20,29 +20,29 @@ export default async function Footer() {
           </div>
 
           {/* Quick Links */}
-          <nav aria-label="Категорії товарів">
+          <nav aria-label={t('productNavigation')}>
             <h3 className="text-white font-bold mb-4">{t('products')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href={locale === 'uk' ? '/products' : `/${locale}/products`} className="hover:text-white transition-colors">
-                  {t('multivarkas12V')}
+                  {t('allProducts')}
                 </Link>
               </li>
               <li>
-                <Link href={locale === 'uk' ? '/products' : `/${locale}/products`} className="hover:text-white transition-colors">
-                  {t('multivarkas24V')}
+                <Link href={locale === 'uk' ? '/#choosing-a-multicooker' : `/${locale}#choosing-a-multicooker`} className="hover:text-white transition-colors">
+                  {t('selectionGuide')}
                 </Link>
               </li>
               <li>
-                <Link href={locale === 'uk' ? '/products' : `/${locale}/products`} className="hover:text-white transition-colors">
-                  {t('accessories')}
+                <Link href={locale === 'uk' ? '/contacts' : `/${locale}/contacts`} className="hover:text-white transition-colors">
+                  {t('productAdvice')}
                 </Link>
               </li>
             </ul>
           </nav>
 
           {/* Customer Service */}
-          <nav aria-label="Інформація для клієнтів">
+          <nav aria-label={t('forCustomers')}>
             <h3 className="text-white font-bold mb-4">{t('forCustomers')}</h3>
             <ul className="space-y-2">
               <li>
@@ -68,17 +68,17 @@ export default async function Footer() {
             <h3 className="text-white font-bold mb-4">{t('contacts')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="tel:+380636815090" className="hover:text-white transition-colors" aria-label="Телефонувати за номером +380 63 681 50 90">
+                <a href="tel:+380636815090" className="hover:text-white transition-colors" aria-label={t('callPhone', { phone: '+380 63 681 50 90' })}>
                   📞 +380 63 681 50 90
                 </a>
               </li>
               <li>
-                <a href="viber://chat?number=%2B380636815090" className="hover:text-white transition-colors" aria-label="Написати в Viber">
+                <a href="viber://chat?number=%2B380636815090" className="hover:text-white transition-colors" aria-label={t('writeViber')}>
                   📱 Viber
                 </a>
               </li>
               <li>
-                <a href="mailto:info@autovarka.com.ua" className="hover:text-white transition-colors" aria-label="Написати на email info@autovarka.com.ua">
+                <a href="mailto:info@autovarka.com.ua" className="hover:text-white transition-colors" aria-label={t('writeEmail', { email: 'info@autovarka.com.ua' })}>
                   ✉️ info@autovarka.com.ua
                 </a>
               </li>

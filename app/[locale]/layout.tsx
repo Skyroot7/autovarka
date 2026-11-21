@@ -1,15 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { getTranslations } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import "../globals.css";
-import Analytics from "@/components/Analytics";
+import AnalyticsLoader from "@/components/AnalyticsLoader";
 import StructuredData from "@/components/StructuredData";
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/structuredData";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { generateAlternates, getOgLocale } from "@/lib/seo";
+import { getSiteName } from "@/lib/seo";
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -24,79 +23,9 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'metadata.home' });
-
-  const siteNames: Record<string, string> = {
-    uk: 'Автоварка - Мультиварки для Вантажівок',
-    ru: 'Автоварка - Мультиварки для Грузовиков',
-    en: 'Autovarka - Multicookers for Trucks',
-    pl: 'Autovarka - Multicookery dla Ciężarówek',
-    de: 'Autovarka - Multikocher für LKW',
-  };
-
-  const templates: Record<string, string> = {
-    uk: 'Автоварка - Мультиварки для Далекобійників',
-    ru: 'Автоварка - Мультиварки для Дальнобойщиков',
-    en: 'Autovarka - Multicookers for Truckers',
-    pl: 'Autovarka - Multicookery dla Kierowców TIR',
-    de: 'Autovarka - Multikocher für LKW-Fahrer',
-  };
-
-  const ogAlts: Record<string, string> = {
-    uk: 'Автомобільна мультиварка 12/24/220V для далекобійника - Автоварка',
-    ru: 'Автомобильная мультиварка 12/24/220V для дальнобойщика - Автоварка',
-    en: 'Car Multicooker 12/24/220V for Truckers - Autovarka',
-    pl: 'Multicooker samochodowy 12/24/220V dla kierowcy TIR - Autovarka',
-    de: 'Auto-Multikocher 12/24/220V für LKW-Fahrer - Autovarka',
-  };
-
-  return {
-    metadataBase: new URL('https://autovarka.com.ua'),
-    title: {
-      default: t('title'),
-      template: `%s | ${templates[locale] || templates.uk}`,
-    },
-    description: t('description'),
-    keywords: t('keywords').split(', '),
-    authors: [{ name: 'Автоварка' }],
-    alternates: generateAlternates(locale, '/'),
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
-    icons: {
-      icon: '/favicon.ico',
-    },
-    openGraph: {
-      title: t('ogTitle'),
-      description: t('ogDescription'),
-      type: 'website',
-      locale: getOgLocale(locale),
-      siteName: siteNames[locale] || siteNames.uk,
-      url: locale === 'uk' ? 'https://autovarka.com.ua' : `https://autovarka.com.ua/${locale}`,
-      images: [
-        {
-          url: '/images/hero-banner.jpg',
-          width: 1200,
-          height: 630,
-          alt: ogAlts[locale] || ogAlts.uk,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: t('twitterTitle'),
-      description: t('twitterDescription'),
-      images: ['/images/hero-banner.jpg'],
-    },
-  };
+  // Page metadata owns its URL and social previews; the layout supplies no
+  // homepage canonical that could leak into service or missing-product pages.
+  return { title: { default: getSiteName(locale), template: `%s | ${getSiteName(locale)}` } };
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
@@ -110,7 +39,9 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
           <StructuredData data={[organizationSchema, websiteSchema]} />
-          <Analytics />
+          <Suspense fallback={null}>
+            <AnalyticsLoader />
+          </Suspense>
           <Header />
           {children}
           <Footer />

@@ -1,9 +1,18 @@
 'use client';
 
-import { Product } from '@/lib/products';
+import type { Product } from '@/lib/products';
 import { useState } from 'react';
-import { uploadImage, deleteImage } from '@/lib/imageActions';
+import { uploadImage } from '@/lib/imageActions';
+import { MAX_IMAGE_BYTES } from '@/lib/imageLimits';
 import Image from 'next/image';
+
+const translationFields = [
+  { locale: 'UK', name: 'name', description: 'description' },
+  { locale: 'EN', name: 'nameEn', description: 'descriptionEn' },
+  { locale: 'RU', name: 'nameRu', description: 'descriptionRu' },
+  { locale: 'PL', name: 'namePl', description: 'descriptionPl' },
+  { locale: 'DE', name: 'nameDe', description: 'descriptionDe' },
+] as const;
 
 interface ProductFormProps {
   product?: Product | null;
@@ -17,11 +26,15 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
     name: product?.name || '',
     nameEn: product?.nameEn || '',
     nameRu: product?.nameRu || '',
+    namePl: product?.namePl || '',
+    nameDe: product?.nameDe || '',
     price: product?.price || 0,
     oldPrice: product?.oldPrice || 0,
     description: product?.description || '',
     descriptionEn: product?.descriptionEn || '',
     descriptionRu: product?.descriptionRu || '',
+    descriptionPl: product?.descriptionPl || '',
+    descriptionDe: product?.descriptionDe || '',
     voltage: product?.specifications?.voltage || '',
     capacity: product?.specifications?.capacity || '',
     power: product?.specifications?.power || '',
@@ -40,10 +53,16 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
   const [images, setImages] = useState<string[]>(product?.images || []);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || isSubmitting || uploadingImage) return;
+    if (file.size > MAX_IMAGE_BYTES) {
+      setUploadError('Файл слишком большой. Максимальный размер: 4 МБ.');
+      e.target.value = '';
+      return;
+    }
 
     setUploadingImage(true);
     setUploadError(null);
@@ -69,37 +88,42 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
     }
   };
 
-  const handleImageDelete = async (imageUrl: string) => {
-    if (!confirm('Удалить это изображение?')) return;
-
-    try {
-      const result = await deleteImage(imageUrl);
-      if (result.success) {
-        setImages(prev => prev.filter(img => img !== imageUrl));
-      }
-    } catch (error) {
-      console.error('Error deleting image:', error);
-    }
+  const handleImageRemove = (imageUrl: string) => {
+    if (isSubmitting || uploadingImage) return;
+    // Edit only the draft. Deleting the Blob here would break the saved product
+    // if the administrator cancels the form or its later save fails.
+    setImages(prev => prev.filter(img => img !== imageUrl));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting || uploadingImage) return;
+
+    const incompleteLocales = translationFields.filter(({ name, description }) =>
+      !formData[name].trim() || !formData[description].trim(),
+    );
+    if (incompleteLocales.length > 0) {
+      setFormError(`Заполните название и описание для языков: ${incompleteLocales.map(field => field.locale).join(', ')}. Переводы не копируются автоматически.`);
+      return;
+    }
+    setFormError(null);
     
     const productData: Partial<Product> = {
       name: formData.name,
       nameEn: formData.nameEn,
       nameRu: formData.nameRu,
-      namePl: product?.namePl || formData.name, // Fallback
-      nameDe: product?.nameDe || formData.name, // Fallback
+      namePl: formData.namePl,
+      nameDe: formData.nameDe,
       price: Number(formData.price),
       oldPrice: formData.oldPrice ? Number(formData.oldPrice) : undefined,
       description: formData.description,
       descriptionEn: formData.descriptionEn,
       descriptionRu: formData.descriptionRu,
-      descriptionPl: product?.descriptionPl || formData.description, // Fallback
-      descriptionDe: product?.descriptionDe || formData.description, // Fallback
+      descriptionPl: formData.descriptionPl,
+      descriptionDe: formData.descriptionDe,
       images: images.length > 0 ? images : ['/placeholder.svg'],
       specifications: {
+        ...product?.specifications,
         voltage: formData.voltage,
         capacity: formData.capacity,
         power: formData.power,
@@ -121,6 +145,11 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
+      {formError && (
+        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {formError}
+        </p>
+      )}
       <div className="space-y-6">
         {/* Basic Info */}
         <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl p-6 border border-orange-200">
@@ -131,45 +160,22 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
             Основная информация
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Название (UK) <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
-                placeholder="Мультиварка 12/24/220В"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Название (EN)
-              </label>
-              <input
-                type="text"
-                value={formData.nameEn}
-                onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
-                placeholder="Multivarka 12/24/220V"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Название (RU)
-              </label>
-              <input
-                type="text"
-                value={formData.nameRu}
-                onChange={(e) => setFormData({ ...formData, nameRu: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
-                placeholder="Мультиварка 12/24/220В"
-              />
-            </div>
+            {translationFields.map(({ locale, name }) => (
+              <div key={name}>
+                <label htmlFor={`product-${name}`} className="block text-sm font-semibold text-gray-700 mb-2">
+                  Название ({locale}) <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id={`product-${name}`}
+                  name={name}
+                  type="text"
+                  required
+                  value={formData[name]}
+                  onChange={(e) => setFormData({ ...formData, [name]: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                />
+              </div>
+            ))}
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -212,47 +218,26 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
             </svg>
             Описание товара
           </h3>
+          <p className="mb-5 text-sm text-gray-600">
+            Заполните название и описание на всех пяти языках. Существующие переводы сохраняются без изменений, пока вы их не отредактируете.
+          </p>
           <div className="space-y-5">
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Описание (UK) <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                required
-                rows={4}
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none"
-                placeholder="Детальний опис товару українською мовою..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Описание (EN)
-              </label>
-              <textarea
-                rows={4}
-                value={formData.descriptionEn}
-                onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none"
-                placeholder="Detailed product description in English..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Описание (RU)
-              </label>
-              <textarea
-                rows={4}
-                value={formData.descriptionRu}
-                onChange={(e) => setFormData({ ...formData, descriptionRu: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none"
-                placeholder="Подробное описание товара на русском языке..."
-              />
-            </div>
+            {translationFields.map(({ locale, description }) => (
+              <div key={description}>
+                <label htmlFor={`product-${description}`} className="block text-sm font-semibold text-gray-700 mb-2">
+                  Описание ({locale}) <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  id={`product-${description}`}
+                  name={description}
+                  required
+                  rows={4}
+                  value={formData[description]}
+                  onChange={(e) => setFormData({ ...formData, [description]: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none"
+                />
+              </div>
+            ))}
           </div>
         </div>
 
@@ -264,6 +249,10 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
             </svg>
             Изображения товара
           </h3>
+
+          <p className="mb-4 text-sm text-gray-600">
+            Удаление из списка применяется к карточке после сохранения. Отмена сохраняет прежние изображения; файлы в хранилище не удаляются.
+          </p>
 
           {/* Upload Error */}
           {uploadError && (
@@ -296,9 +285,11 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
                     </div>
                     <button
                       type="button"
-                      onClick={() => handleImageDelete(imageUrl)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
-                      title="Удалить изображение"
+                      onClick={() => handleImageRemove(imageUrl)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-red-600 disabled:opacity-50"
+                      title="Убрать из карточки"
+                      aria-label={`Убрать изображение ${index + 1} из карточки`}
+                      disabled={isSubmitting || uploadingImage}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -325,7 +316,7 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
                 type="file"
                 accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
                 onChange={handleImageUpload}
-                disabled={uploadingImage}
+                disabled={uploadingImage || isSubmitting}
                 className="hidden"
                 id="image-upload"
               />
@@ -349,7 +340,7 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
                     </svg>
                     <div className="text-center">
                       <span className="text-sm font-semibold text-indigo-700">Кликните для выбора</span>
-                      <p className="text-xs text-gray-500 mt-1">JPG, PNG, WEBP, GIF (макс. 5MB)</p>
+                      <p className="text-xs text-gray-500 mt-1">JPG, PNG, WEBP, GIF (макс. 4 МБ)</p>
                     </div>
                   </div>
                 )}
@@ -573,14 +564,14 @@ export default function ProductForm({ product, onSave, onCancel, isSubmitting }:
         <button
           type="button"
           onClick={onCancel}
-          disabled={isSubmitting}
+          disabled={isSubmitting || uploadingImage}
           className="px-8 py-3.5 border-2 border-gray-300 rounded-xl hover:bg-gray-50 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all order-2 sm:order-1"
         >
           Отменить
         </button>
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || uploadingImage}
           className="px-8 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transform hover:-translate-y-0.5 transition-all order-1 sm:order-2"
         >
           {isSubmitting && (

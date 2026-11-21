@@ -8,6 +8,7 @@ export default function AnalyticsSettings() {
   const [googleAnalyticsId, setGoogleAnalyticsId] = useState('');
   const [googleTagManagerId, setGoogleTagManagerId] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -27,12 +28,15 @@ export default function AnalyticsSettings() {
       })
       .catch(err => {
         console.error('Failed to load settings:', err);
+        setLoadFailed(true);
+        setMessage('❌ Не удалось загрузить текущие настройки. Обновите страницу и проверьте авторизацию.');
         setLoading(false);
       });
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loadFailed || saving) return;
     setSaving(true);
     setMessage('');
 
@@ -50,12 +54,14 @@ export default function AnalyticsSettings() {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (response.ok && data.success) {
         setMessage('✅ Настройки успешно сохранены! Обновите страницу для применения изменений.');
       } else {
-        setMessage('❌ Ошибка сохранения настроек');
+        setMessage(response.status === 401
+          ? '❌ Войдите в панель администратора и повторите попытку.'
+          : '❌ ' + (data.error || 'Ошибка сохранения настроек'));
       }
-    } catch (error) {
+    } catch {
       setMessage('❌ Ошибка сохранения настроек');
     } finally {
       setSaving(false);
@@ -106,13 +112,12 @@ export default function AnalyticsSettings() {
               <textarea
                 value={googleAnalyticsId}
                 onChange={(e) => setGoogleAnalyticsId(e.target.value)}
-                placeholder="G-XXXXXXXXXX или вставьте весь код из Google Analytics"
-                rows={5}
+                placeholder="G-XXXXXXXXXX"
+                maxLength={64} rows={1}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all font-mono text-sm"
               />
               <p className="mt-2 text-sm text-gray-500">
-                ✅ Можете вставить только ID: <code className="bg-gray-100 px-2 py-1 rounded">G-BTPZRYJB0J</code><br/>
-                ✅ Или весь код - система автоматически извлечет ID
+                Укажите идентификатор, например <code className="bg-gray-100 px-2 py-1 rounded">G-XXXXXXXXXX</code>.
               </p>
             </div>
 
@@ -124,13 +129,12 @@ export default function AnalyticsSettings() {
               <textarea
                 value={googleTagManagerId}
                 onChange={(e) => setGoogleTagManagerId(e.target.value)}
-                placeholder="GTM-XXXXXXX или вставьте весь код из Google Tag Manager"
-                rows={5}
+                placeholder="GTM-XXXXXXX"
+                maxLength={64} rows={1}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all font-mono text-sm"
               />
               <p className="mt-2 text-sm text-gray-500">
-                ✅ Можете вставить только ID: <code className="bg-gray-100 px-2 py-1 rounded">GTM-XXXXXXX</code><br/>
-                ✅ Или весь код - система автоматически извлечет ID
+                Укажите идентификатор, например <code className="bg-gray-100 px-2 py-1 rounded">GTM-XXXXXXX</code>.
               </p>
             </div>
 
@@ -162,7 +166,7 @@ export default function AnalyticsSettings() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || loadFailed}
               className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-xl font-bold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? 'Сохранение...' : '💾 Сохранить настройки'}
@@ -181,7 +185,7 @@ export default function AnalyticsSettings() {
               <ol className="list-decimal list-inside space-y-1 ml-4">
                 <li>Откройте <a href="https://analytics.google.com" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline">analytics.google.com</a></li>
                 <li>Выберите свой ресурс</li>
-                <li>Перейдите в "Администратор" → "Информация о ресурсе"</li>
+                <li>Перейдите в &quot;Администратор&quot; → &quot;Информация о ресурсе&quot;</li>
                 <li>Скопируйте ID измерения (например, G-XXXXXXXXXX)</li>
               </ol>
             </div>

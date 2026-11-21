@@ -74,7 +74,7 @@ export default function Header() {
     // Убираем текущую локаль из пути
     // Например, /ru/products/123 -> /products/123
     // или /products/123 (для uk) -> /products/123
-    const pathWithoutLocale = pathname.replace(new RegExp(`^/(${languages.map(l => l.code).join('|')})`), '');
+    const pathWithoutLocale = pathname.replace(new RegExp(`^/(${languages.map(l => l.code).join('|')})(?=/|$)`), '');
     return pathWithoutLocale || '';
   };
 
@@ -102,7 +102,7 @@ export default function Header() {
       <div className="container mx-auto px-4 max-w-full">
         <div className="flex items-center justify-between h-16 md:h-20 w-full">
           {/* Logo */}
-          <Link href={locale === 'uk' ? '/' : `/${locale}`} className="flex items-center group" aria-label="Перейти на головну сторінку Автоварка">
+          <Link href={locale === 'uk' ? '/' : `/${locale}`} className="flex items-center group" aria-label={t('goHome')}>
             <div className="flex flex-row items-center gap-2 group-hover:scale-105 transition-transform">
               <span className="text-3xl md:text-4xl">🚗</span>
               <span className="text-xl md:text-3xl font-bold tracking-tight">Автоварка</span>
@@ -110,7 +110,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8 md:ml-8 lg:ml-12" aria-label="Основна навігація">
+          <nav className="hidden md:flex items-center space-x-8 md:ml-8 lg:ml-12" aria-label={t('mainNavigation')}>
             <Link href={locale === 'uk' ? '/' : `/${locale}`} className="hover:text-orange-200 transition-colors font-medium">
               {t('home')}
             </Link>
@@ -133,7 +133,7 @@ export default function Header() {
               <a 
                 href="tel:+380636815090"
                 className="flex items-center gap-1 md:gap-2 lg:gap-3 px-1.5 sm:px-1 md:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-white/10 transition-all group"
-                aria-label="Позвонить +38 (063) 681-50-90"
+                aria-label={t('callPhone', { phone: '+38 (063) 681-50-90' })}
                 title="+38 (063) 681-50-90"
               >
                 <svg className="w-5 h-5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,8 +148,8 @@ export default function Header() {
               <a 
                 href="viber://chat?number=%2B380636815090"
                 className="p-1.5 sm:p-2 rounded-lg hover:bg-white/10 transition-all group"
-                aria-label="Написать в Viber"
-                title="Написать в Viber"
+                aria-label={t('writeViber')}
+                title={t('writeViber')}
               >
                 <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-6 md:h-6 lg:w-7 lg:h-7 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.696 6.7.633 9.817.57 12.933.488 18.617 6.055 20.29h.005l-.004 2.406s-.037.977.61 1.177c.777.242 1.234-.5 1.977-1.302.41-.442.977-1.093 1.404-1.594 3.856.326 6.82-.42 7.152-.532.77-.26 5.13-.837 5.84-6.833.73-6.17-.437-10.083-3.02-11.832C18.33.41 15.86 0 12.862 0h-.005C12.35-.004 11.875-.008 11.4 0zm.116 1.86c.407-.005.857 0 1.312.008 2.606 0 4.81.36 6.47 1.974 2.155 1.69 2.838 4.942 2.224 9.818-.545 4.35-3.613 4.858-4.228 5.06-.283.095-2.894.743-6.13.49 0 0-2.426 2.924-3.184 3.683-.12.12-.26.167-.352.145-.13-.03-.166-.188-.165-.414l.02-4.004c-4.762-1.338-4.48-6.098-4.426-8.686.054-2.588.567-4.693 1.977-6.105C7.49 2.35 10.94 1.897 11.516 1.86z"/>
@@ -159,7 +159,7 @@ export default function Header() {
             </div>
 
             {/* Language Switcher */}
-            <nav className="hidden md:flex items-center space-x-1" aria-label="Вибір мови">
+            <nav className="hidden md:flex items-center space-x-1" aria-label={t('language')}>
               {languages.map((lang) => (
                 <Link
                   key={lang.code}
@@ -167,7 +167,7 @@ export default function Header() {
                   className={`px-2 py-1 rounded transition-colors ${
                     locale === lang.code ? 'bg-white/20 font-bold' : 'hover:bg-white/10'
                   }`}
-                  aria-label={`Переключити мову на ${lang.name}`}
+                  aria-label={t('switchLanguage', { language: lang.name })}
                   aria-current={locale === lang.code ? 'page' : undefined}
                 >
                   {lang.name}
@@ -206,7 +206,7 @@ export default function Header() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 hover:bg-white/10 rounded-full transition-colors"
-              aria-label={mobileMenuOpen ? "Закрити меню" : "Відкрити меню"}
+              aria-label={mobileMenuOpen ? t('closeMenu') : t('openMenu')}
               aria-expanded={mobileMenuOpen}
             >
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -222,6 +222,7 @@ export default function Header() {
               <input
                 type="text"
                 placeholder={t('search')}
+                aria-label={t('search')}
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 className="flex-1 bg-transparent border-none outline-none px-3 py-2 text-white placeholder-white/70"
@@ -233,7 +234,7 @@ export default function Header() {
                     setSearchQuery('');
                   }}
                   className="px-2 py-2 hover:bg-white/10 transition-colors"
-                  aria-label="Очистити пошук"
+                  aria-label={t('clearSearch')}
                 >
                   <XMarkIcon className="h-5 w-5 text-white" />
                 </button>
@@ -260,7 +261,7 @@ export default function Header() {
                           <div className="relative w-32 h-32 flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden border-2 border-orange-200 shadow-sm">
                             <SafeImage
                               src={product.images[0]}
-                              alt={`${name} - автомобільна мультиварка для далекобійника | ${product.price}₴`}
+                              alt={name}
                               fill
                               sizes="128px"
                               className="object-contain p-3"
